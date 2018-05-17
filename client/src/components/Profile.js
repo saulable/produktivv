@@ -1,41 +1,36 @@
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-class App extends Component {
+class Profile extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			books: []
+			information: false
 		};
+		this.profile = true;
 	}
 	componentDidMount() {
 		axios.defaults.headers.common['Authorization'] = localStorage.getItem(
 			'jwtToken'
 		);
 		axios
-			.get('/api/book')
+			.get('/api/logged_in')
 			.then(res => {
-				this.setState({ books: res.data });
-				console.log(this.state.books);
+				this.setState({ information: res.data });
 			})
 			.catch(error => {
 				if (error.response.status === 401) {
-					this.context.history.push('/login');
+					this.props.history.push('/login');
 				}
 			});
 	}
-	logout(){
-		localStorage.removeItem('jwtToken');
-		window.location.reload();
-	}
 	render() {
-		return (
-			<div className="container">
-			</div>
-		);
+		const { information } = this.state;
+		if (!information) {
+			return <div className="container">Loading...</div>;
+		}
+		return <div className="container">This is the profile page.</div>;
 	}
 }
-
-export default App;
+export default Profile;

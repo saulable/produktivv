@@ -2,6 +2,16 @@
 	"name": "meals",
 	"version": "0.1.0",
 	"private": true,
+	"proxy": {
+		"/api/*": {
+			"target": "https://localhost:5000",
+			"secure" : false
+		},
+		"/auth/*": {
+			"target": "https://localhost:5000",
+			"secure" : false
+		}
+	},
 	"dependencies": {
 		"axios": "^0.18.0",
 		"eslint": "^4.19.1",
@@ -17,7 +27,7 @@
 		"redux-thunk": "^2.2.0"
 	},
 	"scripts": {
-		"start": "react-scripts start",
+		"start": "HTTPS=true react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test --env=jsdom",
 		"eject": "react-scripts eject"
