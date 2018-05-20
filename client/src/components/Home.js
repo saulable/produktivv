@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import axios from 'axios';
+import Header from '../containers/Header';
+import { logout } from '../actions/index';
 
 class Home extends Component {
 	constructor(props) {
@@ -9,7 +13,6 @@ class Home extends Component {
 			books: []
 		};
 	}
-
 	componentDidMount() {
 		axios.defaults.headers.common['Authorization'] = localStorage.getItem(
 			'jwtToken'
@@ -25,14 +28,11 @@ class Home extends Component {
 				}
 			});
 	}
-	logout() {
-		localStorage.removeItem('jwtToken');
-		window.location.reload();
-	}
 	render() {
 		return (
-			<div className="container">
-				<div className="panel panel-default">
+			<div className="">
+				<Header />
+				<div className="container panel panel-default">
 					<div className="panel-heading">
 						<h3 className="panel-title">
 							BOOK CATALOG &nbsp;
@@ -70,4 +70,6 @@ class Home extends Component {
 		);
 	}
 }
+
+
 export default Home;
