@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../styles/login.css';
+import {login, facebookLogin} from '../actions/authActions';
+import FlashMessageList from '../containers/FlashMessageList';
+import { addFlashMessage} from '../actions/flashMessages';
 
 class Login extends Component {
 	constructor() {
@@ -9,10 +13,15 @@ class Login extends Component {
 		this.state = {
 			username: '',
 			password: '',
-			message: ''
+			message: '',
+			isLoading: false
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
+		this.onFacebookLogin = this.onFacebookLogin.bind(this);
+	}
+	componentDidMount(){
+		
 	}
 	onChange(event) {
 		this.setState({ [event.target.name]: event.target.value });
@@ -20,32 +29,30 @@ class Login extends Component {
 	onSubmit(event) {
 		event.preventDefault();
 		const { username, password } = this.state;
-		axios
-			.post('/api/auth/login', { username, password })
-			.then(result => {
-				localStorage.setItem('jwtToken', result.data.token);
-				this.setState({ message: '' });
-				this.props.history.push('/profile');
-			})
-			.catch(error => {
-				if (error.response.status === 401) {
-					this.setState({
-						message: 'Login failed: Username or password do no match'
-					});
-				}
-			});
+		// check the validation here
+		this.props.login(this.state).then(
+			(res) => this.props.history.push('/profile'),
+			(err) => this.setState({message: err.response.data.errors, isLoading: false})
+		);
+	}
+	onFacebookLogin(event){
+		event.preventDefault();
+		this.props.facebookLogin(this.state).then(
+			(res) => this.props.history.push('/profile')
+		);
 	}
 	render() {
 		const { username, password, message } = this.state;
 		return (
 			<div className="container">
+				<FlashMessageList />
 				<form className="form-signin" onSubmit={this.onSubmit}>
 					{message !== '' && (
 						<div className="alert alert-warning alert-dismissible" role="alert">
 							{message}
 						</div>
 					)}
-					<h2 className="form-siginin-heading">Please sign in</h2>
+					<h5 className="form-siginin-heading">Please sign in</h5>
 					<label className="sr-only">Email address</label>
 					<input
 						type="email"
@@ -88,4 +95,4 @@ class Login extends Component {
 	}
 }
 
-export default Login;
+export default connect(null, {login, facebookLogin, addFlashMessage})(Login);

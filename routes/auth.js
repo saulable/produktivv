@@ -19,9 +19,9 @@ module.exports = (app, passport) => {
 				'local.email': req.body.username
 			}).exec();
 			// if profile exists, return the user.
-			if (findUser)
+			if (findUser){
 				res.json({ success: false, msg: 'Username already exists' });
-			else {
+			}else {
 				await User({
 					'local.email': req.body.username,
 					'local.password': req.body.password

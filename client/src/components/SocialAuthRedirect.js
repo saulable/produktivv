@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
+import { facebookLogin } from '../actions/authActions';
+import { connect } from 'react-redux';
 
 class SocialAuthRedirect extends Component {
 	componentWillMount() {
-		const cookieMe = document.cookie.split('=');
-		localStorage.setItem('jwtToken', 'JWT ' + cookieMe[1]);
+		const cookieMe = document.cookie.split('=')[1];
+		this.props.facebookLogin(cookieMe);
 		this.props.history.push('/profile');
 	}
 
@@ -12,4 +14,4 @@ class SocialAuthRedirect extends Component {
 	}
 }
 
-export default SocialAuthRedirect;
+export default connect(null, { facebookLogin })(SocialAuthRedirect);

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import axios from 'axios';
 import Header from '../containers/Header';
-import { logout } from '../actions/index';
+import { logout } from '../actions/authActions';
 
 class Home extends Component {
 	constructor(props) {

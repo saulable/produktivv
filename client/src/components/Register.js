@@ -1,13 +1,16 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import '../styles/login.css';
+import { connect } from 'react-redux';
+import { addFlashMessage } from '../actions/flashMessages';
 
 class Register extends Component {
 	constructor() {
 		super();
 		this.state = {
 			username: '',
-			password: ''
+			password: '',
+			errors:''
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
@@ -18,14 +21,29 @@ class Register extends Component {
 	onSubmit(event) {
 		event.preventDefault();
 		const { username, password } = this.state;
-		axios.post('/api/auth/register', { username, password }).then(result => {
-			this.props.history.push('/login');
-		});
+		axios.post('/api/auth/register', { username, password }).then(
+			res => {
+				console.log(res);
+				if (res.data.success) {
+					this.props.addFlashMessage({
+						type: 'success',
+						text: ' You signed up successfully, please login!'
+					});
+					this.props.history.push('/login');
+				} else {
+					this.setState({errors: res.data.msg});
+				}
+			},
+			err => {
+				this.setState({ errors: err.response.data });
+			}
+		);
 	}
 	render() {
-		const { username, password } = this.state;
+		const { username, password, errors } = this.state;
 		return (
 			<div className="container">
+				<div>{errors}</div>
 				<form className="form-signin" onSubmit={this.onSubmit}>
 					<h2 className="form-signin-heading">Register</h2>
 					<label className="sr-only">Email address</label>
@@ -58,4 +76,4 @@ class Register extends Component {
 		);
 	}
 }
-export default Register;
+export default connect(null, { addFlashMessage })(Register);
