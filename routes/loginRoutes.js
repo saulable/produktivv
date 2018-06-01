@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const passport = require('passport');
 const express = require('express');
+
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
@@ -16,12 +17,12 @@ module.exports = (app, passport) => {
 	app.get(
 		'/auth/facebook/callback',
 		passport.authenticate('facebook', {
-			successRedirect:'/social_auth',
-			failureRedirect: '/login',
 			session: false
 		}), (req, res) => {
 			const token = jwt.sign(req.user.toJSON(), settings.secret);
 			res.cookie('jwtToken', token);
+			res.redirect('/social_auth');
+
 		}
 	);
 	app.post(

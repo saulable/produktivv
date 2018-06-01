@@ -3,6 +3,12 @@ import setAuthorizationToken from '../services/setAuthorizationToken';
 import jwtDecode from 'jwt-decode';
 import { SET_CURRENT_USER } from './types';
 
+export function setCurrentUser(user) {
+	return {
+		type: SET_CURRENT_USER,
+		user
+	};
+}
 export function logout() {
 	return dispatch => {
 		localStorage.removeItem('jwtToken');
@@ -20,6 +26,13 @@ export function login(data) {
 		});
 	};
 }
+export function checkedLogin(data) {
+	return dispatch => {
+		const token = data;
+		setAuthorizationToken(token);
+		dispatch(setCurrentUser(jwtDecode(token)));
+	};
+}
 export function facebookLogin(data) {
 	return dispatch => {
 		const token = 'JWT ' + data;
@@ -28,25 +41,3 @@ export function facebookLogin(data) {
 		dispatch(setCurrentUser(jwtDecode(token)));
 	};
 }
-
-export function setCurrentUser(user) {
-	return {
-		type: SET_CURRENT_USER,
-		user
-	};
-}
-
-// axios
-// 	.post('/api/auth/login', { username, password })
-// 	.then(result => {
-// 		localStorage.setItem('jwtToken', result.data.token);
-// 		this.setState({ message: '' });
-// 		this.props.history.push('/profile');
-// 	})
-// 	.catch(error => {
-// 		if (error.response.status === 401) {
-// 			this.setState({
-// 				message: 'Login failed: Username or password do no match'
-// 			});
-// 		}
-// 	});

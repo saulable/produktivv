@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import {connect} from 'react-redux';
 import { Link } from 'react-router-dom';
 import '../styles/login.css';
@@ -18,27 +17,17 @@ class Login extends Component {
 		};
 		this.onChange = this.onChange.bind(this);
 		this.onSubmit = this.onSubmit.bind(this);
-		this.onFacebookLogin = this.onFacebookLogin.bind(this);
-	}
-	componentDidMount(){
-		
 	}
 	onChange(event) {
 		this.setState({ [event.target.name]: event.target.value });
 	}
 	onSubmit(event) {
 		event.preventDefault();
-		const { username, password } = this.state;
+		// const { username, password } = this.state;
 		// check the validation here
 		this.props.login(this.state).then(
-			(res) => this.props.history.push('/profile'),
+			(res) => this.props.history.push('/home'),
 			(err) => this.setState({message: err.response.data.errors, isLoading: false})
-		);
-	}
-	onFacebookLogin(event){
-		event.preventDefault();
-		this.props.facebookLogin(this.state).then(
-			(res) => this.props.history.push('/profile')
 		);
 	}
 	render() {
@@ -95,4 +84,7 @@ class Login extends Component {
 	}
 }
 
-export default connect(null, {login, facebookLogin, addFlashMessage})(Login);
+function mapStateToProps(state){
+	return state;
+}
+export default connect(mapStateToProps, {login, facebookLogin, addFlashMessage})(Login);

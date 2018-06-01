@@ -6,9 +6,8 @@ class SocialAuthRedirect extends Component {
 	componentWillMount() {
 		const cookieMe = document.cookie.split('=')[1];
 		this.props.facebookLogin(cookieMe);
-		this.props.history.push('/profile');
+		this.props.history.push('/home');
 	}
-
 	render() {
 		return <div />;
 	}

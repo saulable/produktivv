@@ -2,11 +2,8 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 
 class FlashMessage extends Component {
-	constructor(props) {
-		super(props);
-	}
 	render() {
-		const { id, type, text } = this.props.message;
+		const { type, text } = this.props.message;
 		return (
 			<div
 				className={classnames('alert', {

@@ -1,6 +1,7 @@
 /* global process */
-import 'materialize-css/dist/css/materialize.min.css';
-import './styles/main.css';
+import './styles/bootstrap.min.css';
+import './styles/main.scss';
+import './styles/sidebar.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

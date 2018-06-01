@@ -8,10 +8,11 @@ const auth = require('./routes/auth');
 const passport = require('passport');
 const https = require('https');
 const fs = require('fs');
+require('./models/Tasks');
+require('./models/DailyJournals');
 
 // used for development purposes.
 const morgan = require('morgan');
-
 
 const options = {
 	key: fs.readFileSync('./key.pem'),
@@ -24,9 +25,7 @@ mongoose
 
 const app = express();
 
-
 app.use(morgan('dev'));
-
 
 app.use(bodyParser.json());
 app.use(
@@ -37,9 +36,9 @@ app.use(
 );
 // app.use(localJWT.initialize());
 require('./routes/book')(app);
-require('./routes/profileRoutes')(app);
 require('./routes/auth')(app, passport);
 require('./routes/loginRoutes')(app, passport);
+require('./routes/tasksRoutes')(app);
 
 if (process.env.NODE_ENV === 'production') {
 	// Express will serve up production assets.
