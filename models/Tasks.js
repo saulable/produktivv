@@ -8,7 +8,9 @@ const tasksSchema = new Schema({
 	note: {type: String, default: ''},
 	created_at: Date,
 	completed_at: Date,
-	index: Number, 
+	start_date: Date,
+	end_date: Date,
+	index: Number,
 	_user: {type: Schema.Types.ObjectId, ref: 'User'}
 });
 

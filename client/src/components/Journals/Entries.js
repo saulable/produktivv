@@ -93,7 +93,6 @@ class Entries extends Component {
 											className={classnames('nav-link', {
 												active: (this.props.notes.tab == 'journal') ? true : false
 											})}
-											href="#"
 										>
 											Daily Journal
 										</a>
@@ -104,7 +103,6 @@ class Entries extends Component {
 											className={classnames('nav-link', {
 												active: (this.props.notes.tab == 'notes') ? true : false
 											})}
-											href="#"
 										>
 											Notes
 										</a>

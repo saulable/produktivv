@@ -20,7 +20,9 @@ module.exports = app => {
 			journal,
 			_user: user._id,
 			index: (newIndex += 1),
-			created_at: Date.now()
+			created_at: Date.now(),
+			start_date: Date.now(),
+			end_date: Date.now()
 		});
 		try {
 			const saveTask = await task.save();

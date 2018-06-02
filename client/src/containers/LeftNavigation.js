@@ -58,6 +58,9 @@ class LeftNavigation extends Component {
 						<Link to="/daily">Daily Journal</Link>
 					</li>
 					<li>
+						<Link to="/daily_calendar">Calendar</Link>
+					</li>
+					<li>
 						<Link to="/weekly">Weekly Journal</Link>
 					</li>
 					<li>

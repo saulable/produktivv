@@ -45,6 +45,9 @@ a, a:hover, a:focus {
     border-bottom: 1px dashed #ddd;
     margin: 40px 0;
 }
+.nav-link{
+	cursor: pointer;
+}
 
 /* ---------------------------------------------------
     SIDEBAR STYLE
@@ -79,7 +82,7 @@ a, a:hover, a:focus {
 #sidebar {
     min-width: 220px;
     max-width: 220px;
-	
+
   	background: #38383a;
 		margin-bottom: -5000px;
  		padding-bottom: 5000px;
@@ -367,6 +370,12 @@ height: 11px;
 opacity: .25;
 margin-right: 20px;
 	background: linear-gradient(180deg,#000,#000 20%,#fff 0,#fff 40%,#000 0,#000 60%,#fff 0,#fff 80%,#000 0,#000);
+}
+/* ---------------------------------------------------
+    CALENDAR
+----------------------------------------------------- */
+.calendar{
+	padding: 20px;
 }
 /* ---------------------------------------------------
     MEDIAQUERIES
