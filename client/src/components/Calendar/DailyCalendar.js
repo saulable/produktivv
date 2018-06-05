@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import LeftNavigation from '../../containers/LeftNavigation';
 import CalendarSystem from './CalendarSystem';
 
-class DailyCalender extends Component {
+class DailyCalendar extends Component {
 	render() {
 		return (
 			<div className="wrapper">
@@ -12,6 +12,4 @@ class DailyCalender extends Component {
 		);
 	}
 }
-
-
-export default DailyCalender;
+export default DailyCalendar;

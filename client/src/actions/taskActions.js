@@ -12,7 +12,6 @@ import {
 } from './types';
 import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
-import { arrayMove } from 'react-sortable-hoc';
 
 export const newTaskRequest = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));

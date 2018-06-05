@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { dbTasks, taskClick, createJournal, clickComplete, handleTaskChange, saveNoteChange, newOrder} from '../../actions/taskActions';
-import classnames from 'classnames';
-import TextareaAutosize from 'react-autosize-textarea';
-import {SortableContainer, SortableElement, arrayMove} from 'react-sortable-hoc';
+import * as actions from '../../actions/taskActions';
 import SortableList from './SortableList';
-
 
 class DailyTaskList extends Component {
 	constructor(props){
@@ -24,21 +19,6 @@ class DailyTaskList extends Component {
 		}
 	}
 	renderContent(items) {
-		return _.map(this.props.tasks, items => {
-			return (
-				<li onClick={this.props.taskClick.bind(this)} className="list-group-item" key={items._id} data-id={items._id}>
-					<div className="click-wrapper">
-						<TextareaAutosize data-id={items._id} name="task" onChange={this.taskChange} value={items.message} />
-					</div>
-					<div className="round float-right align-middle">
-						<div key={items._id} data-id={items._id} className={classnames('inputGroup', {
-							'completed' : items.completed
-						})} onClick={this.props.clickComplete}>
-						</div>
-					</div>
-				</li>
-			);
-		});
 	}
 	render() {
 		return (
@@ -56,4 +36,4 @@ class DailyTaskList extends Component {
 function mapStateToProps({ tasks }) {
 	return { tasks };
 }
-export default connect(mapStateToProps, { dbTasks, taskClick, createJournal, clickComplete, handleTaskChange, saveNoteChange, newOrder })(DailyTaskList);
+export default connect(mapStateToProps, actions)(DailyTaskList);

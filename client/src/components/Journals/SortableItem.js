@@ -1,7 +1,5 @@
 import {
-	SortableContainer,
-	SortableElement,
-	arrayMove
+	SortableElement
 } from 'react-sortable-hoc';
 import Item from './Item';
 

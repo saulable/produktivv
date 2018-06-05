@@ -91,7 +91,7 @@ class Entries extends Component {
 										<a
 											onClick={() => this.props.onClickNotes('journal')}
 											className={classnames('nav-link', {
-												active: (this.props.notes.tab == 'journal') ? true : false
+												active: (this.props.notes.tab === 'journal') ? true : false
 											})}
 										>
 											Daily Journal
@@ -101,7 +101,7 @@ class Entries extends Component {
 										<a
 											onClick={() => this.props.onClickNotes('notes')}
 											className={classnames('nav-link', {
-												active: (this.props.notes.tab == 'notes') ? true : false
+												active: (this.props.notes.tab === 'notes') ? true : false
 											})}
 										>
 											Notes
@@ -112,7 +112,7 @@ class Entries extends Component {
 							<textarea
 								onChange={this.journalChange.bind(this)}
 								className={classnames('notes-box', {
-									'd-none': (this.props.notes.tab == 'journal') ? false : true
+									'd-none': (this.props.notes.tab === 'journal') ? false : true
 								})}
 								name="dailyj"
 								value={this.props.notes.journalmessage}
@@ -121,7 +121,7 @@ class Entries extends Component {
 							<textarea
 								onChange={this.noteChange.bind(this)}
 								className={classnames('notes-box comments-notes', {
-									'd-none': (this.props.notes.tab == 'notes') ? false : true
+									'd-none': (this.props.notes.tab === 'notes') ? false : true
 								})}
 								name="note"
 								data-id={this.props.notes.id}

@@ -9,6 +9,7 @@ export default (state = [], action = {}) => {
 			type: action.message.type,
 			text: action.message.text
 		}];
-	default: return state;
+	default:
+		return [...state];
 	}
 };

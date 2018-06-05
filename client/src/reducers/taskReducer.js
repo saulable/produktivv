@@ -38,7 +38,6 @@ export default function(state = [], action) {
 		const data = [...state];
 		const check = arrayMove(data, action.payload.oldIndex, action.payload.newIndex);
 		const sendData = {items: check};
-		console.log(sendData);
 		axios.post('/api/update_task_index', sendData);
 		return check;
 		// return arrayMove([...state], action.payload.oldIndex, action.payload.newIndex);

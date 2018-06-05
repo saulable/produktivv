@@ -21,8 +21,8 @@ module.exports = app => {
 			_user: user._id,
 			index: (newIndex += 1),
 			created_at: Date.now(),
-			start_date: Date.now(),
-			end_date: Date.now()
+			start_date: moment().toDate(),
+			end_date: moment().add(5, 'minutes').toDate()
 		});
 		try {
 			const saveTask = await task.save();
@@ -98,5 +98,9 @@ module.exports = app => {
 			{ new: true }
 		).exec();
 		res.send(completed);
+	});
+	app.post('/api/init_cal', async (req, res) => {
+		const dailyTasks = await Tasks.find({ _user: req.body._id });
+		res.send(dailyTasks);
 	});
 };

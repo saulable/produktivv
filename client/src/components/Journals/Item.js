@@ -67,18 +67,4 @@ class Item extends Component {
 function mapStateToProps({tasks})  {
 	return {tasks};
 }
-export default connect(null, actions)(Item);
-
-{
-	/* <li onClick={this.props.taskClick.bind(this)} className="list-group-item" key={items._id} data-id={items._id}>
-	<div className="click-wrapper">
-		<TextareaAutosize data-id={items._id} name="task" onChange={this.taskChange} value={items.message} />
-	</div>
-	<div className="round float-right align-middle">
-		<div key={items._id} data-id={items._id} className={classnames('inputGroup', {
-			'completed' : items.completed
-		})} onClick={this.props.clickComplete}>
-		</div>
-	</div>
-</li> */
-}
+export default connect(mapStateToProps, actions)(Item);

@@ -9,13 +9,6 @@ export function setCurrentUser(user) {
 		user
 	};
 }
-export function logout() {
-	return dispatch => {
-		localStorage.removeItem('jwtToken');
-		setAuthorizationToken(false);
-		dispatch(setCurrentUser({}));
-	};
-}
 export function login(data) {
 	return dispatch => {
 		return axios.post('/api/auth/login', data).then(res => {
@@ -28,16 +21,20 @@ export function login(data) {
 }
 export function checkedLogin(data) {
 	return dispatch => {
-		const token = data;
-		setAuthorizationToken(token);
-		dispatch(setCurrentUser(jwtDecode(token)));
+		if (data) {
+			const token = data;
+			setAuthorizationToken(token);
+			dispatch(setCurrentUser(jwtDecode(token)));
+		}
 	};
 }
 export function facebookLogin(data) {
 	return dispatch => {
-		const token = 'JWT ' + data;
-		localStorage.setItem('jwtToken', token);
-		setAuthorizationToken(token);
-		dispatch(setCurrentUser(jwtDecode(token)));
+		if (data) {
+			const token = 'JWT ' + data;
+			localStorage.setItem('jwtToken', token);
+			setAuthorizationToken(token);
+			dispatch(setCurrentUser(jwtDecode(token)));
+		}
 	};
 }
