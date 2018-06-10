@@ -1,36 +1,67 @@
 import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
+import CustomOverlay from './CustomOverlay';
 import 'react-day-picker/lib/style.css';
-import MomentLocaleUtils, {
-	formatDate,
-	parseDate
-} from 'react-day-picker/moment';
+import { formatDate, parseDate } from 'react-day-picker/moment';
+import classnames from 'classnames';
 
 class Ends extends Component {
 	render() {
+		const { activeRepeatRadio } = this.props;
 		return (
 			<div>
 				Ends
 				<div className="radio">
 					<label>
-						<input type="radio" name="optradio" />Never
+						<div
+							className={classnames({
+								'radio-inside': activeRepeatRadio === 'never'
+							})}
+						/>Never
 					</label>
 				</div>
 				<div className="radio datePicker">
 					<label>
-						<input type="radio" name="optradio" />On
+						<div
+							className="radio-button"
+							onClick={this.props.handleRepeatRadio}
+							data-name="on"
+						>
+							<div
+								className={classnames({
+									'radio-inside': activeRepeatRadio === 'on'
+								})}
+							/>
+						</div>On
 					</label>
 					<DayPickerInput
+						overlayComponent={CustomOverlay}
+						selectedDay={new Date(this.props.startDate)}
+						keepFocus={false}
 						formatDate={formatDate}
 						parseDate={parseDate}
-						placeholder={`${formatDate(new Date())}`}
+						onDayChange={this.props.handleCal}
+						placeholder={`${formatDate(new Date(this.props.startDate))}`}
 					/>
 				</div>
 				<div className="radio ">
 					<label>
-						<input type="radio" name="optradio" />After
+						<div
+							className="radio-button"
+							onClick={this.props.handleRepeatRadio}
+							data-name="after"
+						>
+							<div
+								className={classnames({
+									'radio-inside': activeRepeatRadio === 'after'
+								})}
+							/></div>After
 					</label>
-					<input className="repeatEvery" />
+					<input
+						className="repeatEvery"
+						value={this.props.completesValue}
+						onChange={this.props.handleCompletes}
+					/>
 					<div className="repeatCompletes">completes</div>
 				</div>
 			</div>

@@ -29,8 +29,8 @@ const getSuggestions = value => {
 	return inputLength === 0
 		? []
 		: languages.filter(
-				lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue
-		  );
+			lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue
+		);
 };
 
 // When suggestion is clicked, Autosuggest needs to populate the input
@@ -51,16 +51,18 @@ class ProjectAutoSuggest extends Component {
 		// Suggestions also need to be provided to the Autosuggest,
 		// and they are initially empty because the Autosuggest is closed.
 		this.state = {
-			value: '',
-			suggestions: []
+			suggestions: [],
+			value: ''
 		};
 	}
 
 	onChange = (event, { newValue, method }) => {
+		this.props.onChange(this.props.id, event.target.value);
 		if ('enter') {
 			this.setState({
 				value: newValue
 			});
+			this.props.onChange(this.props.id, newValue);
 		}
 	};
 
@@ -80,7 +82,7 @@ class ProjectAutoSuggest extends Component {
 	};
 
 	render() {
-		const { value, suggestions } = this.state;
+		const {suggestions, value } = this.state;
 
 		// Autosuggest will pass through all these props to the input.
 		const inputProps = {

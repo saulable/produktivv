@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar';
-import {withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { initCal, clearRepeats} from '../../actions/calendarActions';
+import { initCal, clearRepeats, reloadCal } from '../../actions/calendarActions';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -25,18 +25,17 @@ class CalendarSystem extends Component {
 		this.props.initCal();
 		this.props.clearRepeats();
 	}
-
 	handleSelectEvent(event) {
 		alert(event.start);
 	}
 	handleSlotEvent(slotInfo) {
 		const slotStartState = moment(slotInfo.start);
 		const slotEndState = moment(slotInfo.end).add(2, 'hours');
-		this.setState({showComponent: 'AddTask', slotStartState, slotEndState});
+		this.setState({ showComponent: 'AddTask', slotStartState, slotEndState });
 	}
-	onCancelTask(){
+	onCancelTask() {
+		this.setState({ showComponent: 'BigCalendar' });
 		this.props.clearRepeats();
-		this.setState({showComponent: 'BigCalendar'});
 	}
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {
@@ -53,14 +52,20 @@ class CalendarSystem extends Component {
 					onSelectSlot={slotInfo => this.handleSlotEvent(slotInfo)}
 				/>
 			);
-		}else if (this.state.showComponent === 'AddTask'){
+		} else if (this.state.showComponent === 'AddTask') {
 			return (
-				<AddTask onCancel={() => this.onCancelTask()} startDate={this.state.slotStartState} endDate={this.state.slotEndState}/>
+				<AddTask
+					onCancel={() => this.onCancelTask()}
+					startDate={this.state.slotStartState}
+					endDate={this.state.slotEndState}
+				/>
 			);
 		}
 	}
 	render() {
-		return <div className="container-fluid calendar">{this.renderContent()}</div>;
+		return (
+			<div className="container-fluid calendar">{this.renderContent()}</div>
+		);
 	}
 }
 
@@ -69,5 +74,5 @@ function mapStateToProps({ calendar }) {
 }
 
 export default withRouter(
-	connect(mapStateToProps, { initCal ,clearRepeats })(CalendarSystem)
+	connect(mapStateToProps, { initCal, clearRepeats, reloadCal })(CalendarSystem)
 );

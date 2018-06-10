@@ -15,3 +15,4 @@ export const UPDATE_TASK_LIST = 'UPDATE_TASK_LIST';
 export const INIT_CAL_TASKS = 'INIT_CAL_TASKS';
 export const WRITE_QUICK_TASK = 'WRITE_QUICK_TASK';
 export const SWITCH_REPEATS = 'SWITCH_REPEATS';
+export const RELOAD_CAL = 'RELOAD_CAL';

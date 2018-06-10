@@ -10,6 +10,8 @@ const https = require('https');
 const fs = require('fs');
 require('./models/Tasks');
 require('./models/DailyJournals');
+require('./models/Tracks');
+require('./models/Hats');
 
 // used for development purposes.
 const morgan = require('morgan');

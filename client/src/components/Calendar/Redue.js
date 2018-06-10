@@ -58,7 +58,6 @@ class Redue extends Component {
 }
 
 function mapStateToProps({ calendar }) {
-	console.log(calendar);
 	return { calendar };
 }
 export default connect(mapStateToProps, { switchRepeat })(Redue);

@@ -13,6 +13,26 @@ body {
 	font-family: 'Poppins', sans-serif;
 	background: #fafafa;
 }
+.box
+{
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+input, textarea, .userselecton
+{
+    -webkit-touch-callout: text;
+    -webkit-user-select: text;
+    -khtml-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    -o-user-select: text;
+    user-select: text;
+}
 
 p {
 	font-family: 'Poppins', sans-serif;
@@ -411,7 +431,80 @@ a.article:hover {
 .task-box textarea:focus {
 	outline-color: #fff;
 }
+.btn-group .btn{
+	border-radius: 0;
+}
+.btn-group .clicked{
+	background: #fff;
+	color: #000;
+}
+.DayPickerInput-OverlayWrapper{
+	position: absolute !important;
+	top:0;
+	left: 0;
+	width: 275px;
+}
+.switchHeaders .DayPicker-NavBar span:first-child{
+	position: absolute;
+	top:16px;
+}
+.DayPickerInput{
+	display: inline-block;
+    margin-left: 7px;
+    padding: 10px;
+		position: relative;
+}
+.DayPickerInput input{
+	width: 120px;
+	padding: 7px;
+	text-align: right;
+	border: 2px solid #eee;
+}
+.DayPickerInput input:focus{
+	outline-color: #ddd;
+}
+.DayPickerInput-Overlay{
+	bottom:0;
+	left:0;
+	height: 315px;
+}
 
+.radio-button{
+	width: 22px;
+	height: 22px;
+	border: 2px solid #aaa;
+	border-radius: 50%;
+	position: relative;
+	top: 0;
+	left: 0;
+	display: inline-block;
+	top: 6px;
+	margin-right: 15px;
+	cursor:pointer;
+}
+.radio-inside{
+	width: 11px;
+	height: 11px;
+
+	border-radius: 50%;
+	position: absolute;
+	display: inline-block;
+	top: 50%;
+	left: 50%;
+	margin-right: 15px;
+	border: 5px solid #2196F3;
+-webkit-transition: -webkit-transform ease .28s;
+transition: -webkit-transform ease .28s;
+-webkit-transition: transform ease .28s;
+transition: transform ease .28s;
+-webkit-transform: translateX(-50%) translateY(-50%) scale(0);
+transform: translateX(-50%) translateY(-50%) scale(0);
+	transform: translateX(-50%) translateY(-50%) scale(1);
+}
+.radio-button:hover{
+    -webkit-animation: quantumWizPaperAnimateSelectIn .2s .1s forwards;
+    animation: quantumWizPaperAnimateSelectIn .2s .1s forwards;
+}
 /* ---------------------------------------------------
     QUICK TASK
 ----------------------------------------------------- */
@@ -586,6 +679,26 @@ a[aria-expanded='false']::before, a[aria-expanded='true']::before{
 }
 .switchHeaders .radio{
 	margin-top: 10px;
+}
+.dropdown-month{
+			width: 300px;
+	    background: #eee;
+	    padding: 8px;
+	    margin-top: 13px;
+			border-radius: 2px;
+			border: 1px solid #ddd;
+			cursor:pointer;
+}
+.hide{
+	display: none;
+}
+.show-both{
+	display:block;
+	cursor:pointer;
+	margin-top: 5px;
+}
+.show-both:hover{
+	background: #ddd;
 }
 /* ---------------------------------------------------
     MEDIAQUERIES

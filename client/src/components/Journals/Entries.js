@@ -2,13 +2,7 @@ import React, { Component } from 'react';
 import TextFieldGroup from '../../containers/TextFieldGroup';
 import DailyTasksList from './DailyTasksList';
 import { connect } from 'react-redux';
-import {
-	newTaskRequest,
-	onClickNotes,
-	handleNoteChange,
-	saveNoteChange,
-	handleJournalChange
-} from '../../actions/taskActions';
+import * as actions from '../../actions/taskActions';
 import classnames from 'classnames';
 
 class Entries extends Component {
@@ -139,10 +133,4 @@ function mapStateToProps({ notes }) {
 	return { notes };
 }
 
-export default connect(mapStateToProps, {
-	newTaskRequest,
-	onClickNotes,
-	handleNoteChange,
-	saveNoteChange,
-	handleJournalChange
-})(Entries);
+export default connect(mapStateToProps, actions)(Entries);

@@ -4,12 +4,9 @@ import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions/calendarActions';
 import TextareaAutosize from 'react-autosize-textarea';
 import ProjectAutoSuggest from './ProjectAutoSuggest';
-import _ from 'lodash';
-import classnames from 'classnames';
 import Repeat from './Repeat';
 import Redue from './Redue';
 
-import { taskDays } from './Days.js';
 
 import moment from 'moment';
 
@@ -18,20 +15,22 @@ class AddTask extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			taskMesssageAdd: '',
-			showRedue: true
+			message: '',
+			track: '',
+			hat:'',
+			journal: '',
+			note: ''
 		};
-		this.taskChange = this.taskChange.bind(this);
 	}
-	taskChange(e) {
+	taskChange = (e) => {
 		e.preventDefault();
 		const { value } = e.target;
-		this.props.quickTaskMessage(value);
+		this.setState({message: value});
 	}
-	renderDate() {
+	renderDate = () => {
 		let { startDate, endDate } = this.props;
-		startDate = moment(startDate).format('MMMM Do YYYY, h:mm');
-		endDate = moment(endDate).format('MMMM Do YYYY, h:mm');
+		startDate = moment(startDate).format('ddd Do MMMM YYYY, h:mm');
+		endDate = moment(endDate).format('ddd Do MMMM YYYY, h:mm');
 		return (
 			<div>
 				<span>Start: {startDate}</span>
@@ -41,13 +40,35 @@ class AddTask extends Component {
 			</div>
 		);
 	}
+	handleTracksChange = (trackId, value) =>{
+		this.setState({[trackId] : value});
+	}
+	handleHatsChange = (hatId, value) =>{
+		this.setState({[hatId] : value} );
+	}
+	handleAutoJournal = (journalId, value) =>{
+		this.setState({[journalId]: value});
+	}
+	handleNoteChange = (e) =>{
+		e.preventDefault();
+		const { value } = e.target;
+		this.setState({note: value});
+	}
+	handleSubmit = async (e) =>{
+		// do some validation
+		e.preventDefault();
+		let { startDate, endDate } = this.props;
+		startDate = moment(startDate).format('MMMM Do YYYY, h:mm');
+		endDate = moment(endDate).add(1, 'hours').format('MMMM Do YYYY, h:mm');
+		await this.props.quickTaskMessage({...this.state, start_date: startDate, end_date: endDate});
+		await this.props.onCancel();
+	}
 	renderDuration() {
 		let { startDate, endDate } = this.props;
 		const duration = moment(endDate).diff(moment(startDate), 'hours');
 		return <span>Duration: {duration} hours </span>;
 	}
 	render() {
-		const { taskMessage } = this.props;
 		return (
 			<div>
 				<div className="container-fluid">
@@ -58,7 +79,7 @@ class AddTask extends Component {
 								name="task"
 								placeholder="untitled task"
 								onChange={this.taskChange}
-								value={taskMessage}
+								value={this.state.taskMessage}
 								style={{ padding: '2px, 10px' }}
 							/>
 						</div>
@@ -66,14 +87,14 @@ class AddTask extends Component {
 							<div className="row">
 								<div className="col-4">
 									<span className="tasksHead project-head">Tracks:</span>
-									<ProjectAutoSuggest />
+									<ProjectAutoSuggest onChange={this.handleTracksChange} id="track"/>
 									<div className="hat-heading">
 										<span className="tasksHead">Hat: </span>
-										<ProjectAutoSuggest />
+										<ProjectAutoSuggest onChange={this.handleHatsChange} id="hat" />
 									</div>
 									<div className="hat-heading">
 										<span className="tasksHead">Journal: </span>
-										<ProjectAutoSuggest />
+										<ProjectAutoSuggest onChange={this.handleAutoJournal} id="journal"/>
 									</div>
 								</div>
 								<div className="col-4">
@@ -81,7 +102,7 @@ class AddTask extends Component {
 									<div className="date-box">
 										{this.renderDate()}
 										{this.renderDuration()}
-										<Repeat />
+										<Repeat startDate={this.props.startDate} repeatEvery={this.props.startDate} endDate={this.props.endDate}/>
 										<Redue />
 									</div>
 								</div>
@@ -89,7 +110,11 @@ class AddTask extends Component {
 									<div>
 										<span className="tasksHead">Notes:</span>
 									</div>
-									<TextareaAutosize />
+									<TextareaAutosize
+										id="note"
+										onChange={this.handleNoteChange}
+										value={this.state.note}
+									/>
 								</div>
 							</div>
 							<button
@@ -100,11 +125,12 @@ class AddTask extends Component {
 							</button>
 							<button
 								className="float-right btn btn-outline-secondary"
-								onClick={() => this.props.history.push('/home')}
+								onClick={this.handleSubmit}
 							>
 								Submit Task
 							</button>
 						</div>
+							<div>{JSON.stringify(this.state)}</div>
 					</div>
 				</div>
 			</div>
