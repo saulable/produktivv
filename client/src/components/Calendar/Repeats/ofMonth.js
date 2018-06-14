@@ -1,27 +1,40 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { nthOccurenceTask } from '../../../actions/calendarActions';
 import moment from 'moment';
 
-const ofMonth = ({startDate, endDate}) => {
-	const curDay = moment(startDate);
-	var monday = moment(startDate)
-		.startOf('month')
-		.day(curDay.day());
-	if (monday.date() > 7) monday.add(7, 'd');
-	const month = monday.month();
-	let totalOccur = 0;
-	while (month === monday.month() && monday.date() <= curDay.date()) {
-		totalOccur += 1;
-		monday.add(7, 'd');
+class ofMonth extends Component {
+	constructor(props) {
+		super(props);
 	}
-	const addNth = n => {
+	componentDidMount() {
+		const curDay = moment(this.props.startDate);
+		var monday = moment(this.props.startDate)
+			.startOf('month')
+			.day(curDay.day());
+		if (monday.date() > 7) monday.add(7, 'd');
+		const month = monday.month();
+		let totalOccur = 0;
+		while (month === monday.month() && monday.date() <= curDay.date()) {
+			totalOccur += 1;
+			monday.add(7, 'd');
+		}
+		this.props.nthOccurenceTask(totalOccur);
+	}
+	addNth = n => {
 		return ['st', 'nd', 'rd'][((n + 90) % 100 - 10) % 10 - 1] || 'th';
 	};
-	return (
-		<div>
-			On the {totalOccur}{addNth(totalOccur)} {startDate.format('ddd')} of every
-			month
-		</div>
-	);
-};
+	render() {
+		return (
+			<div>
+				On the {this.props.calendar.nthdayMonth}
+				{this.addNth(this.props.calendar.nthdayMonth)} {this.props.startDate.format('ddd')} of every month
+			</div>
+		);
+	}
+}
 
-export default ofMonth;
+function mapStateToProps({ calendar }) {
+	return { calendar };
+}
+export default connect(mapStateToProps, { nthOccurenceTask })(ofMonth);

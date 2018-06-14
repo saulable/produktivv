@@ -11,7 +11,18 @@ const tasksSchema = new Schema({
 	start_date: Date,
 	end_date: Date,
 	index: Number,
-	_user: {type: Schema.Types.ObjectId, ref: 'User'}
+	_user: {type: Schema.Types.ObjectId, ref: 'User'},
+	repeat: Boolean,
+	repeatTime: Number,
+	timeInterval: String,
+	daysSelected: Array,
+	nthdayMonth: String,
+	monthlyRepeat: String,
+	activeRepeatRadio: String,
+	endsOnDate: Date,
+	afterCompletes: Number,
+	lastCompleted: Date,
+	totalCompletes: {type: Number, default: 0}
 });
 
 mongoose.model('tasks', tasksSchema);

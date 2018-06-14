@@ -14,10 +14,16 @@ class Ends extends Component {
 				<div className="radio">
 					<label>
 						<div
-							className={classnames({
-								'radio-inside': activeRepeatRadio === 'never'
-							})}
-						/>Never
+							className="radio-button"
+							onClick={this.props.handleRepeatRadio}
+							data-name="never"
+						>
+							<div
+								className={classnames({
+									'radio-inside': activeRepeatRadio === 'never'
+								})}
+							/>
+						</div>Never
 					</label>
 				</div>
 				<div className="radio datePicker">
@@ -55,7 +61,8 @@ class Ends extends Component {
 								className={classnames({
 									'radio-inside': activeRepeatRadio === 'after'
 								})}
-							/></div>After
+							/>
+						</div>After
 					</label>
 					<input
 						className="repeatEvery"

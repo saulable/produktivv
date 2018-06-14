@@ -50,6 +50,7 @@ class CalendarSystem extends Component {
 					defaultDate={new Date()}
 					onSelectEvent={event => this.handleSelectEvent(event)}
 					onSelectSlot={slotInfo => this.handleSlotEvent(slotInfo)}
+					onNavigate={event => alert(event.view)}
 				/>
 			);
 		} else if (this.state.showComponent === 'AddTask') {

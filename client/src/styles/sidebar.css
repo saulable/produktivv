@@ -505,6 +505,30 @@ transform: translateX(-50%) translateY(-50%) scale(0);
     -webkit-animation: quantumWizPaperAnimateSelectIn .2s .1s forwards;
     animation: quantumWizPaperAnimateSelectIn .2s .1s forwards;
 }
+.rbc-row .rbc-event{
+		padding: 0px 5px;
+    background-color: rgba(0,0,255,0.1);
+    border-radius: 2px;
+		border: 1px solid rgba(0,0,0,.1);
+    color: #000;
+    cursor: pointer;
+    font-size: 14px;
+}
+.rbc-row .rbc-event:hover{
+	box-shadow: 2px 3px rgba(0,0,0,0.5);
+	position: absolute;
+	float:left;
+	font-size:18px;
+	width:100%;
+	z-index: 2;
+	transition: 0.2s;
+}
+.rbc-event-content{
+	width: 100%;
+}
+.rbc-row-segment{
+	position: relative;
+}
 /* ---------------------------------------------------
     QUICK TASK
 ----------------------------------------------------- */
@@ -566,7 +590,7 @@ transform: translateX(-50%) translateY(-50%) scale(0);
 	background-color: #ddd;
 }
 .hat-heading {
-	margin-top: 10px;
+
 }
 .tasksHead {
 	font-size: 15px;
@@ -614,7 +638,7 @@ transform: translateX(-50%) translateY(-50%) scale(0);
   transition: .4s;
 }
 
-input:checked + .slider {
+.checked{
   background-color: #2196F3;
 }
 
@@ -637,7 +661,15 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 .switchHeaders {
+}
+.task-box-below .row{
 	margin-top: 10px;
+}
+.task-box-below .row:first-child{
+	margin-top: 0px;
+}
+.task-details {
+	text-align: center;
 }
 .switchHeaders span:first-child{
 	vertical-align: top;

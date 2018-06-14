@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const moment = require('moment');
-
+const _ = require('lodash');
 const Tasks = mongoose.model('tasks');
 const DailyJ = mongoose.model('dailyjournals');
 const Tracks = mongoose.model('tracks');
 const Hats = mongoose.model('hats');
+
+const repeatFunctions = require('./repeatFunctions');
 
 module.exports = app => {
 	app.post('/api/create_task', async (req, res) => {
@@ -105,14 +107,72 @@ module.exports = app => {
 	});
 	app.post('/api/init_cal', async (req, res) => {
 		const dailyTasks = await Tasks.find({ _user: req.body._id });
-		res.send(dailyTasks);
+		let fullCal = [];
+		_.map(dailyTasks, value => {
+			const { repeat, timeInterval, activeRepeatRadio } = value;
+			if (repeat) {
+				if (timeInterval === 'day') {
+					switch (activeRepeatRadio) {
+					case 'never': {
+						const repeatDays = repeatFunctions.dailyRepeatNever(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'on': {
+						const repeatDays = repeatFunctions.dailyRepeatEnds(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'after': {
+						const repeatDays = repeatFunctions.dailyRepeatCompletes(value);
+						return fullCal.push(...repeatDays);
+					}
+					}
+				}
+				else if (timeInterval === 'week') {
+					switch (activeRepeatRadio) {
+					case 'never': {
+						const repeatDays = repeatFunctions.weeklyRepeatNever(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'on': {
+						const repeatDays = repeatFunctions.weeklyRepeatEnds(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'after': {
+						const repeatDays = repeatFunctions.weeklyRepeatCompletes(value);
+						return fullCal.push(...repeatDays);
+					}
+					}
+				}
+			}
+			fullCal.push(value);
+		});
+		res.send(fullCal);
 	});
+
 	app.post('/api/create_calendar_task', async (req, res) => {
-		// console.log(req.body);
-		let { message, journal, user, start_date, end_date, track, hat } = req.body;
+		let {
+			message,
+			journal,
+			user,
+			start_date,
+			end_date,
+			track,
+			hat,
+			timeInterval,
+			timePlural,
+			repeatTime,
+			activeRepeatRadio,
+			afterCompletes,
+			endsOnDate,
+			daysSelected,
+			monthlyRepeat
+		} = req.body;
+		let { switchRepeats, nthdayMonth } = req.body.rdxStore;
+		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
 		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
 		start_date = moment(start_date, 'MMMM Do YYYY, h:mm').toDate();
 		end_date = moment(end_date, 'MMMM Do YYYY, h:mm').toDate();
+		// first we find the task with the lowest index for that day.
 		let highestIndex = await Tasks.findOne({ _user: user._id })
 			.where('created_at')
 			.gt(moment(start_date).startOf('day'))
@@ -120,67 +180,102 @@ module.exports = app => {
 			.sort('-index')
 			.exec();
 		let newIndex = highestIndex === null ? -1 : highestIndex.index;
-		const task = new Tasks({
-			message,
-			journal,
-			_user: user._id,
-			index: (newIndex += 1),
-			created_at: Date.now(),
-			start_date,
-			end_date: moment(start_date).add(5, 'minutes')
-		});
-		// done with saving tasks to tasks db
+		let task;
+		if (switchRepeats === null) {
+			task = new Tasks({
+				message,
+				journal,
+				_user: user._id,
+				index: (newIndex += 1),
+				created_at: Date.now(),
+				start_date,
+				end_date: moment(start_date).add(1, 'hours')
+			});
+		} else if (switchRepeats === 'repeat') {
+			task = new Tasks({
+				message,
+				journal,
+				_user: user._id,
+				index: (newIndex += 1),
+				created_at: Date.now(),
+				start_date,
+				end_date: moment(start_date).add(1, 'hours'),
+				repeat: true,
+				repeatTime,
+				timeInterval,
+				daysSelected,
+				nthdayMonth,
+				monthlyRepeat,
+				activeRepeatRadio,
+				endsOnDate,
+				afterCompletes,
+				lastCompleted: null,
+				totalCompletes: 0
+			});
+		} else if (switchRepeats === 'redue') {
+			task = new Tasks({
+				message,
+				journal,
+				_user: user._id,
+				index: (newIndex += 1),
+				created_at: Date.now(),
+				start_date,
+				end_date: moment(start_date).add(1, 'hours')
+			});
+		}
 		const saveTask = await task.save();
-		// now time to insert to the tracks / hats db.
-		// if blank we insert to the inbox.
 		if (track === '') {
-			await Tracks.update({
-				$and: [{ _user: user._id }, { name: 'inbox'}]
-			},
-			{
-				name: 'inbox',
-				created_at: Date.now(),
-				$push : { tasks: saveTask.id},
-				_user: user._id
-			},
-			{upsert: true}
+			await Tracks.update(
+				{
+					$and: [{ _user: user._id }, { name: 'inbox' }]
+				},
+				{
+					name: 'inbox',
+					created_at: Date.now(),
+					$push: { tasks: saveTask.id },
+					_user: user._id
+				},
+				{ upsert: true }
 			).exec();
-		}else {
-			await Tracks.update({
-				$and: [{ _user: user._id }, { name: track}]
-			},
-			{
-				name: track,
-				created_at: Date.now(),
-				$push : { tasks: saveTask.id},
-				_user: user._id
-			},
-			{upsert: true}
+		} else {
+			await Tracks.update(
+				{
+					$and: [{ _user: user._id }, { name: track }]
+				},
+				{
+					name: track,
+					created_at: Date.now(),
+					$push: { tasks: saveTask.id },
+					_user: user._id
+				},
+				{ upsert: true }
 			).exec();
 		}
 		if (hat === '') {
-			await Hats.update({
-				$and: [{ _user: user._id }, { name: 'No Hat'}]
-			},
-			{
-				name: 'No Hat',
-				created_at: Date.now(),
-				$push : { tasks: saveTask.id},
-				_user: user._id
-			},
-			{upsert: true}
+			await Hats.update(
+				{
+					$and: [{ _user: user._id }, { name: 'No Hat' }]
+				},
+				{
+					name: 'No Hat',
+					created_at: Date.now(),
+					$push: { tasks: saveTask.id },
+					_user: user._id
+				},
+				{ upsert: true }
 			).exec();
-		}else {
-			await Hats.update({
-				$and: [{ _user: user._id }, { name: hat}]
-			},
-			{
-				name: hat,
-				created_at: Date.now(),
-				$push : { tasks: saveTask.id},
-				_user: user._id
-			},
-			{upsert: true}
+		} else {
+			await Hats.update(
+				{
+					$and: [{ _user: user._id }, { name: hat }]
+				},
+				{
+					name: hat,
+					created_at: Date.now(),
+					$push: { tasks: saveTask.id },
+					_user: user._id
+				},
+				{ upsert: true }
 			).exec();
 		}
 
