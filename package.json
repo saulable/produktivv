@@ -23,6 +23,7 @@
 		"passport-google-oauth20": "^1.0.0",
 		"passport-jwt": "^4.0.0",
 		"path-parser": "^4.0.4",
+		"pug": "^2.0.3",
 		"react-autosize-textarea": "^3.0.3",
 		"react-bootstrap": "^0.32.1",
 		"react-idle-timer": "^3.0.0",
@@ -37,7 +38,8 @@
 	"devDependencies": {
 		"babel-eslint": "^8.2.3",
 		"eslint": "^4.19.1",
-		"eslint-plugin-react": "^7.7.0"
+		"eslint-plugin-react": "^7.7.0",
+		"reload": "^2.3.0"
 	},
 	"scripts": {
 		"start": "HTTPS= true node index.js",

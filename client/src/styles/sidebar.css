@@ -108,7 +108,7 @@ a:focus {
 #sidebar {
 	min-width: 220px;
 	max-width: 220px;
-	/* display: none; */
+	
 	background: #38383a;
 	margin-bottom: -5000px;
 	padding-bottom: 5000px;

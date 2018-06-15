@@ -10,7 +10,7 @@ require('../services/facebookPassport')(passport);
 
 module.exports = (app, passport) => {
 	// send to facebook to do the authentication
-	app.get(
+	app.get( 
 		'/auth/facebook',
 		passport.authenticate('facebook', { scope: 'email' })
 	);

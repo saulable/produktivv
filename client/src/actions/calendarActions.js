@@ -9,13 +9,16 @@ import {
 } from './types';
 import { dailyRepeatNever, dailyRepeatEnds, dailyRepeatCompletes, weeklyRepeatNever, weeklyRepeatEnds, weeklyRepeatCompletes } from './clientrepeatFunctions';
 import jwtDecode from 'jwt-decode';
+import moment from 'moment';
 
-export const initCal = data => async dispatch => {
+export const initCal = dataDate => async dispatch => {
 	let user;
 	if (localStorage.getItem('jwtToken')) {
 		user = jwtDecode(localStorage.getItem('jwtToken'));
 	}
-	const data = await axios.post('/api/init_cal', user);
+	const date = moment(dataDate).clone().toDate();
+	const info = {date, user};
+	const data = await axios.post('/api/init_cal', info);
 	data.data.map((x, index) => {
 		x.start = new Date(x.start_date);
 		x.end = new Date(x.end_date);

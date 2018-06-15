@@ -8,6 +8,11 @@ const auth = require('./routes/auth');
 const passport = require('passport');
 const https = require('https');
 const fs = require('fs');
+const pug = require('pug');
+const path = require('path');
+const reload = require('reload');
+
+
 require('./models/Tasks');
 require('./models/DailyJournals');
 require('./models/Tracks');
@@ -36,11 +41,15 @@ app.use(
 		keys: 'dashgkjlahgfkljashfkjasdflkhasdfjklh'
 	})
 );
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'templates'));
+
 // app.use(localJWT.initialize());
 require('./routes/book')(app);
 require('./routes/auth')(app, passport);
 require('./routes/loginRoutes')(app, passport);
 require('./routes/tasksRoutes')(app);
+require('./routes/frontEnd')(app);
 
 if (process.env.NODE_ENV === 'production') {
 	// Express will serve up production assets.
@@ -52,6 +61,9 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
+
+// reload code
+reload(app);
 
 const PORT = process.env.PORT || 5000;
 const server = https.createServer(options, app).listen(PORT, function() {

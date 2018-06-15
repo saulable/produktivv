@@ -106,15 +106,24 @@ module.exports = app => {
 		res.send(completed);
 	});
 	app.post('/api/init_cal', async (req, res) => {
-		const dailyTasks = await Tasks.find({ _user: req.body._id });
+		const {date, user} = req.body;
+		const monthTasks = await Tasks.find({ _user: user._id })
+			.where('start_date')
+			.gt(moment(date).startOf('month'))
+			.lt(moment(date).endOf('month'));
+		const repeatTasks = await Tasks.find({_user: user._id, repeat: true});
+		const ccTasks = [...repeatTasks, ...monthTasks];
+		const monthlyTasks = _.uniqBy(ccTasks, e =>{
+			return e.id;
+		});
 		let fullCal = [];
-		_.map(dailyTasks, value => {
-			const { repeat, timeInterval, activeRepeatRadio } = value;
+		_.map(monthlyTasks, (value) => {
+			const { repeat, timeInterval, activeRepeatRadio, daysSelected } = value;
 			if (repeat) {
 				if (timeInterval === 'day') {
 					switch (activeRepeatRadio) {
 					case 'never': {
-						const repeatDays = repeatFunctions.dailyRepeatNever(value);
+						const repeatDays = repeatFunctions.dailyRepeatNever(value, date);
 						return fullCal.push(...repeatDays);
 					}
 					case 'on': {
@@ -130,22 +139,43 @@ module.exports = app => {
 				else if (timeInterval === 'week') {
 					switch (activeRepeatRadio) {
 					case 'never': {
-						const repeatDays = repeatFunctions.weeklyRepeatNever(value);
+						let repeatDays;
+						if (daysSelected.length === 0){
+							repeatDays = repeatFunctions.weeklyRepeatNever(value, date);
+						} else{
+							repeatDays = repeatFunctions.weeklyRepeatNeverDays(value, date);
+						}
 						return fullCal.push(...repeatDays);
 					}
 					case 'on': {
-						const repeatDays = repeatFunctions.weeklyRepeatEnds(value);
+						const repeatDays = repeatFunctions.weeklyRepeatEnds(value, date);
 						return fullCal.push(...repeatDays);
 					}
 					case 'after': {
-						const repeatDays = repeatFunctions.weeklyRepeatCompletes(value);
+						const repeatDays = repeatFunctions.weeklyRepeatCompletes(value, date);
+						return fullCal.push(...repeatDays);
+					}
+					}
+				}
+				else if (timeInterval === 'month') {
+					switch (activeRepeatRadio) {
+					case 'never': {
+						const repeatDays = repeatFunctions.monthlyRepeatNever(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'on': {
+						const repeatDays = repeatFunctions.monthlyRepeatEnds(value);
+						return fullCal.push(...repeatDays);
+					}
+					case 'after': {
+						const repeatDays = repeatFunctions.monthlyRepeatCompletes(value);
 						return fullCal.push(...repeatDays);
 					}
 					}
 				}
 			}
 			fullCal.push(value);
-		});
+		}, date);
 		res.send(fullCal);
 	});
 

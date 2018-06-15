@@ -37,6 +37,9 @@ class CalendarSystem extends Component {
 		this.setState({ showComponent: 'BigCalendar' });
 		this.props.clearRepeats();
 	}
+	onNavigate = (e) => {
+		this.props.initCal(e);
+	}
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {
 			return (
@@ -50,7 +53,7 @@ class CalendarSystem extends Component {
 					defaultDate={new Date()}
 					onSelectEvent={event => this.handleSelectEvent(event)}
 					onSelectSlot={slotInfo => this.handleSlotEvent(slotInfo)}
-					onNavigate={event => alert(event.view)}
+					onNavigate={this.onNavigate}
 				/>
 			);
 		} else if (this.state.showComponent === 'AddTask') {
