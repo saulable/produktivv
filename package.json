@@ -37,13 +37,22 @@
 	},
 	"devDependencies": {
 		"babel-eslint": "^8.2.3",
+		"beeper": "^1.1.1",
+		"browser-sync": "^2.24.4",
 		"eslint": "^4.19.1",
 		"eslint-plugin-react": "^7.7.0",
+		"gulp": "^3.9.1",
+		"gulp-nodemon": "^2.2.1",
+		"gulp-notify": "^3.2.0",
+		"gulp-plumber": "^1.2.0",
+		"gulp-pug": "^4.0.1",
+		"gulp-sass": "^4.0.1",
+		"gutil": "^1.6.4",
 		"reload": "^2.3.0"
 	},
 	"scripts": {
 		"start": "HTTPS= true node index.js",
-		"server": "nodemon index.js",
+		"server": "gulp",
 		"client": "npm run start --prefix client",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"

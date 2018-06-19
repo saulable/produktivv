@@ -2,28 +2,26 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const cookieSession = require('cookie-session');
-const keys = require('./config/keys');
+const keys = require('./server/config/keys');
 const bodyParser = require('body-parser');
-const auth = require('./routes/auth');
+const auth = require('./server/routes/auth');
 const passport = require('passport');
 const https = require('https');
 const fs = require('fs');
 const pug = require('pug');
 const path = require('path');
-const reload = require('reload');
+const gulp = require('gulp');
 
-
-require('./models/Tasks');
-require('./models/DailyJournals');
-require('./models/Tracks');
-require('./models/Hats');
+require('./server/models/Tasks');
+require('./server/models/DailyJournals');
+require('./server/models/Tracks');
+require('./server/models/Hats');
 
 // used for development purposes.
 const morgan = require('morgan');
-
 const options = {
-	key: fs.readFileSync('./key.pem'),
-	cert: fs.readFileSync('./cert.pem'),
+	key: fs.readFileSync('./server/key.pem'),
+	cert: fs.readFileSync('./server/cert.pem'),
 };
 mongoose
 	.connect(keys.mongoURI)
@@ -41,15 +39,15 @@ app.use(
 		keys: 'dashgkjlahgfkljashfkjasdflkhasdfjklh'
 	})
 );
-app.set('view engine', 'pug');
-app.set('views', path.join(__dirname, 'templates'));
+
 
 // app.use(localJWT.initialize());
-require('./routes/book')(app);
-require('./routes/auth')(app, passport);
-require('./routes/loginRoutes')(app, passport);
-require('./routes/tasksRoutes')(app);
-require('./routes/frontEnd')(app);
+require('./server/routes/book')(app);
+require('./server/routes/auth')(app, passport);
+require('./server/routes/loginRoutes')(app, passport);
+require('./server/routes/tasksRoutes')(app);
+// require('./server/routes/frontEnd')(app);
+
 
 if (process.env.NODE_ENV === 'production') {
 	// Express will serve up production assets.
@@ -63,7 +61,9 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // reload code
-reload(app);
+app.use(express.static('./server/view/build', {
+    extensions: ['html', 'htm']
+}));
 
 const PORT = process.env.PORT || 5000;
 const server = https.createServer(options, app).listen(PORT, function() {
