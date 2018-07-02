@@ -1,0 +1,460 @@
+$lato: 'Lato', sans-serif;
+$bellefair: 'Bellefair', serif;
+$fredoka: 'Fredoka One', cursive;
+$test: 'Test';
+
+// @mixin background_image($page) {
+// 	background-image: url(../img/featured/small/#{$page}.jpg);
+// 	@include breakpoint(medium) {
+// 		background-image: url(../img/featured/medium/#{$page}.jpg);
+// 	}
+// 	@include breakpoint(large) {
+// 		background-image: url(../img/featured/large/#{$page}.jpg);
+// 	}
+// }
+
+li {
+	list-style-type: none;
+}
+@mixin faded_black() {
+	background: linear-gradient(
+		to bottom,
+		rgba(0, 0, 0, 0.9) 20%,
+		rgba(0, 0, 0, 0.4)
+	);
+}
+.site-header {
+	background-size: cover;
+	position: relative;
+	background: darken($dark-gray, 40%);
+	background-position: center;
+	.header-content {
+		font-family: $lato;
+		.top-section {
+			@include xy-grid();
+			position: absolute;
+			width: 100%;
+			@include flex-align(center, middle);
+			z-index: 10;
+		}
+		.logo {
+			@include xy-cell(6);
+			@include flex-align(left);
+			text-align: left;
+			color: #fff;
+		}
+		.menus {
+			@include xy-cell(6);
+			z-index: 2;
+			.main-navigation {
+				@include menu-base();
+				@include flex();
+				@include flex-align(right);
+				li a {
+					color: #fefefe;
+				}
+			}
+		}
+	}
+	&:after {
+		// @include faded_black();
+		@include position(absolute, 0, 0, 0, 0);
+		content: '';
+		@include box(100%, 100%);
+	}
+}
+.bottom-section {
+	width: 100%;
+	height: 80vh;
+	position: relative;
+	.home-page-container {
+		@include xy-grid-container();
+		@include padding(1) @include xy-grid();
+		height: 80vh;
+		z-index: 2;
+		.slogan {
+			@include xy-cell();
+			@include xy-grid();
+			.intro-title {
+				@include xy-cell();
+				@include flex;
+				@include flex-align(center, bottom);
+				margin-bottom: rem-calc(0);
+				padding: 0;
+				z-index: 2;
+				h3 {
+					color: $primary-color;
+					@include font-bold(900);
+					font-family: $fredoka;
+					font-size: rem-calc(112);
+					width: 100%;
+					padding: rem-calc(50%);
+					padding-bottom: 0;
+					text-align: center;
+					line-height: rem-calc(112);
+					// text-shadow: 0 0 40px hsla(0,0%,100%,.75);
+					text-shadow: 0 0 40px hsla(0, 0%, 100%, 0.85);
+				}
+			}
+			.intro-subtitle {
+				@include xy-cell();
+				p {
+					color: $primary-color;
+					font-size: rem-calc(18);
+					margin: 0 auto;
+					text-align: center;
+				}
+			}
+		}
+	}
+}
+
+.hold-me {
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	left: 0;
+}
+.main-content {
+	@include xy-grid-container();
+	.no-worry {
+		@include xy-grid();
+		.helpful {
+			@include xy-cell(6);
+		}
+		.computer {
+			@include xy-cell(6);
+		}
+	}
+}
+
+.login-form-bg {
+	background: $cool-gray;
+	position: relative;
+	height: 100vh;
+
+	.login-form {
+		@include xy-grid-container();
+		padding-top: 40px;
+		width: 600px;
+
+		.login-form-inner {
+			background: #fefefe;
+			border-radius: 10px;
+			padding: 20px;
+			position: relative;
+			width: 100%;
+			margin: 0;
+		}
+		.callout {
+			@include xy-cell();
+			@include flex;
+			@include flex-align(center);
+		}
+		.outer-form {
+			margin-top: 15px;
+			padding: 0 2px;
+			.register-here {
+				float: right;
+			}
+		}
+	}
+	.form-sign-wrapper {
+		@include xy-cell();
+		@include flex;
+		@include flex-align(center);
+	}
+	.form-signin {
+		width: 100%;
+		padding-bottom: 10px;
+		h5 {
+			text-align: center;
+			font-size: rem-calc(30);
+		}
+		label {
+			color: $cool-gray;
+			font-size: rem-calc(20);
+		}
+		.submit-button {
+			width: 100%;
+			background: $secondary-color;
+			text-align: center;
+			padding: 15px 0;
+			border-radius: 2px;
+			cursor: pointer;
+			margin-bottom: 5px;
+			margin-top: 5px;
+		}
+		.register {
+			width: 100%;
+			background-color: $fourth-color;
+			border-radius: 2px;
+			margin-top: 15px;
+			margin-bottom: 5px;
+			.inner {
+				width: 100%;
+				padding: 10px;
+				text-align: center;
+			}
+		}
+	}
+	.facebookLogin {
+		width: 100%;
+		padding: 10px 0;
+		background-color: $third-color;
+		border-radius: 2px;
+		text-align: center;
+	}
+}
+// Internal Pages
+
+.container {
+	@include xy-grid();
+}
+.sidebar {
+	width: 200px;
+	height: auto;
+	min-height: 100vh;
+	background: $third-color;
+	.sidebar-x {
+		@include flex;
+		@include flex-align(center);
+		.sidebar-profile-image {
+			@include flex;
+			@include flex-align(center);
+		}
+	}
+}
+.content-x {
+	@include flex;
+	flex: 1;
+	background: $primary-color;
+	padding: 30px;
+}
+// Calendar
+.rbc-calendar {
+	flex: 1;
+}
+
+// Daily Input
+.journal-content {
+	flex: 1;
+}
+
+/* ---------------------------------------------------
+    FORMS / ENTRIES / JOURNAL
+----------------------------------------------------- */
+.tasks {
+	width: 100%;
+}
+.journal-content .form-control {
+	width: 100%;
+	height: 45px;
+	font-size: 25px;
+	padding-left: 10px;
+	border: 1px solid #e0e0e0;
+	border-radius: 5px;
+}
+.journal-content .form-control::placeholder {
+	color: #e0e0e0;
+}
+.journal-content .form-control:focus {
+	outline-offset: -5px;
+	outline-color: #ddd;
+}
+.jorunal-content .input-box {
+	width: 100%;
+}
+
+.tasks-notes {
+	@include xy-grid();
+}
+.must-complete {
+	@include xy-cell(8);
+	list-style-type: none;
+	.card {
+		border: none;
+	}
+	.card-header {
+		text-align: center;
+		@include font-bold();
+		padding: 12px;
+		background: $light-gray;
+		border-radius: 5px;
+	}
+	.daily-task-list {
+		margin: 0;
+		.list-group-item {
+			list-style-type: none;
+			background: darken(#fefefe, 1%);
+			margin: rem-calc(10 0);
+			border-radius: 2px;
+			@include shadow();
+			textarea {
+				border: none;
+				resize: none;
+			}
+			.click-wrapper {
+				li {
+					list-style-type: none;
+				}
+			}
+			.drag-div {
+				width: 30px;
+				.drag_handle {
+					@include flex;
+					@include flex-align(center, middle);
+				}
+			}
+			.dtWrapper {
+				@include xy-grid();
+
+				.textWrapper {
+					flex-grow: 1;
+					@include flex-align(center, bottom);
+					textarea {
+						margin: rem-calc(10 0);
+						padding: rem-calc(10 10);
+						font-size: rem-calc(20);
+					}
+				}
+				.checkWrapper {
+					width: 62px;
+					@include flex;
+					@include flex-align(center, middle);
+				}
+				.round {
+					margin-left: 20px;
+					@include xy-cell();
+					@include flex;
+					@include flex-align(center, bottom);
+				}
+				.round .completed {
+					background-image: url('check.png');
+					background-repeat: no-repeat;
+					background-size: 34px;
+					background-position: 6px 2px;
+					border: none;
+				}
+			}
+			.inputGroup {
+				@include flex;
+				@include flex-align(center, middle);
+				height: 40px;
+				width: 40px;
+				background: #fff;
+				border: 3px solid #eeeeee;
+				border-radius: 25px;
+				cursor: pointer;
+				&:hover {
+					background-color: #ddd;
+					border: 1px solid #e0e0e0;
+				}
+			}
+		}
+	}
+}
+
+// Draggable sortable helper.
+.SortableHelper {
+	.textWrapper{
+		textarea{
+			resize: none;
+		}
+	}
+	.dtWrapper {
+		@include xy-grid();
+		.textWrapper {
+			flex-grow: 1;
+			@include flex-align(center, bottom);
+			textarea {
+				margin: rem-calc(10 0);
+				padding: rem-calc(10 10);
+				font-size: rem-calc(20);
+			}
+		}
+		.checkWrapper {
+			width: 62px;
+			@include flex;
+			@include flex-align(center, middle);
+		}
+		.round {
+			margin-left: 20px;
+			@include xy-cell();
+			@include flex;
+			@include flex-align(center, bottom);
+		}
+		.round .completed {
+			background-image: url('check.png');
+			background-repeat: no-repeat;
+			background-size: 34px;
+			background-position: 6px 2px;
+			border: none;
+		}
+	}
+	.inputGroup {
+		@include flex;
+		@include flex-align(center, middle);
+		height: 40px;
+		width: 40px;
+		background: #fff;
+		border: 3px solid #eeeeee;
+		border-radius: 25px;
+		cursor: pointer;
+		&:hover {
+			background-color: #ddd;
+			border: 1px solid #e0e0e0;
+		}
+	}
+}
+
+.notes-card {
+	@include xy-cell(4);
+	.card-header {
+		padding: 10px 0 0 10px;
+		background: $light-gray;
+	}
+	.nav-tabs {
+		border-radius: 5px 5px 0 0;
+		padding: 10px;
+		@include menu-base();
+		.nav-item {
+			.nav-link {
+				background-color: $secondary-color;
+				border-radius: 4px 4px 0 0;
+				margin-right: 10px;
+			}
+			.active {
+				background: darken($secondary-color, 10%);
+				@include shadow();
+			}
+		}
+	}
+	.d-none {
+		display: none;
+	}
+}
+
+.drag_handle {
+	position: relative;
+	top: 30px;
+	float: left;
+	display: block;
+	width: 18px;
+	height: 11px;
+	opacity: 0.25;
+	margin: 0 5px 0 5px;
+	background: linear-gradient(
+		180deg,
+		#000,
+		#000 20%,
+		#fff 0,
+		#fff 40%,
+		#000 0,
+		#000 60%,
+		#fff 0,
+		#fff 80%,
+		#000 0,
+		#000
+	);
+}

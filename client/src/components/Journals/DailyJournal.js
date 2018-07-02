@@ -5,9 +5,11 @@ import Entries from './Entries';
 class DailyJournal extends Component {
 	render() {
 		return (
-			<div>
+			<div className="container">
 				<LeftNavigation />
-				<Entries />
+				<div className="content-x">
+					<Entries />
+				</div>
 			</div>
 		);
 	}

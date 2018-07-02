@@ -30,7 +30,7 @@ mongoose
 
 const app = express();
 
-app.use(morgan('dev'));
+// app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(
@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 // reload code
-app.use(express.static('./server/view/build', {
+app.use(express.static('./dist/', {
     extensions: ['html', 'htm']
 }));
 

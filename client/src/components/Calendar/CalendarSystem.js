@@ -68,7 +68,7 @@ class CalendarSystem extends Component {
 	}
 	render() {
 		return (
-			<div className="container-fluid calendar">{this.renderContent()}</div>
+			<div className="content-x calendar">{this.renderContent()}</div>
 		);
 	}
 }

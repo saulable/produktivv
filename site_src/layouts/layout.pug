@@ -1,0 +1,20 @@
+html
+	block vars
+		- var headerClass = 'homepage'
+	head
+		title Produktivv - #{headerClass[0].toUpperCase() + headerClass.substr(1)}
+		link(rel="stylesheet", href="./assets/css/app.css")
+		meta(charset="utf-8")
+		meta(http-equiv="x-ua-compatible" content="ie=edge")
+		meta(name="viewport" content="width=device-width, initial-scale=1.0")
+	body
+		header.site-header(class=headerClass)
+			include ../partials/header
+			div.bottom-section
+				block slogan
+					h1.slogan #{slogan}
+	block content
+	footer.site-footer
+				script(src='/assets/js/jquery.js')
+				script(src='/assets/js/foundation.js')
+				script(src='/assets/js/app.js')

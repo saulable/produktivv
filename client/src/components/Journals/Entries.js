@@ -75,10 +75,10 @@ class Entries extends Component {
 						</div>
 					</div>
 					<div className="row tasks-notes">
-						<div className="must-complete col-8">
+						<div className="must-complete">
 							<DailyTasksList />
 						</div>
-						<div className="card notes-card col-4">
+						<div className="card notes-card">
 							<div className="card-header">
 								<ul className="nav nav-tabs card-header-tabs">
 									<li className="nav-item">

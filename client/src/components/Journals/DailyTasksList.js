@@ -22,12 +22,12 @@ class DailyTaskList extends Component {
 	}
 	render() {
 		return (
-			<div>
+			<div className="dailyTaskList">
 				<div className="card">
 					<div className="card-header">Must Complete</div>
 				</div>
 				<div>
-					<SortableList items={this.props.tasks} onSortEnd={this.props.newOrder} useDragHandle={true} />
+					<SortableList items={this.props.tasks} onSortEnd={this.props.newOrder} helperClass="SortableHelper" useDragHandle={true} />
 				</div>
 			</div>
 		);

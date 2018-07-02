@@ -5,7 +5,7 @@ import CalendarSystem from './CalendarSystem';
 class DailyCalendar extends Component {
 	render() {
 		return (
-			<div className="wrapper">
+			<div className="grid-x">
 				<LeftNavigation/>
 				<CalendarSystem />
 			</div>

@@ -33,22 +33,28 @@ class LeftNavigation extends Component {
 	}
 	render() {
 		return (
-			<nav id="sidebar">
-				<div className="sidebar-header">
-					<Link to="/home">
-						<div className="logo" />
-					</Link>
-					<div className="sidebar-profile">
-						<div className="sidebar-profile-image">
-							<img alt="profile" src={ProfilePhoto} className="profile-photo" />
-						</div>
-						<div className="sidebar-profile-links">
-							<a href="# " onClick={this.logout.bind(this)}>
-								<span>Logout</span>
-							</a>
+			<nav className="sidebar">
+				<div className="sidebar-x">
+					<div className="sidebar-header">
+						<Link to="/home">
+							<div className="logo" />
+						</Link>
+						<div className="sidebar-profile">
+							<div className="sidebar-profile-image">
+								<img
+									alt="profile"
+									src={ProfilePhoto}
+									className="profile-photo"
+								/>
+							</div>
+							<div className="sidebar-profile-links">
+								<a href="# " onClick={this.logout.bind(this)}>
+									<span>Logout</span>
+								</a>
 
-							<span>Edit Profile</span>
-							<span>0/3</span>
+								<span>Edit Profile</span>
+								<span>0/3</span>
+							</div>
 						</div>
 					</div>
 				</div>
@@ -86,4 +92,7 @@ LeftNavigation.defaultProps = {
 function mapStateToProps({ menu }) {
 	return { menu };
 }
-export default connect(mapStateToProps, { logout })(LeftNavigation);
+export default connect(
+	mapStateToProps,
+	{ logout }
+)(LeftNavigation);

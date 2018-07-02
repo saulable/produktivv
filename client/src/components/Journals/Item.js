@@ -5,14 +5,14 @@ import TextareaAutosize from 'react-autosize-textarea';
 import { SortableHandle } from 'react-sortable-hoc';
 import classnames from 'classnames';
 
-const DragHandle = SortableHandle(() => <div className="drag_handle"></div>);
+const DragHandle = SortableHandle(() => <div className="drag_handle" />);
 class Item extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
 			typing: false,
-			typingTimeOut: 0,
+			typingTimeOut: 0
 		};
 		this.taskChange = this.taskChange.bind(this);
 	}
@@ -20,7 +20,7 @@ class Item extends Component {
 		e.preventDefault();
 		const { value, name } = e.target;
 		const _id = e.currentTarget.dataset.id;
-		this.props.handleTaskChange({ _id, value , name});
+		this.props.handleTaskChange({ _id, value, name });
 		this.autoSave(value, _id, name);
 	}
 	autoSave(dataNote, id, name) {
@@ -44,27 +44,40 @@ class Item extends Component {
 				className="list-group-item"
 			>
 				<div className="click-wrapper">
-					<DragHandle />
-					<TextareaAutosize
-						data-id={value._id}
-						name="task"
-						onChange={this.taskChange}
-						value={value.message}
-					/>
-					<div className="round float-right align-middle">
-						<div data-id={value._id} className={classnames('inputGroup', {
-							'completed' : value.completed
-						})} onClick={this.props.clickComplete}>
+					<div className="drag-div">
+						<DragHandle />
+					</div>
+					<div className="dtWrapper">
+						<div className="textWrapper">
+							<TextareaAutosize
+								data-id={value._id}
+								name="task"
+								onChange={this.taskChange}
+								value={value.message}
+							/>
+						</div>
+						<div className="checkWrapper">
+							<div className="round">
+								<div
+									data-id={value._id}
+									className={classnames('inputGroup', {
+										completed: value.completed
+									})}
+									onClick={this.props.clickComplete}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
-
 			</li>
 		);
 	}
 }
 
-function mapStateToProps({tasks})  {
-	return {tasks};
+function mapStateToProps({ tasks }) {
+	return { tasks };
 }
-export default connect(mapStateToProps, actions)(Item);
+export default connect(
+	mapStateToProps,
+	actions
+)(Item);

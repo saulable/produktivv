@@ -4,9 +4,9 @@ import LeftNavigation from '../containers/LeftNavigation';
 class Home extends Component {
 	render() {
 		return (
-			<div className="wrapper">
+			<div className="container">
 				<LeftNavigation/>
-				<div className="wrapper content">This is the home page.</div>
+				<div className="content-x">This is the home page.</div>
 			</div>
 		);
 	}

@@ -1,7 +1,6 @@
 /* global process */
-import './styles/bootstrap.min.css';
-import './styles/main.scss';
-import './styles/sidebar.css';
+import './styles/scss/app.css';
+// import './styles/sidebar.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
