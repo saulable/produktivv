@@ -4,17 +4,34 @@ import {
 	NOTE_WRITE,
 	JOURNAL_WRITE,
 	JOURNAL_CREATED,
+	HELPER_POP,
+	TASK_OFF_CLICK,
+	JOURNAL_AUTOSAVE
 } from '../actions/types';
 
-export default function(state = {}, action) {
+// this reducers handles all the interactions with the elements on the daily journal page.
+const initState = {
+	journal_autosaved: false
+};
+
+export default function(state = initState, action) {
 	switch (action.type) {
-	case TASK_LI_CLICK:
+	case TASK_LI_CLICK: {
 		return {
 			...state,
-			id: action.payload.data._id,
-			tab: 'notes',
-			note: action.payload.data.note
+			task: action.payload.data,
+			taskSettings: true
 		};
+	}
+	case TASK_OFF_CLICK: {
+		if (state.taskSettings)  {
+			state.taskSettings = false;
+			state.id = null;
+		}
+		return {
+			...state
+		};
+	}
 	case NOTE_WRITE:
 		return { ...state, note: action.payload.data };
 	case JOURNAL_WRITE:
@@ -25,10 +42,22 @@ export default function(state = {}, action) {
 	case JOURNAL_CREATED: {
 		return {
 			...state,
-			tab: 'journal',
 			journalmessage: action.payload[0].message,
 			journalid: action.payload[0]._id
 		};
+	}
+	case JOURNAL_AUTOSAVE: {
+		return {
+			...state,
+			journal_autosaved: action.payload.success
+		};
+	}
+	case HELPER_POP: {
+		if (state.tab && state.tab === action.payload) {
+			state.tab = null;
+			return { ...state };
+		}
+		return { ...state, tab: action.payload };
 	}
 	default:
 		return state;

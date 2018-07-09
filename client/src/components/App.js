@@ -8,7 +8,7 @@ import Index from '../containers/HomePages/Index';
 import Login from '../containers/HomePages/Login';
 import Register from '../containers/HomePages/Register';
 import SocialAuthRedirect from './SocialAuthRedirect';
-import DailyJournal from './Journals/DailyJournal';
+import DailyJournal from './Journals/DailyJournal/DailyJournal';
 import DailyCalendar from './Calendar/DailyCalendar';
 import AddTask from './Calendar/AddTask';
 import Tracks from './Tracks/Dashboard';
@@ -24,9 +24,9 @@ class App extends Component {
 			<BrowserRouter>
 				<Switch>
 					<Route exact path="/" component={Index} />
-					<Route path="/social_auth" component={SocialAuthRedirect} />
 					<Route exact path="/login" component={Login} />
 					<Route exact path="/register" component={Register} />
+					<Route path="/social_auth" component={SocialAuthRedirect} />
 					<Route exact path="/home" component={requireAuth(Home)} />
 					<Route exact path="/daily" component={requireAuth(DailyJournal)} />
 					<Route exact path="/daily_calendar" component={requireAuth(DailyCalendar)} />

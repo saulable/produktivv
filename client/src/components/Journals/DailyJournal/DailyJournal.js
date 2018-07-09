@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import LeftNavigation from '../../containers/LeftNavigation';
+import LeftNavigation from '../../../containers/LeftNavigation';
 import Entries from './Entries';
 
 class DailyJournal extends Component {

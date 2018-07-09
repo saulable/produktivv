@@ -2,7 +2,7 @@
 
 @import 'settings';
 @import 'foundation';
-@import 'motion-ui';
+@import './motion-ui/motion-ui.scss';
 @import url('https://fonts.googleapis.com/css?family=Lato');
 @import url('https://fonts.googleapis.com/css?family=Bellefair');
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
@@ -17,6 +17,7 @@
 @include foundation-typography;
 @include foundation-button;
 @include foundation-forms;
+
 // @include foundation-range-input;
 @include foundation-accordion;
 @include foundation-accordion-menu;
@@ -53,7 +54,6 @@
 @include foundation-flex-classes;
 
 // @include foundation-prototype-classes;
-
 @include motion-ui-transitions;
 @include motion-ui-animations;
 

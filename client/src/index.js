@@ -1,6 +1,6 @@
 /* global process */
 import './styles/scss/app.css';
-// import './styles/sidebar.css';
+import './styles/scss/motion-ui.min.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';

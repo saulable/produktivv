@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions/taskActions';
+import * as actions from '../../../actions/taskActions';
 import TextareaAutosize from 'react-autosize-textarea';
 import { SortableHandle } from 'react-sortable-hoc';
 import classnames from 'classnames';
@@ -15,6 +15,7 @@ class Item extends Component {
 			typingTimeOut: 0
 		};
 		this.taskChange = this.taskChange.bind(this);
+		this.onKeyDown = this.onKeyDown.bind(this);
 	}
 	taskChange(e) {
 		e.preventDefault();
@@ -22,6 +23,14 @@ class Item extends Component {
 		const _id = e.currentTarget.dataset.id;
 		this.props.handleTaskChange({ _id, value, name });
 		this.autoSave(value, _id, name);
+	}
+	onKeyDown(e) {
+		const { value, name } = e.target;
+		const _id = e.currentTarget.dataset.id;
+		if (e.target.value === '' && e.keyCode === 8) {
+			this.props.deleteTask({ _id, value, name });
+		}
+		// console.log(e.keyCode);
 	}
 	autoSave(dataNote, id, name) {
 		if (this.state.typingTimeout) {
@@ -41,7 +50,9 @@ class Item extends Component {
 			<li
 				data-id={value._id}
 				onClick={this.props.taskClick.bind(this)}
-				className="list-group-item"
+				className={classnames('list-group-item', {
+					active: this.props.notes.id === value._id ? 'active' : ''
+				})}
 			>
 				<div className="click-wrapper">
 					<div className="drag-div">
@@ -53,6 +64,7 @@ class Item extends Component {
 								data-id={value._id}
 								name="task"
 								onChange={this.taskChange}
+								onKeyDown={this.onKeyDown}
 								value={value.message}
 							/>
 						</div>
@@ -74,8 +86,8 @@ class Item extends Component {
 	}
 }
 
-function mapStateToProps({ tasks }) {
-	return { tasks };
+function mapStateToProps({ tasks, notes }) {
+	return { tasks, notes };
 }
 export default connect(
 	mapStateToProps,

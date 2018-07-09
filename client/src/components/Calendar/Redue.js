@@ -40,7 +40,7 @@ class Redue extends Component {
 							onChange={this.handleSwitch}
 							checked={switchRepeats === 'redue'}
 						/>
-						<span className={classnames('slider round', {
+						<span className={classnames('sliders round', {
 							'checked': (switchRepeats === 'redue') ? true : false
 						})} />
 					</label>

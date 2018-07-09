@@ -1,16 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as actions from '../../actions/taskActions';
+import * as actions from '../../../actions/taskActions';
 import SortableList from './SortableList';
+import { arrayMove } from 'react-sortable-hoc';
 
 class DailyTaskList extends Component {
-	constructor(props){
+	constructor(props) {
 		super(props);
 		this.state = {
 			name: '',
 			typing: false,
-			typingTimeOut: 0,
+			typingTimeOut: 0
 		};
+		this.onSortEnd = this.onSortEnd.bind(this);
 	}
 	componentWillMount() {
 		if (localStorage.getItem('jwtToken')) {
@@ -18,7 +20,13 @@ class DailyTaskList extends Component {
 			this.props.createJournal();
 		}
 	}
-	renderContent(items) {
+	onSortEnd({ oldIndex, newIndex }) {
+		const newOrderedList = arrayMove(
+			this.props.tasks.list,
+			oldIndex,
+			newIndex
+		);
+		this.props.newOrder(newOrderedList);
 	}
 	render() {
 		return (
@@ -27,7 +35,12 @@ class DailyTaskList extends Component {
 					<div className="card-header">Must Complete</div>
 				</div>
 				<div>
-					<SortableList items={this.props.tasks} onSortEnd={this.props.newOrder} helperClass="SortableHelper" useDragHandle={true} />
+					<SortableList
+						items={this.props.tasks.list}
+						onSortEnd={this.onSortEnd}
+						helperClass="SortableHelper"
+						useDragHandle={true}
+					/>
 				</div>
 			</div>
 		);
@@ -36,4 +49,7 @@ class DailyTaskList extends Component {
 function mapStateToProps({ tasks }) {
 	return { tasks };
 }
-export default connect(mapStateToProps, actions)(DailyTaskList);
+export default connect(
+	mapStateToProps,
+	actions
+)(DailyTaskList);

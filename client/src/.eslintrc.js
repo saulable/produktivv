@@ -5,12 +5,14 @@ module.exports = {
         "es6": true
     },
     "extends": "eslint:recommended",
+		"parser" : "babel-eslint",
     "parserOptions": {
         "ecmaFeatures": {
             "experimentalObjectRestSpread": true,
             "jsx": true
         },
-        "sourceType": "module"
+        "sourceType": "module",
+				"ecmaVersion": 8,
     },
     "plugins": [
         "react"

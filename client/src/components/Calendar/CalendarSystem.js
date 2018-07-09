@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import BigCalendar from 'react-big-calendar';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { initCal, clearRepeats, reloadCal } from '../../actions/calendarActions';
+import * as actions from '../../actions/calendarActions';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
@@ -31,6 +31,7 @@ class CalendarSystem extends Component {
 	handleSlotEvent(slotInfo) {
 		const slotStartState = moment(slotInfo.start);
 		const slotEndState = moment(slotInfo.end).add(2, 'hours');
+		this.props.setTimes({slotStartState, slotEndState});
 		this.setState({ showComponent: 'AddTask', slotStartState, slotEndState });
 	}
 	onCancelTask() {
@@ -46,7 +47,7 @@ class CalendarSystem extends Component {
 				<BigCalendar
 					popup
 					selectable
-					events={this.props.calendar.events ? this.props.calendar.events : []}
+					events={this.props.calendar.events}
 					setartAccessor="start"
 					endAccessor="end"
 					titleAccessor="message"
@@ -78,5 +79,5 @@ function mapStateToProps({ calendar }) {
 }
 
 export default withRouter(
-	connect(mapStateToProps, { initCal, clearRepeats, reloadCal })(CalendarSystem)
+	connect(mapStateToProps, actions)(CalendarSystem)
 );

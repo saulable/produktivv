@@ -30,7 +30,7 @@ mongoose
 
 const app = express();
 
-// app.use(morgan('dev'));
+app.use(morgan('dev'));
 
 app.use(bodyParser.json());
 app.use(
@@ -59,11 +59,11 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
-
-// reload code
-app.use(express.static('./dist/', {
-    extensions: ['html', 'htm']
-}));
+// 
+// // reload code
+// app.use(express.static('./dist/', {
+//     extensions: ['html', 'htm']
+// }));
 
 const PORT = process.env.PORT || 5000;
 const server = https.createServer(options, app).listen(PORT, function() {

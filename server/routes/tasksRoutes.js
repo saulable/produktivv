@@ -41,6 +41,7 @@ module.exports = app => {
 		req.body.items.map((x, index) => {
 			Tasks.update({ _id: x._id }, { $set: { index: index } }).exec();
 		});
+		res.status(200).send({success:true});
 	});
 	app.post('/api/daily_tasks', async (req, res) => {
 		const dailyTasks = await Tasks.find({ _user: req.body._id })
@@ -70,9 +71,11 @@ module.exports = app => {
 			res.send(dailyJournal);
 		}
 	});
-	app.post('/api/notes_retrieve', async (req, res) => {
-		const getNote = await Tasks.find({ _id: req.body.id }).select('note');
-		res.send(getNote[0]);
+	app.post('/api/task_retrieve', async (req, res) => {
+		const getNote = await Tasks.find({ _id: req.body.id }).exec((err, data)=> {
+			if (err) res.status(500).send(err);
+			res.status(200).send(data);
+		});
 	});
 	app.post('/api/notes_update', async (req, res) => {
 		Tasks.updateOne(
@@ -104,77 +107,121 @@ module.exports = app => {
 		).exec();
 		res.send(completed);
 	});
+	app.post('/api/delete_task', async (req, res) => {
+		try {
+			const deleteTask = await Tasks.deleteOne({
+				_id: req.body.data._id
+			}).exec();
+			const dailyTasks = await Tasks.find({ _user: req.body.user._id })
+				.where('start_date')
+				.gt(moment().startOf('day'))
+				.lt(moment().endOf('day'))
+				.sort({index: 'asc'})
+				.exec();
+			const newIndexTasks = await dailyTasks.map((x, index) => {
+				Tasks.findOneAndUpdate(
+					{ _id: x._id },
+					{ $set: { index: index } }
+				).exec();
+			});
+			const updatedTasks = await Tasks.find({ _user: req.body.user._id })
+				.where('start_date')
+				.gt(moment().startOf('day'))
+				.lt(moment().endOf('day'))
+				.sort({index: 'asc'})
+				.exec();
+			res.status(200).send(updatedTasks);
+		} catch (err) {
+			res.status(500).json({ err });
+		}
+	});
 	app.post('/api/init_cal', async (req, res) => {
-		const {date, user} = req.body;
+		const { date, user } = req.body;
 		const monthTasks = await Tasks.find({ _user: user._id })
 			.where('start_date')
 			.gt(moment(date).startOf('month'))
 			.lt(moment(date).endOf('month'));
-		const repeatTasks = await Tasks.find({_user: user._id, repeat: true});
+		const repeatTasks = await Tasks.find({ _user: user._id, repeat: true });
 		const ccTasks = [...repeatTasks, ...monthTasks];
-		const monthlyTasks = _.uniqBy(ccTasks, e =>{
+		const monthlyTasks = _.uniqBy(ccTasks, e => {
 			return e.id;
 		});
 		let fullCal = [];
-		_.map(monthlyTasks, (value) => {
-			const { repeat, timeInterval, activeRepeatRadio, daysSelected } = value;
-			if (repeat) {
-				if (timeInterval === 'day') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						const repeatDays = repeatFunctions.dailyRepeatNever(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.dailyRepeatEnds(value);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.dailyRepeatCompletes(value);
-						return fullCal.push(...repeatDays);
-					}
-					}
-				}
-				else if (timeInterval === 'week') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						let repeatDays;
-						if (daysSelected.length === 0){
-							repeatDays = repeatFunctions.weeklyRepeatNever(value, date);
-						} else{
-							repeatDays = repeatFunctions.weeklyRepeatNeverDays(value, date);
+		_.map(
+			monthlyTasks,
+			value => {
+				const { repeat, timeInterval, activeRepeatRadio, daysSelected } = value;
+				if (repeat) {
+					if (timeInterval === 'day') {
+						switch (activeRepeatRadio) {
+						case 'never': {
+							const repeatDays = repeatFunctions.dailyRepeatNever(
+								value,
+								date
+							);
+							return fullCal.push(...repeatDays);
 						}
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.weeklyRepeatEnds(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.weeklyRepeatCompletes(value, date);
-						return fullCal.push(...repeatDays);
-					}
+						case 'on': {
+							const repeatDays = repeatFunctions.dailyRepeatEnds(value);
+							return fullCal.push(...repeatDays);
+						}
+						case 'after': {
+							const repeatDays = repeatFunctions.dailyRepeatCompletes(value);
+							return fullCal.push(...repeatDays);
+						}
+						}
+					} else if (timeInterval === 'week') {
+						switch (activeRepeatRadio) {
+						case 'never': {
+							let repeatDays;
+							if (daysSelected.length === 0) {
+								repeatDays = repeatFunctions.weeklyRepeatNever(value, date);
+							} else {
+								repeatDays = repeatFunctions.weeklyRepeatNeverDays(
+									value,
+									date
+								);
+							}
+							return fullCal.push(...repeatDays);
+						}
+						case 'on': {
+							const repeatDays = repeatFunctions.weeklyRepeatEnds(
+								value,
+								date
+							);
+							return fullCal.push(...repeatDays);
+						}
+						case 'after': {
+							const repeatDays = repeatFunctions.weeklyRepeatCompletes(
+								value,
+								date
+							);
+							return fullCal.push(...repeatDays);
+						}
+						}
+					} else if (timeInterval === 'month') {
+						switch (activeRepeatRadio) {
+						case 'never': {
+							const repeatDays = repeatFunctions.monthlyRepeatNever(value);
+							return fullCal.push(...repeatDays);
+						}
+						case 'on': {
+							const repeatDays = repeatFunctions.monthlyRepeatEnds(value);
+							return fullCal.push(...repeatDays);
+						}
+						case 'after': {
+							const repeatDays = repeatFunctions.monthlyRepeatCompletes(
+								value
+							);
+							return fullCal.push(...repeatDays);
+						}
+						}
 					}
 				}
-				else if (timeInterval === 'month') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						const repeatDays = repeatFunctions.monthlyRepeatNever(value);
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.monthlyRepeatEnds(value);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.monthlyRepeatCompletes(value);
-						return fullCal.push(...repeatDays);
-					}
-					}
-				}
-			}
-			fullCal.push(value);
-		}, date);
+				fullCal.push(value);
+			},
+			date
+		);
 		res.send(fullCal);
 	});
 

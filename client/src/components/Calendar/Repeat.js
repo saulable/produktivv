@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import Days from './Days.js';
 import { switchRedueRepeat } from '../../actions/calendarActions';
 import Ends from './Repeats/Ends.js';
-import OfMonth from './Repeats/ofMonth';
+import HandleMonth from './Repeats/handleMonth.js';
 import _ from 'lodash';
 import moment from 'moment';
 import DROP_DOWN_FIELDS from './Repeats/DropDownFields';
@@ -23,7 +23,7 @@ class Repeat extends Component {
 			afterCompletes: '',
 			activeRepeatRadio: 'never',
 			activeRedueRadio: '',
-			showPicker: '',
+			showPicker: ''
 		};
 	}
 	handleSwitch = e => {
@@ -53,50 +53,21 @@ class Repeat extends Component {
 			this.props.timeInterval === 'month' ||
 			this.props.timeInterval === 'months'
 		) {
-			return (
-				<div className="addMarginTop">
-					<div
-						className={classnames('dropdown-month', {
-							'hide': this.props.monthlyRepeat !== 'noDays',
-							'show-both': this.props.monthlyBoth
-						})}
-						onClick={this.props.clickMonth}
-						data-name="noDays"
-					>
-						<div
-							className="dropdown-select"
-						>
-							On the {this.props.startDate.format('Do')} of every month
-						</div>
-					</div>
-					<div
-						className={classnames('dropdown-month', {
-							'hide': this.props.monthlyRepeat !== 'nthDay',
-							'show-both': this.props.monthlyBoth
-						})}
-						onClick={this.props.clickMonth}
-						data-name="nthDay"
-					>
-						<div
-							className="dropdown-select"
-
-						>
-							<OfMonth
-								startDate={this.props.startDate}
-								endDate={this.props.endDate}
-							/>
-						</div>
-					</div>
-				</div>
-			);
+			return <HandleMonth endDate={this.state.endDate} startDate={this.state.startDate}/>;
 		}
 	};
-	renderDropDown(){
+	renderDropDown() {
 		const timePlural = this.props.timePlural ? 's' : '';
-		return _.map(DROP_DOWN_FIELDS, ({name}) => {
+		return _.map(DROP_DOWN_FIELDS, ({ name }) => {
 			return (
-				<div key={name} data-name={name} onClick={this.props.handleMonthTime} className="dropdown-item">
-					{name}{timePlural}
+				<div
+					key={name}
+					data-name={name}
+					onClick={this.props.handleMonthTime}
+					className="dropdown-item"
+				>
+					{name}
+					{timePlural}
 				</div>
 			);
 		});
@@ -115,7 +86,7 @@ class Repeat extends Component {
 							checked={switchRepeats === 'repeat'}
 						/>
 						<span
-							className={classnames('slider round', {
+							className={classnames('sliders round', {
 								checked: switchRepeats === 'repeat' ? true : false
 							})}
 						/>
@@ -126,7 +97,7 @@ class Repeat extends Component {
 						'd-none': switchRepeats === 'repeat' ? false : true
 					})}
 				>
-					<div>
+					<div className="repeatChoose">
 						Repeat every
 						<input
 							className="repeatEvery"
@@ -174,4 +145,7 @@ function mapStateToProps({ calendar }) {
 	return { calendar };
 }
 
-export default connect(mapStateToProps, { switchRedueRepeat })(Repeat);
+export default connect(
+	mapStateToProps,
+	{ switchRedueRepeat }
+)(Repeat);

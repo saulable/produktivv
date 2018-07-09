@@ -16,7 +16,7 @@ class AddTask extends Component {
 		this.state = {
 			message: '',
 			track: '',
-			hat:'',
+			hat: '',
 			journal: '',
 			note: '',
 			timeInterval: 'week',
@@ -26,7 +26,7 @@ class AddTask extends Component {
 			monthlyBoth: false,
 			repeatDropdown: false,
 			redueCompletes: '1',
-			redueDays:'1',
+			redueDays: '1',
 			daysSelected: [],
 			endsOnDate: '',
 			afterCompletes: '',
@@ -44,14 +44,14 @@ class AddTask extends Component {
 		this.setState({ activeRepeatRadio: e.currentTarget.dataset.name });
 	};
 
-	updateRadioState = (e) => {
+	updateRadioState = e => {
 		const name = e.currentTarget.dataset.tag;
-	}
-	taskChange = (e) => {
+	};
+	taskChange = e => {
 		e.preventDefault();
 		const { value } = e.target;
-		this.setState({message: value});
-	}
+		this.setState({ message: value });
+	};
 	renderDate = () => {
 		let { startDate, endDate } = this.props;
 		startDate = moment(startDate).format('ddd Do MMMM YYYY, h:mm');
@@ -64,31 +64,38 @@ class AddTask extends Component {
 				<br />
 			</div>
 		);
-	}
-	handleTracksChange = (trackId, value) =>{
-		this.setState({[trackId] : value});
-	}
-	handleHatsChange = (hatId, value) =>{
-		this.setState({[hatId] : value} );
-	}
-	handleAutoJournal = (journalId, value) =>{
-		this.setState({[journalId]: value});
-	}
-	handleNoteChange = (e) =>{
+	};
+	handleTracksChange = (trackId, value) => {
+		this.setState({ [trackId]: value });
+	};
+	handleHatsChange = (hatId, value) => {
+		this.setState({ [hatId]: value });
+	};
+	handleAutoJournal = (journalId, value) => {
+		this.setState({ [journalId]: value });
+	};
+	handleNoteChange = e => {
 		e.preventDefault();
 		const { value } = e.target;
-		this.setState({note: value});
-	}
-	handleSubmit = async (e) =>{
+		this.setState({ note: value });
+	};
+	handleSubmit = async e => {
 		// do some validation
 		e.preventDefault();
 		let { startDate, endDate } = this.props;
 		startDate = moment(startDate).format('MMMM Do YYYY, h:mm');
-		endDate = moment(endDate).add(1, 'hours').format('MMMM Do YYYY, h:mm');
+		endDate = moment(endDate)
+			.add(1, 'hours')
+			.format('MMMM Do YYYY, h:mm');
 		const rdxStore = this.props.calendar;
-		await this.props.quickTaskMessage({...this.state, start_date: startDate, end_date: endDate, rdxStore});
+		await this.props.quickTaskMessage({
+			...this.state,
+			start_date: startDate,
+			end_date: endDate,
+			rdxStore
+		});
 		await this.props.onCancel();
-	}
+	};
 	renderDuration() {
 		let { startDate, endDate } = this.props;
 		const duration = moment(endDate).diff(moment(startDate), 'hours');
@@ -127,28 +134,17 @@ class AddTask extends Component {
 			this.setState({ repeatTime: e.target.value });
 		}
 	};
-	clickMonth = e => {
-		const { name } = e.currentTarget.dataset;
-		if (this.state.monthlyBoth === false){
-			this.setState({monthlyBoth: !this.state.monthlyBoth});
-		}else if (this.state.monthlyBoth) {
-			this.setState({
-				monthlyBoth: !this.state.monthlyBoth,
-				monthlyRepeat: name,
-				repeatDropdown: false
-			});
-		}
-	};
+
 	handleRepeatDropdown = e => {
-		this.setState({repeatDropdown : !this.state.repeatDropdown});
-	}
+		this.setState({ repeatDropdown: !this.state.repeatDropdown });
+	};
 	handleRedueCompletes = e => {
 		this.setState({ redueCompletes: e.target.value });
-	}
+	};
 	redueDaysChange = e => {
 		e.preventDefault();
-		this.setState({redueDays: e.currentTarget.value});
-	}
+		this.setState({ redueDays: e.currentTarget.value });
+	};
 	handleDayClick = e => {
 		const day = e.currentTarget.dataset.id;
 		const data = this.state.daysSelected;
@@ -164,7 +160,7 @@ class AddTask extends Component {
 	render() {
 		return (
 			<div>
-				<div className="container-fluid">
+				<div className="dailyCalendarContainer">
 					<div className="card">
 						<div className="card-header">New Task</div>
 						<div className="task-box">
@@ -180,21 +176,30 @@ class AddTask extends Component {
 							<div className="row">
 								<div className="col-4">
 									<span className="tasksHead project-head">Tracks:</span>
-									<ProjectAutoSuggest onChange={this.handleTracksChange} id="track"/>
+									<ProjectAutoSuggest
+										onChange={this.handleTracksChange}
+										id="track"
+									/>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
 										<span className="tasksHead">Hat: </span>
-										<ProjectAutoSuggest onChange={this.handleHatsChange} id="hat" />
+										<ProjectAutoSuggest
+											onChange={this.handleHatsChange}
+											id="hat"
+										/>
 									</div>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
 										<span className="tasksHead">Journal: </span>
-										<ProjectAutoSuggest onChange={this.handleAutoJournal} id="journal"/>
+										<ProjectAutoSuggest
+											onChange={this.handleAutoJournal}
+											id="journal"
+										/>
 									</div>
 								</div>
-								</div>
+							</div>
 
 							<div className="row">
 								<div className="col-4 task-details">
@@ -202,76 +207,74 @@ class AddTask extends Component {
 									<div className="date-box">
 										{this.renderDate()}
 										{this.renderDuration()}
-								</div>
-								<div className="notes-heading">
-									<div>
-										<span className="tasksHead">Notes:</span>
 									</div>
-									<TextareaAutosize
-										id="note"
-										onChange={this.handleNoteChange}
-										value={this.state.note}
+									<div className="notes-heading">
+										<div>
+											<span className="tasksHead">Notes:</span>
+										</div>
+										<TextareaAutosize
+											id="note"
+											onChange={this.handleNoteChange}
+											value={this.state.note}
+										/>
+									</div>
+								</div>
+								<div className="col-4">
+									<Repeat
+										startDate={this.props.startDate}
+										endDate={this.props.endDate}
+										handleMonthTime={this.handleMonthTime}
+										changeTime={this.changeTime}
+										timeInterval={this.state.timeInterval}
+										timePlural={this.state.timePlural}
+										repeatTime={this.state.repeatTime}
+										clickMonth={this.clickMonth}
+										monthlyRepeat={this.state.monthlyRepeat}
+										monthlyBoth={this.state.monthlyBoth}
+										handleRepeatDropdown={this.handleRepeatDropdown}
+										repeatDropdown={this.state.repeatDropdown}
+										completesValue={this.state.redueCompletes}
+										handleDayClick={this.handleDayClick}
+										daysSelected={this.state.daysSelected}
+										handleCal={this.handleCal}
+										handleCompletes={this.handleCompletes}
+										handleRepeatRadio={this.handleRepeatRadio}
+										completesValue={this.state.afterCompletes}
+										activeRepeatRadio={this.state.activeRepeatRadio}
 									/>
 								</div>
-									</div>
 								<div className="col-4">
-										<Repeat
-											startDate={this.props.startDate}
-											endDate={this.props.endDate}
-											handleMonthTime={this.handleMonthTime}
-											changeTime={this.changeTime}
-											timeInterval={this.state.timeInterval}
-											timePlural={this.state.timePlural}
-											repeatTime={this.state.repeatTime}
-											clickMonth={this.clickMonth}
-											monthlyRepeat={this.state.monthlyRepeat}
-											monthlyBoth={this.state.monthlyBoth}
-											handleRepeatDropdown={this.handleRepeatDropdown}
-											repeatDropdown={this.state.repeatDropdown}
-											completesValue={this.state.redueCompletes}
-											handleDayClick={this.handleDayClick}
-											daysSelected={this.state.daysSelected}
-											handleCal={this.handleCal}
-											handleCompletes={this.handleCompletes}
-											handleRepeatRadio={this.handleRepeatRadio}
-											completesValue={this.state.afterCompletes}
-											activeRepeatRadio={this.state.activeRepeatRadio}
-										/>
-									</div>
-									<div className="col-4">
-										<Redue
-											startDate={this.props.startDate}
-											endDate={this.props.endDate}
-											handleCompletes={this.handleRedueCompletes}
-											redueDaysChange={this.redueDaysChange}
-											redueDays={this.state.redueDays}
-										/>
-									</div>
-									</div>
-							<div className="row">
-
+									<Redue
+										startDate={this.props.startDate}
+										endDate={this.props.endDate}
+										handleCompletes={this.handleRedueCompletes}
+										redueDaysChange={this.redueDaysChange}
+										redueDays={this.state.redueDays}
+									/>
+								</div>
 							</div>
-
-							<div>
-							<button
-								className="float-left btn btn-outline-warning"
-								onClick={this.props.onCancel}
-							>
-								Cancel
-							</button>
-						</div>
-					<div>
-							<button
-								className="float-right btn btn-outline-secondary"
-								onClick={this.handleSubmit}
-							>
-								Submit Task
-							</button>
-						</div>
+							<div className="row bottomButtons">
+								<div>
+									<button
+										className="float-left btn btn-outline-warning"
+										onClick={this.props.onCancel}
+									>
+										Cancel
+									</button>
+								</div>
+								<div>
+									<button
+										className="float-right btn btn-outline-secondary"
+										onClick={this.handleSubmit}
+									>
+										Submit Task
+									</button>
+								</div>
 							</div>
 						</div>
-						</div>
-						</div>
+					</div>
+				</div>
+			</div>
 		);
 	}
 }
@@ -279,4 +282,7 @@ class AddTask extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-export default connect(mapStateToProps, actions)(withRouter(AddTask));
+export default connect(
+	mapStateToProps,
+	actions
+)(withRouter(AddTask));

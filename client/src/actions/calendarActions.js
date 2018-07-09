@@ -5,9 +5,18 @@ import {
 	SWITCH_REPEATS,
 	RELOAD_CAL,
 	NTH_OCCURENCE,
-	REPEAT_QUICK_TASKS
+	REPEAT_QUICK_TASKS,
+	SET_TASK_TIMES,
+	MONTH_CHOICE
 } from './types';
-import { dailyRepeatNever, dailyRepeatEnds, dailyRepeatCompletes, weeklyRepeatNever, weeklyRepeatEnds, weeklyRepeatCompletes } from './clientrepeatFunctions';
+import {
+	dailyRepeatNever,
+	dailyRepeatEnds,
+	dailyRepeatCompletes,
+	weeklyRepeatNever,
+	weeklyRepeatEnds,
+	weeklyRepeatCompletes
+} from './clientrepeatFunctions';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 
@@ -16,8 +25,10 @@ export const initCal = dataDate => async dispatch => {
 	if (localStorage.getItem('jwtToken')) {
 		user = jwtDecode(localStorage.getItem('jwtToken'));
 	}
-	const date = moment(dataDate).clone().toDate();
-	const info = {date, user};
+	const date = moment(dataDate)
+		.clone()
+		.toDate();
+	const info = { date, user };
 	const data = await axios.post('/api/init_cal', info);
 	data.data.map((x, index) => {
 		x.start = new Date(x.start_date);
@@ -25,6 +36,14 @@ export const initCal = dataDate => async dispatch => {
 		return x;
 	});
 	dispatch({ type: INIT_CAL_TASKS, payload: data });
+};
+export const setTimes = data => dispatch => {
+	dispatch({ type: SET_TASK_TIMES, payload: data });
+};
+
+export const clickMonth = data => dispatch => {
+	const { name } = data.currentTarget.dataset;
+	dispatch({type: MONTH_CHOICE, payload: name});
 };
 export const switchRedueRepeat = data => dispatch => {
 	if (data.hasOwnProperty('currentTarget')) {
@@ -64,7 +83,7 @@ export const quickTaskMessage = data => async dispatch => {
 				return dispatch({ type: REPEAT_QUICK_TASKS, payload: newDays });
 			}
 			}
-		}else if (timeInterval === 'week'){
+		} else if (timeInterval === 'week') {
 			switch (activeRepeatRadio) {
 			case 'never': {
 				const newDays = weeklyRepeatNever(res.data);

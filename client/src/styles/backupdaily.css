@@ -1,0 +1,77 @@
+
+
+
+
+
+.journal-content .must-complete {
+	text-align: center;
+	padding: 0 2% 0 0;
+}
+.tasks-notes {
+	margin-top: 20px;
+}
+.notes-box {
+	width: 100%;
+	border: none;
+	border-radius: 0 0 3px 3px;
+	min-height: 50vh;
+	padding: 10px;
+}
+.notes-box:focus {
+	outline-color: #ddd;
+	outline-width: 1px;
+}
+.journal-content .card {
+	margin: 0;
+}
+.notes-card {
+	padding: 0;
+}
+.card-header {
+	font-weight: 500;
+}
+.list-group {
+	text-align: left;
+}
+.journal-content .list-group-item {
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+}
+.inputGroup {
+	height: 40px;
+	width: 40px;
+	background: #fff;
+	border: 3px solid #eeeeee;
+	border-radius: 25px;
+}
+.inputGroup:hover {
+	background-color: #ddd;
+	border: 1px solid #e0e0e0;
+}
+.round .completed {
+	background-image: url('check.png');
+	background-repeat: no-repeat;
+	background-size: 34px;
+	background-position: 6px 2px;
+	border: none;
+}
+
+.float-right {
+	position: relative;
+	right: 0;
+}
+.list-group-item .click-wrapper {
+	width: 100%;
+}
+.list-group-flush .list-group-item {
+	margin-bottom: 0;
+}
+.list-group-item textarea {
+	border: none;
+	width: 90%;
+	resize: none;
+}
+.list-group-item textarea:focus {
+	/* outline-color: #fff; */
+}
