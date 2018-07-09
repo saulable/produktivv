@@ -643,26 +643,64 @@ button:focus {
 ----------------------------------------------------- */
 .calendar {
 	padding: 20px;
+	.card{
+		border: none;
+	}
+}
+.sortHead{
+	display: flex;
+	@include flex-align(left, middle);
+	flex: 1 1 auto;
+	margin-left: rem-calc(10);
+	.btn {
+		background: $secondary-color;
+		margin-left: 10px;
+		padding: 8px 19px;
+		color: $white;
+		@include shadow();
+		cursor: pointer;
+		&:active{
+			box-shadow:none;
+		}
+	}
+}
+.newTask {
+		// background: $light-gray;
+		border: 1px solid $light-gray;
+		border-radius: 50%;
+		font-size: rem-calc(25) !important;
+		line-height: rem-calc(33);
+		font-weight: bold;
+		width: 43px;
+		height: 40px;
+		font-size: 16px;
+		text-align: center;
+		cursor: pointer;
+		&:hover{
+			background: $light-gray;
+		}
 }
 .task-box {
-	padding: 10px;
-	width: 100%;
+	@include xy-cell(8);
 	font-size: 25px;
-	padding-left: 10px;
-
-	border-radius: 5px;
+	margin-left: 15px;
 }
 .task-box-below {
-	padding: 0px 15px 15px 15px;
+	padding: 20px 0px 15px 0px;
 }
 .task-box textarea {
-	width: 100%;
-	border: 1px solid #eee;
-	padding: 2px 10px;
-	border-radius: 5px;
+	font-size: 20px;
+	box-shadow: none;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-bottom: 4px solid $secondary-color;
+	min-height: 40px;
+	margin: 0;
+	padding: 5px 10px 5px 5px;
 }
 .task-box textarea:focus {
-	outline-color: #fff;
+	background-color: $light-gray;
 }
 .DayPickerInput-OverlayWrapper {
 	position: absolute !important;
@@ -782,6 +820,66 @@ button:focus {
 		display: none;
 	}
 }
+// Tracks / Hats and Journal
+
+.react-autosuggest__container {
+	position: relative;
+	.react-autosuggest__input {
+		height: 40px;
+		padding: 5px 5px;
+		font-weight: 400;
+		font-size: 18px;
+		border-left: none;
+		border-right: none;
+		border-top: none;
+		border-bottom: 4px solid $secondary-color;
+		box-shadow: none;
+		outline-color: none;
+		&:focus{
+			background-color: $light-gray;
+		}
+	}
+
+}
+.react-autosuggest__input--open {
+	background: $light-gray;
+}
+
+.react-autosuggest__suggestions-container--open {
+	position: absolute;
+	width:98%;
+	top: 40px;
+	margin-left: 1%;
+	background-color: lighten($light-gray, 7%);
+	font-weight: 400;
+	font-size: 16px;
+	border: 1px solid #e0e0e0;
+	border-top: none;
+	z-index: 2;
+	.react-autosuggest__suggestions-list {
+		margin: 0;
+		padding: 0;
+		list-style-type: none;
+
+	}
+}
+
+.react-autosuggest__suggestion {
+	cursor: pointer;
+	padding: 5px 10px;
+
+}
+.react-autosuggest__suggestion--highlighted {
+	background-color: #ddd;
+}
+.tasksHead {
+	font-size: 15px;
+	font-weight: bold;
+}
+.notes-heading textarea {
+	width: 100%;
+	resize: none;
+}
 
 .repeatChoose {
 	@include menu-base;
@@ -867,6 +965,8 @@ button:focus {
 }
 
 // Ends section on the daily task calendar.
+
+// Repeat Section
 .endsWrap {
 	.choiceSelect {
 		font-size: rem-calc(16);
@@ -897,74 +997,17 @@ button:focus {
 		font-size: rem-calc(20);
 	}
 }
-.neverEnds {
-}
 
-.react-autosuggest__container {
-	position: relative;
-}
-
-.react-autosuggest__input {
-	width: 280px;
-	height: 40px;
-	padding: 10px 20px;
-	font-family: Helvetica, sans-serif;
-	font-weight: 300;
-	font-size: 16px;
-	border: 1px solid #aaa;
-	border-radius: 4px;
-}
-
-.react-autosuggest__input--focused {
-	outline: none;
-}
-
-.react-autosuggest__input--open {
-	border-bottom-left-radius: 0;
-	border-bottom-right-radius: 0;
-}
-
-.react-autosuggest__suggestions-container {
-	display: none;
-}
-
-.react-autosuggest__suggestions-container--open {
-	display: block;
-	position: absolute;
-	top: 39px;
-	width: 280px;
-	border: 1px solid #aaa;
-	background-color: #fff;
-	font-family: Helvetica, sans-serif;
-	font-weight: 300;
-	font-size: 16px;
-	border-bottom-left-radius: 4px;
-	border-bottom-right-radius: 4px;
-	z-index: 2;
-}
-
-.react-autosuggest__suggestions-list {
-	margin: 0;
-	padding: 0;
-	list-style-type: none;
-}
-
-.react-autosuggest__suggestion {
+.dropdown-month {
+	background: #eee;
+	padding: 8px;
+	margin-top: 13px;
+	border-radius: 2px;
+	border: 1px solid #ddd;
 	cursor: pointer;
-	padding: 10px 20px;
-}
-
-.react-autosuggest__suggestion--highlighted {
-	background-color: #ddd;
-}
-.hat-heading {
-}
-.tasksHead {
-	font-size: 15px;
-	font-weight: bold;
-}
-.notes-heading textarea {
-	width: 100%;
+	&:hover {
+		border: 1px solid darken(#ddd, 30%);
+	}
 }
 
 /* The switch - the box around the slider */
@@ -1071,31 +1114,7 @@ input:checked + .sliders:before {
 	display: inline-block;
 	margin-left: 10px;
 }
-a[aria-expanded='false']::before,
-a[aria-expanded='true']::before {
-	display: none;
-}
 .repeatCompletes {
 	display: inline-block;
 	margin-left: 10px;
-}
-.dropdown-month {
-	width: 300px;
-	background: #eee;
-	padding: 8px;
-	margin-top: 13px;
-	border-radius: 2px;
-	border: 1px solid #ddd;
-	cursor: pointer;
-}
-.hide {
-	display: none;
-}
-.show-both {
-	display: block;
-	cursor: pointer;
-	margin-top: 5px;
-}
-.show-both:hover {
-	background: #ddd;
 }

@@ -61,8 +61,6 @@ class CalendarSystem extends Component {
 			return (
 				<AddTask
 					onCancel={() => this.onCancelTask()}
-					startDate={this.state.slotStartState}
-					endDate={this.state.slotEndState}
 				/>
 			);
 		}

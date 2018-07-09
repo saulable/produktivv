@@ -33,27 +33,12 @@ class AddTask extends Component {
 			activeRepeatRadio: 'never'
 		};
 	}
-	handleCal = e => {
-		this.setState({ endsOnDate: e });
-	};
-
-	handleCompletes = e => {
-		this.setState({ afterCompletes: e.target.value });
-	};
-	handleRepeatRadio = e => {
-		this.setState({ activeRepeatRadio: e.currentTarget.dataset.name });
-	};
-
+	// don't think I need this?
 	updateRadioState = e => {
 		const name = e.currentTarget.dataset.tag;
 	};
-	taskChange = e => {
-		e.preventDefault();
-		const { value } = e.target;
-		this.setState({ message: value });
-	};
 	renderDate = () => {
-		let { startDate, endDate } = this.props;
+		let { startDate, endDate } = this.props.calendar;
 		startDate = moment(startDate).format('ddd Do MMMM YYYY, h:mm');
 		endDate = moment(endDate).format('ddd Do MMMM YYYY, h:mm');
 		return (
@@ -65,22 +50,12 @@ class AddTask extends Component {
 			</div>
 		);
 	};
-	handleTracksChange = (trackId, value) => {
-		this.setState({ [trackId]: value });
-	};
-	handleHatsChange = (hatId, value) => {
-		this.setState({ [hatId]: value });
-	};
-	handleAutoJournal = (journalId, value) => {
-		this.setState({ [journalId]: value });
-	};
-	handleNoteChange = e => {
-		e.preventDefault();
-		const { value } = e.target;
-		this.setState({ note: value });
+	renderDuration = () => {
+		let { startDate, endDate } = this.props.calendar;
+		const duration = moment(endDate).diff(moment(startDate), 'hours');
+		return <span>Duration: {duration} hours </span>;
 	};
 	handleSubmit = async e => {
-		// do some validation
 		e.preventDefault();
 		let { startDate, endDate } = this.props;
 		startDate = moment(startDate).format('MMMM Do YYYY, h:mm');
@@ -96,111 +71,60 @@ class AddTask extends Component {
 		});
 		await this.props.onCancel();
 	};
-	renderDuration() {
-		let { startDate, endDate } = this.props;
-		const duration = moment(endDate).diff(moment(startDate), 'hours');
-		return <span>Duration: {duration} hours </span>;
-	}
-	handleMonthTime = e => {
-		e.preventDefault();
-		const { name } = e.currentTarget.dataset;
-		if (this.state.timePlural) {
-			this.setState({ timeInterval: name + 's', repeatDropdown: false });
-		} else {
-			this.setState({ timeInterval: name, repeatDropdown: false });
-		}
-	};
-	changeTime = e => {
-		e.preventDefault();
-		if (e.target.value > 1) {
-			if (this.state.timePlural) {
-				this.setState({ repeatTime: e.target.value });
-			} else {
-				this.setState({
-					repeatTime: e.target.value,
-					timePlural: true,
-					timeInterval: this.state.timeInterval + 's'
-				});
-			}
-		} else if (this.state.timePlural) {
-			// it's one and timeplural is true, remove the s
-			this.setState({
-				timeInterval: this.state.timeInterval.slice(0, -1),
-				timePlural: false,
-				repeatTime: e.target.value
-			});
-		} else {
-			// else its one and time plural is false
-			this.setState({ repeatTime: e.target.value });
-		}
-	};
 
-	handleRepeatDropdown = e => {
-		this.setState({ repeatDropdown: !this.state.repeatDropdown });
-	};
-	handleRedueCompletes = e => {
-		this.setState({ redueCompletes: e.target.value });
-	};
-	redueDaysChange = e => {
-		e.preventDefault();
-		this.setState({ redueDays: e.currentTarget.value });
-	};
-	handleDayClick = e => {
-		const day = e.currentTarget.dataset.id;
-		const data = this.state.daysSelected;
-		const index = this.state.daysSelected.indexOf(day);
-		if (_.includes(data, day)) {
-			this.setState({
-				daysSelected: [...data.slice(0, index), ...data.slice(index + 1)]
-			});
-		} else {
-			this.setState({ daysSelected: [...this.state.daysSelected, day] });
-		}
-	};
 	render() {
 		return (
 			<div>
 				<div className="dailyCalendarContainer">
 					<div className="card">
-						<div className="card-header">New Task</div>
-						<div className="task-box">
-							<TextareaAutosize
-								name="task"
-								placeholder="untitled task"
-								onChange={this.taskChange}
-								value={this.state.taskMessage}
-								style={{ padding: '2px, 10px' }}
-							/>
+						<div className="sortHead">
+							<div onClick={this.props.onCancel} className="newTask">
+								&times;
+							</div>
+							<div className="task-box">
+								<TextareaAutosize
+									name="task"
+									placeholder="Add task"
+									onChange={this.taskChange}
+									value={this.state.taskMessage}
+									style={{
+										height: '40px',
+										resize: 'none'
+									}}
+								/>
+							</div>
+							<div className="btn" onClick={this.handleSubmit}>
+								Add New Task
+							</div>
 						</div>
 						<div className="task-box-below">
 							<div className="row">
 								<div className="col-4">
-									<span className="tasksHead project-head">Tracks:</span>
 									<ProjectAutoSuggest
 										onChange={this.handleTracksChange}
 										id="track"
+										placeholder="Choose Track"
 									/>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
-										<span className="tasksHead">Hat: </span>
 										<ProjectAutoSuggest
 											onChange={this.handleHatsChange}
 											id="hat"
+											placeholder="Choose Hat"
 										/>
 									</div>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
-										<span className="tasksHead">Journal: </span>
 										<ProjectAutoSuggest
 											onChange={this.handleAutoJournal}
 											id="journal"
+											placeholder="Choose Journal"
 										/>
 									</div>
 								</div>
 							</div>
-
 							<div className="row">
 								<div className="col-4 task-details">
 									<span>Task Details:</span>
@@ -251,24 +175,6 @@ class AddTask extends Component {
 										redueDaysChange={this.redueDaysChange}
 										redueDays={this.state.redueDays}
 									/>
-								</div>
-							</div>
-							<div className="row bottomButtons">
-								<div>
-									<button
-										className="float-left btn btn-outline-warning"
-										onClick={this.props.onCancel}
-									>
-										Cancel
-									</button>
-								</div>
-								<div>
-									<button
-										className="float-right btn btn-outline-secondary"
-										onClick={this.handleSubmit}
-									>
-										Submit Task
-									</button>
 								</div>
 							</div>
 						</div>

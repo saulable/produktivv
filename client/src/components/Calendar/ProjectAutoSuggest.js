@@ -16,6 +16,14 @@ const languages = [
 		year: 1972
 	},
 	{
+		name: 'Comaddddd',
+		year: 1972
+	},
+	{
+		name: 'Comrade',
+		year: 1972
+	},
+	{
 		name: 'Elm',
 		year: 2012
 	}
@@ -86,7 +94,7 @@ class ProjectAutoSuggest extends Component {
 
 		// Autosuggest will pass through all these props to the input.
 		const inputProps = {
-			placeholder: 'type a project',
+			placeholder: this.props.placeholder,
 			value,
 			onChange: this.onChange
 		};

@@ -53,7 +53,7 @@ class Repeat extends Component {
 			this.props.timeInterval === 'month' ||
 			this.props.timeInterval === 'months'
 		) {
-			return <HandleMonth endDate={this.state.endDate} startDate={this.state.startDate}/>;
+			return <HandleMonth />;
 		}
 	};
 	renderDropDown() {
@@ -126,8 +126,6 @@ class Repeat extends Component {
 					{this.renderPicker()}
 					<div className="addMarginTop">
 						<Ends
-							startDate={this.props.startDate}
-							endDate={this.props.endDate}
 							handleCal={this.props.handleCal}
 							handleCompletes={this.props.handleCompletes}
 							completesValue={this.props.afterCompletes}

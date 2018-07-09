@@ -19,6 +19,7 @@ import {
 } from './clientrepeatFunctions';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
+import _ from 'lodash';
 
 export const initCal = dataDate => async dispatch => {
 	let user;
@@ -43,7 +44,7 @@ export const setTimes = data => dispatch => {
 
 export const clickMonth = data => dispatch => {
 	const { name } = data.currentTarget.dataset;
-	dispatch({type: MONTH_CHOICE, payload: name});
+	dispatch({ type: MONTH_CHOICE, payload: name });
 };
 export const switchRedueRepeat = data => dispatch => {
 	if (data.hasOwnProperty('currentTarget')) {
@@ -108,4 +109,91 @@ export function reloadCal(data) {
 	return dispatch => {
 		dispatch({ type: RELOAD_CAL, payload: null });
 	};
+}
+
+export function handleMonthTime(e) {
+	e.preventDefault();
+	const { name } = e.currentTarget.dataset;
+	if (this.state.timePlural) {
+		this.setState({ timeInterval: name + 's', repeatDropdown: false });
+	} else {
+		this.setState({ timeInterval: name, repeatDropdown: false });
+	}
+}
+
+export function changeTime(e) {
+	e.preventDefault();
+	if (e.target.value > 1) {
+		if (this.state.timePlural) {
+			this.setState({ repeatTime: e.target.value });
+		} else {
+			this.setState({
+				repeatTime: e.target.value,
+				timePlural: true,
+				timeInterval: this.state.timeInterval + 's'
+			});
+		}
+	} else if (this.state.timePlural) {
+		// it's one and timeplural is true, remove the s
+		this.setState({
+			timeInterval: this.state.timeInterval.slice(0, -1),
+			timePlural: false,
+			repeatTime: e.target.value
+		});
+	} else {
+		// else its one and time plural is false
+		this.setState({ repeatTime: e.target.value });
+	}
+}
+export function handleCompletes(e) {
+	this.setState({ afterCompletes: e.target.value });
+}
+export function redueDaysChange(e) {
+	e.preventDefault();
+	this.setState({ redueDays: e.currentTarget.value });
+}
+
+export function handleDayClick(e) {
+	const day = e.currentTarget.dataset.id;
+	const data = this.state.daysSelected;
+	const index = this.state.daysSelected.indexOf(day);
+	if (_.includes(data, day)) {
+		this.setState({
+			daysSelected: [...data.slice(0, index), ...data.slice(index + 1)]
+		});
+	} else {
+		this.setState({ daysSelected: [...this.state.daysSelected, day] });
+	}
+}
+export function handleRepeatDropdown(e) {
+	this.setState({ repeatDropdown: !this.state.repeatDropdown });
+}
+export function handleRedueCompletes(e) {
+	this.setState({ redueCompletes: e.target.value });
+}
+
+export function handleTracksChange(trackId, value) {
+	this.setState({ [trackId]: value });
+}
+export function handleHatsChange(hatId, value) {
+	this.setState({ [hatId]: value });
+}
+export function handleAutoJournal(journalId, value) {
+	this.setState({ [journalId]: value });
+}
+export function handleNoteChange(e) {
+	e.preventDefault();
+	const { value } = e.target;
+	this.setState({ note: value });
+}
+export function taskChange(e) {
+	e.preventDefault();
+	const { value } = e.target;
+	this.setState({ message: value });
+}
+export function handleRepeatRadio(e) {
+	this.setState({ activeRepeatRadio: e.currentTarget.dataset.name });
+}
+export function handleCal(e) {
+	this.setState({ endsOnDate: e });
 }
