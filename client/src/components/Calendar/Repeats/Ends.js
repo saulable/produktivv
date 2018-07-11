@@ -2,11 +2,16 @@ import React, { Component } from 'react';
 import DayPickerInput from 'react-day-picker/DayPickerInput';
 import CustomOverlay from './CustomOverlay';
 import 'react-day-picker/lib/style.css';
+import {handleRepeatRadio} from '../../../actions/calendarActions';
 import {connect} from 'react-redux';
 import { formatDate, parseDate } from 'react-day-picker/moment';
 import classnames from 'classnames';
+import moment from 'moment';
 
 class Ends extends Component {
+	formatDate(date, format, locale){
+
+	}
 	render() {
 		const { activeRepeatRadio } = this.props;
 		return (
@@ -17,7 +22,7 @@ class Ends extends Component {
 						<label>
 							<div
 								className="radio-button"
-								onClick={this.props.handleRepeatRadio}
+								onClick={this.props.handleRadio}
 								data-name="never"
 							>
 								<div
@@ -32,7 +37,7 @@ class Ends extends Component {
 						<label>
 							<div
 								className="radio-button"
-								onClick={this.props.handleRepeatRadio}
+								onClick={this.props.handleRadio}
 								data-name="on"
 							>
 								<div
@@ -56,7 +61,7 @@ class Ends extends Component {
 						<label>
 							<div
 								className="radio-button"
-								onClick={this.props.handleRepeatRadio}
+								onClick={this.props.handleRadio}
 								data-name="after"
 							>
 								<div

@@ -224,10 +224,11 @@ button:focus {
 // --------------
 
 .container {
-	@include xy-grid();
+	display: flex;
 }
 .sidebar {
 	width: 200px;
+	min-width:200px;
 	height: auto;
 	min-height: 100vh;
 	background: $fourth-color;
@@ -252,6 +253,10 @@ button:focus {
 	flex: 1;
 	background: $primary-color;
 	padding: 10px;
+
+}
+.grid-x{
+	flex-flow: nowrap;
 }
 
 // 4. Daily Journal
@@ -636,6 +641,25 @@ button:focus {
 
 .rbc-calendar {
 	flex: 1;
+	.rbc-toolbar{
+		flex-wrap: wrap;
+	}
+	.rbc-show-more{
+		color: #000;
+	}
+	.rbc-row{
+		flex: 1 1 0;
+		.rbc-row-segment{
+			height:24px;
+		}
+	}
+	.rbc-row .rbc-event{
+		width: 100%;
+		position: absolute;
+	}
+	.rbc-month-row{
+		flex: 1 1 0%;
+	}
 }
 
 /* ---------------------------------------------------
@@ -820,6 +844,7 @@ button:focus {
 		display: none;
 	}
 }
+
 // Tracks / Hats and Journal
 
 .react-autosuggest__container {
@@ -876,10 +901,23 @@ button:focus {
 	font-size: 15px;
 	font-weight: bold;
 }
-.notes-heading textarea {
-	width: 100%;
-	resize: none;
+
+
+.task-details {
+	text-align: left;
+	.task-details-header{
+		background: $light-gray;
+		padding: 5px 10px;
+		text-align: left;
+	}
+	.notes-heading textarea {
+		width: 100%;
+		resize: none;
+	}
 }
+
+
+
 
 .repeatChoose {
 	@include menu-base;
@@ -1080,9 +1118,7 @@ input:checked + .sliders:before {
 .task-box-below .row:first-child {
 	margin-top: 0px;
 }
-.task-details {
-	text-align: center;
-}
+
 .switchHeaders span:first-child {
 	vertical-align: top;
 	position: relative;

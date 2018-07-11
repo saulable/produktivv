@@ -5554,11 +5554,11 @@ button:focus {
     text-align: center; }
 
 .container {
-  display: flex;
-  flex-flow: row wrap; }
+  display: flex; }
 
 .sidebar {
   width: 200px;
+  min-width: 200px;
   height: auto;
   min-height: 100vh;
   background: #7E8D85;
@@ -5580,6 +5580,9 @@ button:focus {
   flex: 1;
   background: #fefefe;
   padding: 10px; }
+
+.grid-x {
+  flex-flow: nowrap; }
 
 .journal-content {
   flex: 1; }
@@ -5932,6 +5935,19 @@ button:focus {
 
 .rbc-calendar {
   flex: 1; }
+  .rbc-calendar .rbc-toolbar {
+    flex-wrap: wrap; }
+  .rbc-calendar .rbc-show-more {
+    color: #000; }
+  .rbc-calendar .rbc-row {
+    flex: 1 1 0; }
+    .rbc-calendar .rbc-row .rbc-row-segment {
+      height: 24px; }
+  .rbc-calendar .rbc-row .rbc-event {
+    width: 100%;
+    position: absolute; }
+  .rbc-calendar .rbc-month-row {
+    flex: 1 1 0%; }
 
 /* ---------------------------------------------------
     CALENDAR
@@ -6154,9 +6170,15 @@ button:focus {
   font-size: 15px;
   font-weight: bold; }
 
-.notes-heading textarea {
-  width: 100%;
-  resize: none; }
+.task-details {
+  text-align: left; }
+  .task-details .task-details-header {
+    background: #e6e6e6;
+    padding: 5px 10px;
+    text-align: left; }
+  .task-details .notes-heading textarea {
+    width: 100%;
+    resize: none; }
 
 .repeatChoose {
   padding: 0;
@@ -6350,9 +6372,6 @@ input:checked + .sliders:before {
 
 .task-box-below .row:first-child {
   margin-top: 0px; }
-
-.task-details {
-  text-align: center; }
 
 .switchHeaders span:first-child {
   vertical-align: top;

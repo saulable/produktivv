@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
+import {handleTracksChange} from '../../actions/calendarActions';
+import {connect} from 'react-redux';
 
 // Imagine you have a list of languages that you'd like to autosuggest.
 const languages = [
@@ -90,7 +92,8 @@ class ProjectAutoSuggest extends Component {
 	};
 
 	render() {
-		const {suggestions, value } = this.state;
+		const {suggestions } = this.state;
+		const {value} = this.props;
 
 		// Autosuggest will pass through all these props to the input.
 		const inputProps = {
@@ -111,5 +114,7 @@ class ProjectAutoSuggest extends Component {
 		);
 	}
 }
-
-export default ProjectAutoSuggest;
+function mapStateToProps({calendar}){
+	return {calendar};
+}
+export default connect(mapStateToProps, {handleTracksChange})(ProjectAutoSuggest);

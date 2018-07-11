@@ -15,22 +15,7 @@ class AddTask extends Component {
 		super(props);
 		this.state = {
 			message: '',
-			track: '',
-			hat: '',
-			journal: '',
-			note: '',
-			timeInterval: 'week',
-			timePlural: false,
-			repeatTime: '1',
-			monthlyRepeat: 'noDays',
-			monthlyBoth: false,
-			repeatDropdown: false,
-			redueCompletes: '1',
-			redueDays: '1',
-			daysSelected: [],
-			endsOnDate: '',
-			afterCompletes: '',
-			activeRepeatRadio: 'never'
+			note: ''
 		};
 	}
 	// don't think I need this?
@@ -51,22 +36,22 @@ class AddTask extends Component {
 		);
 	};
 	renderDuration = () => {
-		let { startDate, endDate } = this.props.calendar;
+		const { startDate, endDate } = this.props.calendar;
 		const duration = moment(endDate).diff(moment(startDate), 'hours');
 		return <span>Duration: {duration} hours </span>;
 	};
 	handleSubmit = async e => {
 		e.preventDefault();
-		let { startDate, endDate } = this.props;
-		startDate = moment(startDate).format('MMMM Do YYYY, h:mm');
-		endDate = moment(endDate)
+		const { startDate, endDate } = this.props.calendar;
+		const startDateFormat = moment(startDate).format('MMMM Do YYYY, h:mm');
+		const endDateFormat = moment(endDate)
 			.add(1, 'hours')
 			.format('MMMM Do YYYY, h:mm');
 		const rdxStore = this.props.calendar;
 		await this.props.quickTaskMessage({
 			...this.state,
-			start_date: startDate,
-			end_date: endDate,
+			start_date: startDateFormat,
+			end_date: startDateFormat,
 			rdxStore
 		});
 		await this.props.onCancel();
@@ -101,33 +86,38 @@ class AddTask extends Component {
 							<div className="row">
 								<div className="col-4">
 									<ProjectAutoSuggest
-										onChange={this.handleTracksChange}
+										onChange={this.props.handleTracksChange}
 										id="track"
 										placeholder="Choose Track"
+										value={this.props.calendar.track}
 									/>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
 										<ProjectAutoSuggest
-											onChange={this.handleHatsChange}
+											onChange={this.props.handleHatsChange}
 											id="hat"
 											placeholder="Choose Hat"
+											value={this.props.calendar.hat}
 										/>
 									</div>
 								</div>
 								<div className="col-4">
 									<div className="hat-heading">
 										<ProjectAutoSuggest
-											onChange={this.handleAutoJournal}
+											onChange={this.props.handleAutoJournal}
 											id="journal"
 											placeholder="Choose Journal"
+											value={this.props.calendar.journal}
 										/>
 									</div>
 								</div>
 							</div>
 							<div className="row">
 								<div className="col-4 task-details">
-									<span>Task Details:</span>
+									<div className="task-details-header">
+										<span>Task Details:</span>
+									</div>
 									<div className="date-box">
 										{this.renderDate()}
 										{this.renderDuration()}
@@ -138,43 +128,16 @@ class AddTask extends Component {
 										</div>
 										<TextareaAutosize
 											id="note"
-											onChange={this.handleNoteChange}
-											value={this.state.note}
+											onChange={this.props.handleNoteChange}
+											value={this.props.calendar.note}
 										/>
 									</div>
 								</div>
 								<div className="col-4">
-									<Repeat
-										startDate={this.props.startDate}
-										endDate={this.props.endDate}
-										handleMonthTime={this.handleMonthTime}
-										changeTime={this.changeTime}
-										timeInterval={this.state.timeInterval}
-										timePlural={this.state.timePlural}
-										repeatTime={this.state.repeatTime}
-										clickMonth={this.clickMonth}
-										monthlyRepeat={this.state.monthlyRepeat}
-										monthlyBoth={this.state.monthlyBoth}
-										handleRepeatDropdown={this.handleRepeatDropdown}
-										repeatDropdown={this.state.repeatDropdown}
-										completesValue={this.state.redueCompletes}
-										handleDayClick={this.handleDayClick}
-										daysSelected={this.state.daysSelected}
-										handleCal={this.handleCal}
-										handleCompletes={this.handleCompletes}
-										handleRepeatRadio={this.handleRepeatRadio}
-										completesValue={this.state.afterCompletes}
-										activeRepeatRadio={this.state.activeRepeatRadio}
-									/>
+									<Repeat />
 								</div>
 								<div className="col-4">
-									<Redue
-										startDate={this.props.startDate}
-										endDate={this.props.endDate}
-										handleCompletes={this.handleRedueCompletes}
-										redueDaysChange={this.redueDaysChange}
-										redueDays={this.state.redueDays}
-									/>
+									<Redue />
 								</div>
 							</div>
 						</div>

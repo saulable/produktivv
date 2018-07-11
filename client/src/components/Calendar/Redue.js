@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import Ends from './Repeats/Ends';
 import { connect } from 'react-redux';
-import { switchRedueRepeat } from '../../actions/calendarActions';
+import { switchRedueRepeat, handleRedueRadio } from '../../actions/calendarActions';
 
 class Redue extends Component {
 	constructor(props) {
@@ -28,7 +28,7 @@ class Redue extends Component {
 		}
 	}
 	renderRedue() {
-		const {switchRepeats} = this.props.calendar;
+		const {switchRepeats, activeRedueRadio} = this.props.calendar;
 		return (
 			<div className="switchHeaders">
 				<div>
@@ -55,15 +55,7 @@ class Redue extends Component {
 					</div>
 					<div></div>
 					<div className="addMarginTop">
-						<Ends
-							startDate={this.props.startDate}
-							endDate={this.props.endDate}
-							handleCal={this.handleCal}
-							completesValue={this.props.afterCompletes}
-							handleCompletes={this.props.handleCompletes}
-							activeRepeatRadio={this.state.activeRepeatRadio}
-							handleRepeatRadio={this.handleRepeatRadio}
-						/>
+						<Ends handleRadio={this.props.handleRedueRadio} activeRepeatRadio={activeRedueRadio} />
 					</div>
 				</div>
 			</div>
@@ -77,4 +69,4 @@ class Redue extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-export default connect(mapStateToProps, { switchRedueRepeat })(Redue);
+export default connect(mapStateToProps, { switchRedueRepeat, handleRedueRadio })(Redue);

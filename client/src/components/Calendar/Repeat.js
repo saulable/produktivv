@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import { connect } from 'react-redux';
 import Days from './Days.js';
-import { switchRedueRepeat } from '../../actions/calendarActions';
+import * as actions from '../../actions/calendarActions';
 import Ends from './Repeats/Ends.js';
 import HandleMonth from './Repeats/handleMonth.js';
 import _ from 'lodash';
@@ -34,10 +34,8 @@ class Repeat extends Component {
 		}
 	};
 	renderPicker = e => {
-		if (
-			this.props.timeInterval === 'week' ||
-			this.props.timeInterval === 'weeks'
-		) {
+		const { timeInterval } = this.props.calendar;
+		if (timeInterval === 'week' || timeInterval === 'weeks') {
 			return (
 				<div className="addMarginTop">
 					Repeat on<br />
@@ -50,14 +48,14 @@ class Repeat extends Component {
 				</div>
 			);
 		} else if (
-			this.props.timeInterval === 'month' ||
-			this.props.timeInterval === 'months'
+			timeInterval === 'month' ||
+			timeInterval === 'months'
 		) {
 			return <HandleMonth />;
 		}
 	};
 	renderDropDown() {
-		const timePlural = this.props.timePlural ? 's' : '';
+		const timePlural = this.props.calendar.timePlural ? 's' : '';
 		return _.map(DROP_DOWN_FIELDS, ({ name }) => {
 			return (
 				<div
@@ -73,7 +71,7 @@ class Repeat extends Component {
 		});
 	}
 	render() {
-		const { switchRepeats } = this.props.calendar;
+		const { switchRepeats, repeatTime, timeInterval, repeatDropdown, activeRepeatRadio} = this.props.calendar;
 		return (
 			<div className="switchHeaders">
 				<div>
@@ -101,7 +99,7 @@ class Repeat extends Component {
 						Repeat every
 						<input
 							className="repeatEvery"
-							value={this.props.repeatTime}
+							value={repeatTime}
 							onChange={this.props.changeTime}
 							type="text"
 						/>
@@ -111,11 +109,11 @@ class Repeat extends Component {
 								className="btn btn-secondary dropdown-toggle"
 								id="dropdownMenuLink"
 							>
-								{this.props.timeInterval}
+								{timeInterval}
 							</button>
 							<div
 								className={classnames('dropdown-menu dropdownRepeat', {
-									'd-block': this.props.repeatDropdown
+									'd-block': repeatDropdown
 								})}
 								aria-labelledby="dropdownMenuLink"
 							>
@@ -125,13 +123,7 @@ class Repeat extends Component {
 					</div>
 					{this.renderPicker()}
 					<div className="addMarginTop">
-						<Ends
-							handleCal={this.props.handleCal}
-							handleCompletes={this.props.handleCompletes}
-							completesValue={this.props.afterCompletes}
-							activeRepeatRadio={this.props.activeRepeatRadio}
-							handleRepeatRadio={this.props.handleRepeatRadio}
-						/>
+						<Ends handleRadio={this.props.handleRepeatRadio} activeRepeatRadio={activeRepeatRadio} />
 					</div>
 				</div>
 			</div>
@@ -145,5 +137,5 @@ function mapStateToProps({ calendar }) {
 
 export default connect(
 	mapStateToProps,
-	{ switchRedueRepeat }
+	actions
 )(Repeat);

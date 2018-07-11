@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import classnames from 'classnames';
+import {handleDayClick} from '../../actions/calendarActions';
+import {connect} from 'react-redux';
 const daysArr = [
 	{ day: 'Monday', label: 'M' },
 	{ day: 'Tuesday', label: 'T' },
@@ -12,14 +14,8 @@ const daysArr = [
 ];
 
 class taskDays extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			daysSelected: []
-		};
-	}
 	days() {
-		let {daysSelected} = this.props;
+		let {daysSelected} = this.props.calendar;
 
 		return _.map(daysArr, ({ day, label }) => {
 			const isDayClicked = _.includes(daysSelected, day);
@@ -44,5 +40,9 @@ class taskDays extends Component {
 	}
 }
 
-export default taskDays;
+function mapStateToProps({calendar}){
+	return {calendar};
+}
+
+export default connect(mapStateToProps, {handleDayClick})(taskDays);
 // if the state has index of the day, then it is active.

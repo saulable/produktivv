@@ -7,7 +7,21 @@ import {
 	NTH_OCCURENCE,
 	REPEAT_QUICK_TASKS,
 	SET_TASK_TIMES,
-	MONTH_CHOICE
+	MONTH_CHOICE,
+	CHANGE_EVERY_TIME,
+	HANDLE_REPEAT_DROPDOWN,
+	REPEAT_EVERY_CHOICE,
+	DAY_PICKERS,
+	HANDLE_COMPLETES,
+	REDUE_DAYS_CHANGE,
+	REDUE_COMPLETES,
+	TRACKS_CHANGE,
+	HATS_CHANGE,
+	AUTO_JOURNAL,
+	Q_NOTE_CHANGE,
+	Q_TASK_MESSAGE,
+	Q_REPEAT_RADIO,
+	Q_HANDLE_CAL
 } from './types';
 import {
 	dailyRepeatNever,
@@ -110,90 +124,80 @@ export function reloadCal(data) {
 		dispatch({ type: RELOAD_CAL, payload: null });
 	};
 }
-
 export function handleMonthTime(e) {
-	e.preventDefault();
-	const { name } = e.currentTarget.dataset;
-	if (this.state.timePlural) {
-		this.setState({ timeInterval: name + 's', repeatDropdown: false });
-	} else {
-		this.setState({ timeInterval: name, repeatDropdown: false });
-	}
+	return dispatch => {
+		const { name } = e.currentTarget.dataset;
+		dispatch({ type: REPEAT_EVERY_CHOICE, payload: name });
+	};
 }
-
 export function changeTime(e) {
-	e.preventDefault();
-	if (e.target.value > 1) {
-		if (this.state.timePlural) {
-			this.setState({ repeatTime: e.target.value });
-		} else {
-			this.setState({
-				repeatTime: e.target.value,
-				timePlural: true,
-				timeInterval: this.state.timeInterval + 's'
-			});
-		}
-	} else if (this.state.timePlural) {
-		// it's one and timeplural is true, remove the s
-		this.setState({
-			timeInterval: this.state.timeInterval.slice(0, -1),
-			timePlural: false,
-			repeatTime: e.target.value
-		});
-	} else {
-		// else its one and time plural is false
-		this.setState({ repeatTime: e.target.value });
-	}
+	return dispatch => {
+		const data = e.target.value;
+		dispatch({ type: CHANGE_EVERY_TIME, payload: data });
+	};
 }
 export function handleCompletes(e) {
-	this.setState({ afterCompletes: e.target.value });
+	return dispatch => {
+		dispatch({ type: HANDLE_COMPLETES, payload: e.target.value });
+	};
 }
 export function redueDaysChange(e) {
-	e.preventDefault();
-	this.setState({ redueDays: e.currentTarget.value });
+	return dispatch => {
+		dispatch({ type: REDUE_DAYS_CHANGE, payload: e.currentTarget.value });
+	};
 }
-
 export function handleDayClick(e) {
-	const day = e.currentTarget.dataset.id;
-	const data = this.state.daysSelected;
-	const index = this.state.daysSelected.indexOf(day);
-	if (_.includes(data, day)) {
-		this.setState({
-			daysSelected: [...data.slice(0, index), ...data.slice(index + 1)]
-		});
-	} else {
-		this.setState({ daysSelected: [...this.state.daysSelected, day] });
-	}
+	return dispatch => {
+		dispatch({ type: DAY_PICKERS, payload: e });
+	};
 }
 export function handleRepeatDropdown(e) {
-	this.setState({ repeatDropdown: !this.state.repeatDropdown });
+	return dispatch => {
+		dispatch({ type: HANDLE_REPEAT_DROPDOWN, payload: e });
+	};
 }
 export function handleRedueCompletes(e) {
-	this.setState({ redueCompletes: e.target.value });
+	return dispatch => {
+		dispatch({ type: REDUE_COMPLETES, payload: e.target.value });
+	};
 }
-
-export function handleTracksChange(trackId, value) {
-	this.setState({ [trackId]: value });
+export function handleTracksChange(type, value) {
+	return dispatch => {
+		dispatch({ type: TRACKS_CHANGE, payload: { type, value } });
+	};
 }
-export function handleHatsChange(hatId, value) {
-	this.setState({ [hatId]: value });
+export function handleHatsChange(type, value) {
+	return dispatch => {
+		dispatch({ type: HATS_CHANGE, payload: { type, value } });
+	};
 }
-export function handleAutoJournal(journalId, value) {
-	this.setState({ [journalId]: value });
+export function handleAutoJournal(type, value) {
+	return dispatch => {
+		dispatch({ type: AUTO_JOURNAL, payload: { type, value } });
+	};
 }
 export function handleNoteChange(e) {
-	e.preventDefault();
-	const { value } = e.target;
-	this.setState({ note: value });
+	return dispatch => {
+		dispatch({ type: Q_NOTE_CHANGE, payload: e.target.value });
+	};
 }
 export function taskChange(e) {
-	e.preventDefault();
-	const { value } = e.target;
-	this.setState({ message: value });
+	return dispatch => {
+		dispatch({ type: Q_TASK_MESSAGE, payload: e.target.value });
+	};
 }
 export function handleRepeatRadio(e) {
-	this.setState({ activeRepeatRadio: e.currentTarget.dataset.name });
+	return dispatch => {
+		dispatch({ type: Q_REPEAT_RADIO, payload: { type: 'repeat', value:e.currentTarget.dataset.name} });
+	};
+}
+export function handleRedueRadio(e) {
+	return dispatch => {
+		dispatch({ type: Q_REPEAT_RADIO, payload: { type: 'redue', value:e.currentTarget.dataset.name}});
+	};
 }
 export function handleCal(e) {
-	this.setState({ endsOnDate: e });
+	return dispatch => {
+		dispatch({ type: Q_HANDLE_CAL, payload: e });
+	};
 }
