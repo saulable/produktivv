@@ -20,9 +20,17 @@ import {
 	Q_NOTE_CHANGE,
 	Q_TASK_MESSAGE,
 	Q_REPEAT_RADIO,
-	Q_HANDLE_CAL
+	Q_HANDLE_CAL,
+	Q_UPDATE_START_TIME_HOURS,
+	Q_UPDATE_START_TIME_MINS,
+	Q_UPDATE_END_TIME_HOURS,
+	Q_UPDATE_END_TIME_MINS,
+	Q_FROM_START,
+	Q_TO_END,
+	Q_UPDATE_DURATION
 } from '../actions/types';
 import _ from 'lodash';
+import moment from 'moment';
 
 const initState = {
 	events: [],
@@ -41,22 +49,37 @@ const initState = {
 	afterCompletes: '',
 	activeRepeatRadio: 'never',
 	activeRedueRadio: 'never',
+	switchRepeats: null,
 	track: '',
 	hat: '',
 	journal: '',
-	note: ''
+	note: '',
+	taskDuration: '',
+	taskDurationFormat: 'h',
+	startTimeHours: '',
+	startTimeMinutes: '',
+	endTimeHours: '',
+	endTimeMinutes: '',
+	rptDisabled: false
 };
 
 export default (state = initState, action) => {
 	switch (action.type) {
 	case INIT_CAL_TASKS:
 		return { ...state, events: action.payload.data };
-	case SET_TASK_TIMES:
+	case SET_TASK_TIMES: {
 		return {
 			...state,
-			startDate: action.payload.slotStartState,
-			endDate: action.payload.slotEndState
+			startDate: action.payload.data.slotStartState,
+			endDate: action.payload.data.slotEndState,
+			taskDuration: action.payload.duration,
+			taskDurationFormat: 'h',
+			startTimeHours: action.payload.data.slotStartState.format('HH'),
+			startTimeMinutes: action.payload.data.slotStartState.format('mm'),
+			endTimeHours: action.payload.data.slotEndState.format('HH'),
+			endTimeMinutes: action.payload.data.slotEndState.format('mm')
 		};
+	}
 	case WRITE_QUICK_TASK:
 		return { ...state, events: [...state.events, action.payload.data] };
 	case REPEAT_QUICK_TASKS: {
@@ -141,7 +164,6 @@ export default (state = initState, action) => {
 	case REDUE_COMPLETES:
 		return { ...state, redueCompletes: action.payload };
 	case TRACKS_CHANGE: {
-		const type = action.payload.type;
 		return { ...state, track: action.payload.value };
 	}
 	case HATS_CHANGE:
@@ -161,6 +183,181 @@ export default (state = initState, action) => {
 	}
 	case Q_HANDLE_CAL:
 		return { ...state, endsOnDate: action.payload };
+	case Q_UPDATE_START_TIME_HOURS: {
+		const startDate = moment(state.startDate)
+			.set({ h: action.payload })
+			.toDate();
+		return { ...state, startTimeHours: action.payload, startDate };
+	}
+	case Q_UPDATE_START_TIME_MINS: {
+		const startDate = moment(state.startDate)
+			.set({ m: action.payload })
+			.toDate();
+		return { ...state, startTimeMinutes: action.payload, startDate };
+	}
+	case Q_UPDATE_END_TIME_HOURS: {
+		// const taskDuration = moment(state.startDate).diff(moment(endDate));
+		const endDate = moment(state.endDate)
+			.set({ h: action.payload })
+			.toDate();
+		switch (state.taskDurationFormat) {
+		case 'h': {
+			const duration = moment.duration(
+				moment(endDate).diff(moment(state.startDate))
+			);
+			const taskDuration = Math.round(duration.asHours());
+			return {
+				...state,
+				endTimeHours: action.payload,
+				endDate,
+				taskDuration
+			};
+		}
+		default: {
+			return { ...state, endTimeHours: action.payload, endDate };
+		}
+		}
+	}
+	case Q_UPDATE_END_TIME_MINS: {
+		const endDate = moment(state.endDate)
+			.set({ m: action.payload })
+			.toDate();
+		return { ...state, endTimeMinutes: action.payload, endDate };
+	}
+	case Q_FROM_START: {
+		const duration = moment.duration(
+			moment(state.endDate).diff(moment(action.payload))
+		);
+		const asDays = duration.asDays();
+		const inMonth = moment(action.payload).daysInMonth();
+		if (moment(action.payload).isSame(moment(state.endDate), 'day')) {
+			return {
+				...state,
+				startDate: action.payload,
+				taskDurationFormat: 'h',
+				taskDuration: Math.round(duration.asHours()),
+				rptDisabled: false
+			};
+		} else if (asDays >= 1 && asDays < 7) {
+			return {
+				...state,
+				startDate: action.payload,
+				taskDurationFormat: 'd',
+				taskDuration: Math.round(asDays),
+				rptDisabled: true
+			};
+		} else if (asDays >= 7 && asDays < inMonth) {
+			return {
+				...state,
+				startDate: action.payload,
+				taskDurationFormat: 'w',
+				taskDuration: Math.round(duration.asWeeks()),
+				rptDisabled: true
+			};
+		} else if (asDays >= inMonth) {
+			return {
+				...state,
+				startDate: action.payload,
+				taskDurationFormat: 'm',
+				taskDuration: Math.round(duration.asMonths()),
+				rptDisabled: true
+			};
+		} else {
+			return { ...state, startDate: action.payload, taskDuration: 'ERR' };
+		}
+	}
+	case Q_TO_END: {
+		const duration = moment.duration(
+			moment(action.payload).diff(moment(state.startDate))
+		);
+		const asDays = duration.asDays();
+		const inMonth = moment(state.startDate).daysInMonth();
+		if (moment(action.payload).isSame(moment(state.startDate), 'day')) {
+			return {
+				...state,
+				endDate: action.payload,
+				taskDurationFormat: 'h',
+				taskDuration: Math.round(duration.asHours()),
+				rptDisabled: false
+			};
+		} else if (asDays >= 1 && asDays < 7) {
+			return {
+				...state,
+				endDate: action.payload,
+				taskDurationFormat: 'd',
+				taskDuration: Math.round(asDays),
+				rptDisabled: true
+			};
+		} else if (asDays >= 7 && asDays < inMonth) {
+			return {
+				...state,
+				endDate: action.payload,
+				taskDurationFormat: 'w',
+				taskDuration: Math.round(duration.asWeeks()),
+				rptDisabled: true
+			};
+		} else {
+			return {
+				...state,
+				endDate: action.payload,
+				taskDurationFormat: 'm',
+				taskDuration: Math.round(duration.asMonths()),
+				rptDisabled: true
+			};
+		}
+	}
+	case Q_UPDATE_DURATION: {
+		switch (state.taskDurationFormat) {
+		case 'h': {
+			const endDate = moment(state.startDate).add(action.payload, 'hours');
+			const endTimeHours = endDate.format('HH');
+			if (moment(endDate).isBefore(moment(state.startDate).endOf('day'))) {
+				return {
+					...state,
+					taskDuration: action.payload,
+					endDate,
+					endTimeHours,
+					rptDisabled: false
+				};
+			} else {
+				return {
+					...state,
+					taskDuration: action.payload,
+					endDate,
+					endTimeHours,
+					rptDisabled: true
+				};
+			}
+		}
+		case 'd': {
+			const endDate = moment(state.startDate).add(action.payload, 'days');
+			return {
+				...state,
+				taskDuration: action.payload,
+				endDate
+			};
+		}
+		case 'w': {
+			const endDate = moment(state.startDate).add(action.payload, 'weeks');
+			return {
+				...state,
+				taskDuration: action.payload,
+				endDate
+			};
+		}
+		case 'm': {
+			const endDate = moment(state.startDate).add(action.payload, 'months');
+			return {
+				...state,
+				taskDuration: action.payload,
+				endDate
+			};
+		}
+		default: {
+			return { ...state };
+		}
+		}
+	}
 	default:
 		return state;
 	}

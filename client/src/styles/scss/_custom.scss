@@ -228,7 +228,7 @@ button:focus {
 }
 .sidebar {
 	width: 200px;
-	min-width:200px;
+	min-width: 200px;
 	height: auto;
 	min-height: 100vh;
 	background: $fourth-color;
@@ -253,9 +253,8 @@ button:focus {
 	flex: 1;
 	background: $primary-color;
 	padding: 10px;
-
 }
-.grid-x{
+.grid-x {
 	flex-flow: nowrap;
 }
 
@@ -301,6 +300,7 @@ button:focus {
 	}
 	.card {
 		border: none;
+		overflow: visible;
 	}
 	.card-header {
 		text-align: center;
@@ -641,23 +641,23 @@ button:focus {
 
 .rbc-calendar {
 	flex: 1;
-	.rbc-toolbar{
+	.rbc-toolbar {
 		flex-wrap: wrap;
 	}
-	.rbc-show-more{
+	.rbc-show-more {
 		color: #000;
 	}
-	.rbc-row{
+	.rbc-row {
 		flex: 1 1 0;
-		.rbc-row-segment{
-			height:24px;
+		.rbc-row-segment {
+			height: 24px;
 		}
 	}
-	.rbc-row .rbc-event{
+	.rbc-row .rbc-event {
 		width: 100%;
 		position: absolute;
 	}
-	.rbc-month-row{
+	.rbc-month-row {
 		flex: 1 1 0%;
 	}
 }
@@ -665,13 +665,16 @@ button:focus {
 /* ---------------------------------------------------
     CALENDAR
 ----------------------------------------------------- */
-.calendar {
-	padding: 20px;
-	.card{
+.dailyCalendarContainer {
+	.calendar {
+		padding: 20px;
+	}
+	.card {
 		border: none;
+		overflow: visible;
 	}
 }
-.sortHead{
+.sortHead {
 	display: flex;
 	@include flex-align(left, middle);
 	flex: 1 1 auto;
@@ -683,26 +686,26 @@ button:focus {
 		color: $white;
 		@include shadow();
 		cursor: pointer;
-		&:active{
-			box-shadow:none;
+		&:active {
+			box-shadow: none;
 		}
 	}
 }
 .newTask {
-		// background: $light-gray;
-		border: 1px solid $light-gray;
-		border-radius: 50%;
-		font-size: rem-calc(25) !important;
-		line-height: rem-calc(33);
-		font-weight: bold;
-		width: 43px;
-		height: 40px;
-		font-size: 16px;
-		text-align: center;
-		cursor: pointer;
-		&:hover{
-			background: $light-gray;
-		}
+	// background: $light-gray;
+	border: 1px solid $light-gray;
+	border-radius: 50%;
+	font-size: rem-calc(25) !important;
+	line-height: rem-calc(33);
+	font-weight: bold;
+	width: 43px;
+	height: 40px;
+	font-size: 16px;
+	text-align: center;
+	cursor: pointer;
+	&:hover {
+		background: $light-gray;
+	}
 }
 .task-box {
 	@include xy-cell(8);
@@ -726,37 +729,6 @@ button:focus {
 .task-box textarea:focus {
 	background-color: $light-gray;
 }
-.DayPickerInput-OverlayWrapper {
-	position: absolute !important;
-	top: 0;
-	left: 0;
-	width: 275px;
-}
-.switchHeaders .DayPicker-NavBar span:first-child {
-	position: absolute;
-	top: 16px;
-}
-.DayPickerInput {
-	display: inline-block;
-	margin-left: 7px;
-	padding: 10px;
-	position: relative;
-}
-.DayPickerInput input {
-	width: 120px;
-	padding: 7px;
-	text-align: right;
-	border: 2px solid #eee;
-}
-.DayPickerInput input:focus {
-	outline-color: #ddd;
-}
-.DayPickerInput-Overlay {
-	bottom: 0;
-	left: 0;
-	height: 315px;
-}
-
 .radio-button {
 	width: 22px;
 	height: 22px;
@@ -845,7 +817,7 @@ button:focus {
 	}
 }
 
-// Tracks / Hats and Journal
+// Tracks / Hats and Journal AutoSuggest Section
 
 .react-autosuggest__container {
 	position: relative;
@@ -860,11 +832,10 @@ button:focus {
 		border-bottom: 4px solid $secondary-color;
 		box-shadow: none;
 		outline-color: none;
-		&:focus{
+		&:focus {
 			background-color: $light-gray;
 		}
 	}
-
 }
 .react-autosuggest__input--open {
 	background: $light-gray;
@@ -872,7 +843,7 @@ button:focus {
 
 .react-autosuggest__suggestions-container--open {
 	position: absolute;
-	width:98%;
+	width: 98%;
 	top: 40px;
 	margin-left: 1%;
 	background-color: lighten($light-gray, 7%);
@@ -885,14 +856,12 @@ button:focus {
 		margin: 0;
 		padding: 0;
 		list-style-type: none;
-
 	}
 }
 
 .react-autosuggest__suggestion {
 	cursor: pointer;
 	padding: 5px 10px;
-
 }
 .react-autosuggest__suggestion--highlighted {
 	background-color: #ddd;
@@ -902,21 +871,109 @@ button:focus {
 	font-weight: bold;
 }
 
+// Task Details Section
 
 .task-details {
 	text-align: left;
-	.task-details-header{
+	.task-details-header {
 		background: $light-gray;
-		padding: 5px 10px;
+		padding: 10px 10px;
 		text-align: left;
+		font-weight: bold;
 	}
 	.notes-heading textarea {
 		width: 100%;
 		resize: none;
 	}
+	.startTimes {
+		display: flex;
+		flex: 1 0 auto;
+		margin-top: 10px;
+		@include flex-align(left, middle);
+		span {
+			color: $fourth-color;
+			font-weight: 400;
+			font-size: rem-calc(18);
+		}
+		.DayPickerInput {
+			margin-left: 10px;
+			margin-right: 5px;
+			display: flex;
+			flex: 0 1 115px;
+		}
+		.timePicker {
+			margin-left: 5px;
+			display: flex;
+			flex: 0 1 115px;
+			& span {
+				margin-right: 2px;
+			}
+			& input {
+				margin-right: 2px;
+				text-align: center;
+			}
+		}
+		.editTimes {
+			display: flex;
+			flex: 1;
+			height: 35px;
+			@include flex-align(left, middle);
+			.dateInput {
+				margin-right: 5px;
+			}
+			& .title {
+				min-width: 45px;
+			}
+		}
+		.durationTimes {
+			display: flex;
+			& .duration {
+				max-width: 55px;
+				text-align: center;
+				margin-left: 10px;
+				margin-right: 10px;
+			}
+		}
+		& input {
+			flex: 1;
+			display: block;
+			margin: 0;
+			width: 100%;
+			text-align: left;
+			color: $black;
+			padding: 10px 5px;
+			height: 30px;
+			font-weight: 400;
+			font-size: rem-calc(20);
+			border-right: none;
+			border-left: none;
+			border-top: none;
+			border-bottom: 3px solid $secondary-color;
+			box-shadow: none;
+			border-radius: 0 0 0 0;
+			background: lighten($light-gray, 5%);
+			&::placeholder {
+				color: $dark-gray;
+			}
+		}
+	}
 }
-
-
+.rc-time-picker-panel {
+	width: 166px;
+	background: $white;
+	.rc-time-picker-panel-input {
+		font-size: rem-calc(20);
+	}
+	.rc-time-picker-panel-input-wrap {
+		padding: 0 4px;
+	}
+	& .rc-time-picker-panel .rc-time-picker-panel-input-wrap {
+		padding: 0 10px;
+	}
+	.rc-time-picker-panel-inner {
+		border: none;
+	}
+}
 
 
 .repeatChoose {
@@ -1111,7 +1168,43 @@ input:checked + .sliders:before {
 	border-radius: 50%;
 }
 .switchHeaders {
+	.DayPickerInput-OverlayWrapper {
+		position: absolute !important;
+		top: 0;
+		left: 0;
+		width: 275px;
+	}
+	.DayPicker-NavBar span:first-child {
+		position: absolute;
+		top: 16px;
+	}
+	.DayPickerInput {
+		display: inline-block;
+		margin-left: 7px;
+		padding: 10px;
+		position: relative;
+	}
+	.DayPickerInput input {
+		width: 120px;
+		padding: 7px;
+		text-align: right;
+		border: 2px solid #eee;
+	}
+	.DayPickerInput input:focus {
+		outline-color: #ddd;
+	}
+	.DayPickerInput-Overlay {
+		bottom: 0;
+		left: 0;
+		height: 315px;
+	}
 }
+.DayPickerInput-Overlay {
+	.DayPicker-Day {
+		padding: rem-calc(7 10);
+	}
+}
+
 .task-box-below .row {
 	margin-top: 10px;
 }

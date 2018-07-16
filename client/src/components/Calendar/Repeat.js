@@ -6,7 +6,6 @@ import * as actions from '../../actions/calendarActions';
 import Ends from './Repeats/Ends.js';
 import HandleMonth from './Repeats/handleMonth.js';
 import _ from 'lodash';
-import moment from 'moment';
 import DROP_DOWN_FIELDS from './Repeats/DropDownFields';
 
 class Repeat extends Component {
@@ -47,10 +46,7 @@ class Repeat extends Component {
 					</div>
 				</div>
 			);
-		} else if (
-			timeInterval === 'month' ||
-			timeInterval === 'months'
-		) {
+		} else if (timeInterval === 'month' || timeInterval === 'months') {
 			return <HandleMonth />;
 		}
 	};
@@ -71,9 +67,20 @@ class Repeat extends Component {
 		});
 	}
 	render() {
-		const { switchRepeats, repeatTime, timeInterval, repeatDropdown, activeRepeatRadio} = this.props.calendar;
+		const {
+			switchRepeats,
+			repeatTime,
+			timeInterval,
+			repeatDropdown,
+			activeRepeatRadio,
+			rptDisabled
+		} = this.props.calendar;
 		return (
-			<div className="switchHeaders">
+			<div
+				className={classnames('switchHeaders', {
+					'd-none': rptDisabled
+				})}
+			>
 				<div>
 					<span>Repeat</span>
 					<label className="switch">
@@ -123,7 +130,11 @@ class Repeat extends Component {
 					</div>
 					{this.renderPicker()}
 					<div className="addMarginTop">
-						<Ends handleRadio={this.props.handleRepeatRadio} activeRepeatRadio={activeRepeatRadio} />
+						<Ends
+							handleRadio={this.props.handleRepeatRadio}
+							activeRepeatRadio={activeRepeatRadio}
+							handleCompletes={this.props.handleCompletes}
+						/>
 					</div>
 				</div>
 			</div>

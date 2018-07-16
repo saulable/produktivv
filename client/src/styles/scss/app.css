@@ -5621,7 +5621,8 @@ button:focus {
     width: 100%;
     margin-right: 10px; }
   .must-complete .card {
-    border: none; }
+    border: none;
+    overflow: visible; }
   .must-complete .card-header {
     text-align: center;
     font-weight: bold;
@@ -5952,10 +5953,12 @@ button:focus {
 /* ---------------------------------------------------
     CALENDAR
 ----------------------------------------------------- */
-.calendar {
+.dailyCalendarContainer .calendar {
   padding: 20px; }
-  .calendar .card {
-    border: none; }
+
+.dailyCalendarContainer .card {
+  border: none;
+  overflow: visible; }
 
 .sortHead {
   display: flex;
@@ -6010,36 +6013,6 @@ button:focus {
 
 .task-box textarea:focus {
   background-color: #e6e6e6; }
-
-.DayPickerInput-OverlayWrapper {
-  position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 275px; }
-
-.switchHeaders .DayPicker-NavBar span:first-child {
-  position: absolute;
-  top: 16px; }
-
-.DayPickerInput {
-  display: inline-block;
-  margin-left: 7px;
-  padding: 10px;
-  position: relative; }
-
-.DayPickerInput input {
-  width: 120px;
-  padding: 7px;
-  text-align: right;
-  border: 2px solid #eee; }
-
-.DayPickerInput input:focus {
-  outline-color: #ddd; }
-
-.DayPickerInput-Overlay {
-  bottom: 0;
-  left: 0;
-  height: 315px; }
 
 .radio-button {
   width: 22px;
@@ -6174,11 +6147,85 @@ button:focus {
   text-align: left; }
   .task-details .task-details-header {
     background: #e6e6e6;
-    padding: 5px 10px;
-    text-align: left; }
+    padding: 10px 10px;
+    text-align: left;
+    font-weight: bold; }
   .task-details .notes-heading textarea {
     width: 100%;
     resize: none; }
+  .task-details .startTimes {
+    display: flex;
+    flex: 1 0 auto;
+    margin-top: 10px;
+    justify-content: flex-start;
+    align-items: center; }
+    .task-details .startTimes span {
+      color: #7E8D85;
+      font-weight: 400;
+      font-size: 1.125rem; }
+    .task-details .startTimes .DayPickerInput {
+      margin-left: 10px;
+      margin-right: 5px;
+      display: flex;
+      flex: 0 1 115px; }
+    .task-details .startTimes .timePicker {
+      margin-left: 5px;
+      display: flex;
+      flex: 0 1 115px; }
+      .task-details .startTimes .timePicker span {
+        margin-right: 2px; }
+      .task-details .startTimes .timePicker input {
+        margin-right: 2px;
+        text-align: center; }
+    .task-details .startTimes .editTimes {
+      display: flex;
+      flex: 1;
+      height: 35px;
+      justify-content: flex-start;
+      align-items: center; }
+      .task-details .startTimes .editTimes .dateInput {
+        margin-right: 5px; }
+      .task-details .startTimes .editTimes .title {
+        min-width: 45px; }
+    .task-details .startTimes .durationTimes {
+      display: flex; }
+      .task-details .startTimes .durationTimes .duration {
+        max-width: 55px;
+        text-align: center;
+        margin-left: 10px;
+        margin-right: 10px; }
+    .task-details .startTimes input {
+      flex: 1;
+      display: block;
+      margin: 0;
+      width: 100%;
+      text-align: left;
+      color: #0a0a0a;
+      padding: 10px 5px;
+      height: 30px;
+      font-weight: 400;
+      font-size: 1.25rem;
+      border-right: none;
+      border-left: none;
+      border-top: none;
+      border-bottom: 3px solid #0083BB;
+      box-shadow: none;
+      border-radius: 0 0 0 0;
+      background: #f3f3f3; }
+      .task-details .startTimes input::placeholder {
+        color: #8a8a8a; }
+
+.rc-time-picker-panel {
+  width: 166px;
+  background: #fefefe; }
+  .rc-time-picker-panel .rc-time-picker-panel-input {
+    font-size: 1.25rem; }
+  .rc-time-picker-panel .rc-time-picker-panel-input-wrap {
+    padding: 0 4px; }
+  .rc-time-picker-panel .rc-time-picker-panel .rc-time-picker-panel-input-wrap {
+    padding: 0 10px; }
+  .rc-time-picker-panel .rc-time-picker-panel-inner {
+    border: none; }
 
 .repeatChoose {
   padding: 0;
@@ -6366,6 +6413,39 @@ input:checked + .sliders:before {
 
 .sliders.round:before {
   border-radius: 50%; }
+
+.switchHeaders .DayPickerInput-OverlayWrapper {
+  position: absolute !important;
+  top: 0;
+  left: 0;
+  width: 275px; }
+
+.switchHeaders .DayPicker-NavBar span:first-child {
+  position: absolute;
+  top: 16px; }
+
+.switchHeaders .DayPickerInput {
+  display: inline-block;
+  margin-left: 7px;
+  padding: 10px;
+  position: relative; }
+
+.switchHeaders .DayPickerInput input {
+  width: 120px;
+  padding: 7px;
+  text-align: right;
+  border: 2px solid #eee; }
+
+.switchHeaders .DayPickerInput input:focus {
+  outline-color: #ddd; }
+
+.switchHeaders .DayPickerInput-Overlay {
+  bottom: 0;
+  left: 0;
+  height: 315px; }
+
+.DayPickerInput-Overlay .DayPicker-Day {
+  padding: 0.4375rem 0.625rem; }
 
 .task-box-below .row {
   margin-top: 10px; }

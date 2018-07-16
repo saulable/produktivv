@@ -103,7 +103,7 @@ const dailyArr = (
 			return arr;
 		}
 		if (daysSelected.indexOf(m.format('dddd')) !== -1) {
-			if (m.toDate().getTime() != init1week[0].start.getTime()) {
+			if (m.toDate().getTime() !== init1week[0].start.getTime()) {
 				arr.push({
 					start: m.clone().toDate(),
 					end: m

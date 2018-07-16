@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
-import anime from 'animejs';
 import {fireworks} from './utils/fireworks';
 
 class Main extends Component {
 	componentDidMount(){
 		fireworks();
 	}
-
 	render() {
 		return (
 			<header class="site-header homepage">

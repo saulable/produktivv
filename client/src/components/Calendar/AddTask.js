@@ -6,52 +6,52 @@ import TextareaAutosize from 'react-autosize-textarea';
 import ProjectAutoSuggest from './ProjectAutoSuggest';
 import Repeat from './Repeat';
 import Redue from './Redue';
-import _ from 'lodash';
+import Duration from './Duration';
 
 import moment from 'moment';
+
+import StartRepeatDate from './StartRepeatDate';
+import EndRepeatDate from './EndRepeatDate';
 
 class AddTask extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			message: '',
-			note: ''
+			message: ''
 		};
+		this.taskChange = this.taskChange.bind(this);
 	}
-	// don't think I need this?
-	updateRadioState = e => {
-		const name = e.currentTarget.dataset.tag;
-	};
+
+	taskChange(e) {
+		e.preventDefault();
+		this.setState({ message: e.target.value });
+	}
 	renderDate = () => {
-		let { startDate, endDate } = this.props.calendar;
-		startDate = moment(startDate).format('ddd Do MMMM YYYY, h:mm');
-		endDate = moment(endDate).format('ddd Do MMMM YYYY, h:mm');
 		return (
 			<div>
-				<span>Start: {startDate}</span>
-				<br />
-				<span>End: {endDate}</span>
-				<br />
+				<div className="startTimes">
+					<StartRepeatDate />
+				</div>
+				<div className="startTimes end">
+					<EndRepeatDate />
+				</div>
 			</div>
 		);
 	};
 	renderDuration = () => {
-		const { startDate, endDate } = this.props.calendar;
-		const duration = moment(endDate).diff(moment(startDate), 'hours');
-		return <span>Duration: {duration} hours </span>;
+		return <Duration />;
 	};
 	handleSubmit = async e => {
 		e.preventDefault();
 		const { startDate, endDate } = this.props.calendar;
 		const startDateFormat = moment(startDate).format('MMMM Do YYYY, h:mm');
 		const endDateFormat = moment(endDate)
-			.add(1, 'hours')
 			.format('MMMM Do YYYY, h:mm');
 		const rdxStore = this.props.calendar;
 		await this.props.quickTaskMessage({
 			...this.state,
 			start_date: startDateFormat,
-			end_date: startDateFormat,
+			end_date: endDateFormat,
 			rdxStore
 		});
 		await this.props.onCancel();

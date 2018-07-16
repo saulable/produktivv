@@ -41,7 +41,7 @@ module.exports = app => {
 		req.body.items.map((x, index) => {
 			Tasks.update({ _id: x._id }, { $set: { index: index } }).exec();
 		});
-		res.status(200).send({success:true});
+		res.status(200).send({ success: true });
 	});
 	app.post('/api/daily_tasks', async (req, res) => {
 		const dailyTasks = await Tasks.find({ _user: req.body._id })
@@ -72,7 +72,7 @@ module.exports = app => {
 		}
 	});
 	app.post('/api/task_retrieve', async (req, res) => {
-		const getNote = await Tasks.find({ _id: req.body.id }).exec((err, data)=> {
+		const getNote = await Tasks.find({ _id: req.body.id }).exec((err, data) => {
 			if (err) res.status(500).send(err);
 			res.status(200).send(data);
 		});
@@ -116,7 +116,7 @@ module.exports = app => {
 				.where('start_date')
 				.gt(moment().startOf('day'))
 				.lt(moment().endOf('day'))
-				.sort({index: 'asc'})
+				.sort({ index: 'asc' })
 				.exec();
 			const newIndexTasks = await dailyTasks.map((x, index) => {
 				Tasks.findOneAndUpdate(
@@ -128,7 +128,7 @@ module.exports = app => {
 				.where('start_date')
 				.gt(moment().startOf('day'))
 				.lt(moment().endOf('day'))
-				.sort({index: 'asc'})
+				.sort({ index: 'asc' })
 				.exec();
 			res.status(200).send(updatedTasks);
 		} catch (err) {
@@ -226,12 +226,9 @@ module.exports = app => {
 	});
 
 	app.post('/api/create_calendar_task', async (req, res) => {
+		let { message, user, start_date, end_date } = req.body;
 		let {
-			message,
 			journal,
-			user,
-			start_date,
-			end_date,
 			track,
 			hat,
 			timeInterval,
@@ -241,9 +238,13 @@ module.exports = app => {
 			afterCompletes,
 			endsOnDate,
 			daysSelected,
-			monthlyRepeat
-		} = req.body;
-		let { switchRepeats, nthdayMonth } = req.body.rdxStore;
+			monthlyRepeatswitchRepeats,
+			nthdayMonth,
+			switchRepeats,
+			monthChoice,
+			monthlyRepeat,
+			totalCompletes
+		} = req.body.rdxStore;
 		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
 		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
 		start_date = moment(start_date, 'MMMM Do YYYY, h:mm').toDate();
@@ -275,7 +276,7 @@ module.exports = app => {
 				index: (newIndex += 1),
 				created_at: Date.now(),
 				start_date,
-				end_date: moment(start_date).add(1, 'hours'),
+				end_date,
 				repeat: true,
 				repeatTime,
 				timeInterval,
@@ -286,7 +287,7 @@ module.exports = app => {
 				endsOnDate,
 				afterCompletes,
 				lastCompleted: null,
-				totalCompletes: 0
+				totalCompletes
 			});
 		} else if (switchRepeats === 'redue') {
 			task = new Tasks({

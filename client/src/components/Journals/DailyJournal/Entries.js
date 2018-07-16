@@ -3,10 +3,10 @@ import TextFieldGroup from '../../../containers/TextFieldGroup';
 import DailyTasksList from './DailyTasksList';
 import DailyRightSideBar from './DailyRightSideBar';
 import DailyJournalText from './DailyJournalText';
+
 import TaskSettings from './TaskSettings';
 import { connect } from 'react-redux';
 import * as actions from '../../../actions/taskActions';
-import classnames from 'classnames';
 
 class Entries extends Component {
 	constructor(props) {
@@ -46,9 +46,7 @@ class Entries extends Component {
 	}
 	handleClickOutside(event) {
 		if (this.wrapperRef && !this.wrapperRef.contains(event.target)) {
-			{
-				this.props.offTaskClick();
-			}
+			this.props.offTaskClick();
 		}
 	}
 	render() {
@@ -68,7 +66,7 @@ class Entries extends Component {
 							</form>
 						</div>
 					</div>
-					<div className="row tasks-notes"  ref={this.setWrapperRef}>
+					<div className="row tasks-notes" ref={this.setWrapperRef}>
 						<div className="must-complete">
 							<DailyTasksList />
 							{this.props.notes.tab === 'journal' ? <DailyJournalText /> : null}

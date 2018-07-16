@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as actions from '../../../actions/taskActions';
 
 class TaskSettings extends Component {
@@ -15,12 +14,7 @@ class TaskSettings extends Component {
 	renderTaskSettings() {
 		const {
 			message,
-			note,
-			index,
-			start_date,
-			completed
 		} = this.props.notes.task[0];
-		console.log(this.props.notes.task);
 		return (
 			<div className="settingsWrap">
 				<div className="title">{message}</div>
@@ -46,9 +40,6 @@ class TaskSettings extends Component {
 function mapStateToProps({ notes }) {
 	return { notes };
 }
-
-const mapDispatchToProps = dispatch => ({});
-
 export default connect(
 	mapStateToProps,
 	actions

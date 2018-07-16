@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import * as actions from '../../../actions/taskActions';
 
 class DailyRightSideBar extends Component {
@@ -45,7 +44,7 @@ class DailyRightSideBar extends Component {
 		}
 	}
 	renderContent() {
-		const { tab, taskSettings } = this.props.notes;
+		const { tab } = this.props.notes;
 		if (!tab) {
 			return (
 				<div className="daily-buttons">
@@ -69,8 +68,6 @@ class DailyRightSideBar extends Component {
 function mapStateToProps({ notes }) {
 	return { notes };
 }
-
-const mapDispatchToProps = dispatch => ({});
 
 export default connect(
 	mapStateToProps,

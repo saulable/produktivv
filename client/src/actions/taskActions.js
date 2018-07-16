@@ -83,7 +83,7 @@ export function onClickNotes(data) {
 	};
 }
 export const newOrder = (data) => dispatch => {
-	const res = axios.post('/api/update_task_index', {items:data});
+	axios.post('/api/update_task_index', {items:data});
 	dispatch({ type: UPDATE_TASK_LIST, payload: data });
 };
 export const clickComplete = data => async dispatch => {
@@ -93,7 +93,6 @@ export const clickComplete = data => async dispatch => {
 };
 export const deleteTask = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
-	const info = data;
 	const res = await axios.post('/api/delete_task', {data, user});
 	dispatch({type: DELETED_TASK, payload: res});
 };

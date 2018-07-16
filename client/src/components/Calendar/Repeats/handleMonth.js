@@ -74,9 +74,6 @@ class HandleMonth extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-
-const mapDispatchToProps = dispatch => ({});
-
 export default connect(
 	mapStateToProps,
 	actions

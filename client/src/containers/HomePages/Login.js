@@ -39,7 +39,7 @@ class Login extends Component {
 				<div className="login-form">
 					<div className="login-form-inner">
 						<FlashMessageList />
-						<div class="form-sign-wrapper">
+						<div className="form-sign-wrapper">
 							<form className="form-signin" onSubmit={this.onSubmit}>
 								{message !== '' && (
 									<div
@@ -88,8 +88,8 @@ class Login extends Component {
 						</div>
 					</div>
 					<div className="outer-form">
-					<span class="password"><Link to="password">Forgot password?</Link></span>
-					<span class="register-here"><Link to="register">Don't have an account?</Link></span>
+					<span className="password"><Link to="password">Forgot password?</Link></span>
+					<span className="register-here"><Link to="register">Don't have an account?</Link></span>
 				</div>
 				</div>
 			</div>

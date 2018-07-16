@@ -29,18 +29,22 @@ class CalendarSystem extends Component {
 		alert(event.start);
 	}
 	handleSlotEvent(slotInfo) {
+		const nowHours = moment().hour();
+		const nowMinutes = moment().minutes();
 		const slotStartState = moment(slotInfo.start);
-		const slotEndState = moment(slotInfo.end).add(2, 'hours');
-		this.props.setTimes({slotStartState, slotEndState});
+		// set the current slot time to now
+		slotStartState.set({ h: nowHours, m: nowMinutes });
+		const slotEndState = moment(slotStartState).add(1, 'hours');
+		this.props.setTimes({ slotStartState, slotEndState});
 		this.setState({ showComponent: 'AddTask', slotStartState, slotEndState });
 	}
 	onCancelTask() {
 		this.setState({ showComponent: 'BigCalendar' });
 		this.props.clearRepeats();
 	}
-	onNavigate = (e) => {
+	onNavigate = e => {
 		this.props.initCal(e);
-	}
+	};
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {
 			return (
@@ -58,17 +62,11 @@ class CalendarSystem extends Component {
 				/>
 			);
 		} else if (this.state.showComponent === 'AddTask') {
-			return (
-				<AddTask
-					onCancel={() => this.onCancelTask()}
-				/>
-			);
+			return <AddTask onCancel={() => this.onCancelTask()} />;
 		}
 	}
 	render() {
-		return (
-			<div className="content-x calendar">{this.renderContent()}</div>
-		);
+		return <div className="content-x calendar">{this.renderContent()}</div>;
 	}
 }
 
@@ -77,5 +75,8 @@ function mapStateToProps({ calendar }) {
 }
 
 export default withRouter(
-	connect(mapStateToProps, actions)(CalendarSystem)
+	connect(
+		mapStateToProps,
+		actions
+	)(CalendarSystem)
 );

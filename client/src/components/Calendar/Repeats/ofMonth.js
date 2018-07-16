@@ -4,9 +4,6 @@ import { nthOccurenceTask } from '../../../actions/calendarActions';
 import moment from 'moment';
 
 class ofMonth extends Component {
-	constructor(props) {
-		super(props);
-	}
 	componentDidMount() {
 		const curDay = moment(this.props.startDate);
 		var monday = moment(this.props.startDate)

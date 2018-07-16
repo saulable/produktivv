@@ -28,9 +28,11 @@ class Redue extends Component {
 		}
 	}
 	renderRedue() {
-		const {switchRepeats, activeRedueRadio} = this.props.calendar;
+		const {switchRepeats, activeRedueRadio, rptDisabled} = this.props.calendar;
 		return (
-			<div className="switchHeaders">
+			<div className={classnames('switchHeaders', {
+				'd-none': rptDisabled
+			})}>
 				<div>
 					<span>ReDue</span>
 					<label className="switch switch2">

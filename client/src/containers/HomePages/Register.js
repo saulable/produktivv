@@ -45,7 +45,7 @@ class Register extends Component {
 				<div className="login-form">
 					<div className="login-form-inner">
 						{errors ? <div className="callout warning">{errors} </div> : ''}
-						<div class="form-sign-wrapper">
+						<div className="form-sign-wrapper">
 							<form className="form-signin" onSubmit={this.onSubmit}>
 								<h4 className="type-sidelines"><span>Register</span></h4>
 								<label className="sr-only">Email address</label>
@@ -80,11 +80,8 @@ class Register extends Component {
 						</div>
 					</div>
 					<div className="outer-form">
-						<span class="password">
+						<span className="password">
 							<Link to="login">Back to Login</Link>
-						</span>
-						<span class="register-here">
-							<a href="register" />
 						</span>
 					</div>
 				</div>

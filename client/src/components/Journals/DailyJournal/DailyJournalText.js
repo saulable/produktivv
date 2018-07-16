@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import classnames from 'classnames';
 import TextareaAutosize from 'react-autosize-textarea';
 import * as actions from '../../../actions/taskActions';
 import moment from 'moment';
@@ -88,9 +87,6 @@ class DailyJournalText extends Component {
 function mapStateToProps({ notes }) {
 	return { notes };
 }
-
-const mapDispatchToProps = dispatch => ({});
-
 export default connect(
 	mapStateToProps,
 	actions

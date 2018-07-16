@@ -21,7 +21,14 @@ import {
 	Q_NOTE_CHANGE,
 	Q_TASK_MESSAGE,
 	Q_REPEAT_RADIO,
-	Q_HANDLE_CAL
+	Q_HANDLE_CAL,
+	Q_UPDATE_START_TIME_HOURS,
+	Q_UPDATE_START_TIME_MINS,
+	Q_UPDATE_END_TIME_HOURS,
+	Q_UPDATE_END_TIME_MINS,
+	Q_FROM_START,
+	Q_TO_END,
+	Q_UPDATE_DURATION
 } from './types';
 import {
 	dailyRepeatNever,
@@ -33,7 +40,6 @@ import {
 } from './clientrepeatFunctions';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
-import _ from 'lodash';
 
 export const initCal = dataDate => async dispatch => {
 	let user;
@@ -53,7 +59,10 @@ export const initCal = dataDate => async dispatch => {
 	dispatch({ type: INIT_CAL_TASKS, payload: data });
 };
 export const setTimes = data => dispatch => {
-	dispatch({ type: SET_TASK_TIMES, payload: data });
+	const a = data.slotEndState;
+	const b = data.slotStartState;
+	const duration = a.diff(b, 'hours');
+	dispatch({ type: SET_TASK_TIMES, payload: { data, duration } });
 };
 
 export const clickMonth = data => dispatch => {
@@ -97,6 +106,9 @@ export const quickTaskMessage = data => async dispatch => {
 				const newDays = dailyRepeatCompletes(res.data);
 				return dispatch({ type: REPEAT_QUICK_TASKS, payload: newDays });
 			}
+			default: {
+				return;
+			}
 			}
 		} else if (timeInterval === 'week') {
 			switch (activeRepeatRadio) {
@@ -111,6 +123,9 @@ export const quickTaskMessage = data => async dispatch => {
 			case 'after': {
 				const newDays = weeklyRepeatCompletes(res.data);
 				return dispatch({ type: REPEAT_QUICK_TASKS, payload: newDays });
+			}
+			default: {
+				return;
 			}
 			}
 		}
@@ -188,16 +203,57 @@ export function taskChange(e) {
 }
 export function handleRepeatRadio(e) {
 	return dispatch => {
-		dispatch({ type: Q_REPEAT_RADIO, payload: { type: 'repeat', value:e.currentTarget.dataset.name} });
+		dispatch({
+			type: Q_REPEAT_RADIO,
+			payload: { type: 'repeat', value: e.currentTarget.dataset.name }
+		});
 	};
 }
 export function handleRedueRadio(e) {
 	return dispatch => {
-		dispatch({ type: Q_REPEAT_RADIO, payload: { type: 'redue', value:e.currentTarget.dataset.name}});
+		dispatch({
+			type: Q_REPEAT_RADIO,
+			payload: { type: 'redue', value: e.currentTarget.dataset.name }
+		});
 	};
 }
 export function handleCal(e) {
 	return dispatch => {
 		dispatch({ type: Q_HANDLE_CAL, payload: e });
+	};
+}
+export function handleStartFrom(e) {
+	return dispatch => {
+		dispatch({ type: Q_FROM_START, payload: e });
+	};
+}
+export function handleEndTo(e) {
+	return dispatch => {
+		dispatch({ type: Q_TO_END, payload: e });
+	};
+}
+export function startTimePickerHours(data) {
+	return dispatch => {
+		dispatch({ type: Q_UPDATE_START_TIME_HOURS, payload: data });
+	};
+}
+export function startTimePickerMins(data) {
+	return dispatch => {
+		dispatch({ type: Q_UPDATE_START_TIME_MINS, payload: data });
+	};
+}
+export function endTimePickerHours(data) {
+	return dispatch => {
+		dispatch({ type: Q_UPDATE_END_TIME_HOURS, payload: data });
+	};
+}
+export function endTimePickerMins(data) {
+	return dispatch => {
+		dispatch({ type: Q_UPDATE_END_TIME_MINS, payload: data });
+	};
+}
+export function updateDuration(data) {
+	return dispatch => {
+		dispatch({ type: Q_UPDATE_DURATION, payload: data });
 	};
 }

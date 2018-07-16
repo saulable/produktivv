@@ -7,8 +7,6 @@ import {
 	DELETED_TASK
 } from '../actions/types';
 import _ from 'lodash';
-import { arrayMove } from 'react-sortable-hoc';
-import axios from 'axios';
 
 const initState = {
 	list: []
