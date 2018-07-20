@@ -72,8 +72,10 @@ export const clickMonth = data => dispatch => {
 export const switchRedueRepeat = data => dispatch => {
 	if (data.hasOwnProperty('currentTarget')) {
 		data = data.currentTarget.dataset.tag;
+		dispatch({ type: SWITCH_REPEATS, payload: data });
+	}else{
+		dispatch({ type: SWITCH_REPEATS, payload: null });
 	}
-	dispatch({ type: SWITCH_REPEATS, payload: data });
 };
 export function clearRepeats(data) {
 	return dispatch => {
@@ -90,7 +92,8 @@ export const quickTaskMessage = data => async dispatch => {
 		user = jwtDecode(localStorage.getItem('jwtToken'));
 	}
 	let res = await axios.post('/api/create_calendar_task', { ...data, user });
-	const { repeat, timeInterval, activeRepeatRadio } = res.data;
+	const { repeat, timeInterval, activeRepeatRadio, start_date, end_date } = res.data;
+
 	if (repeat) {
 		if (timeInterval === 'day') {
 			switch (activeRepeatRadio) {
@@ -130,8 +133,8 @@ export const quickTaskMessage = data => async dispatch => {
 			}
 		}
 	}
-	res.data.start = new Date(res.data.start_date);
-	res.data.end = new Date(res.data.end_date);
+	res.data.start = new Date(start_date);
+	res.data.end = new Date(end_date);
 	dispatch({ type: WRITE_QUICK_TASK, payload: res });
 };
 export function reloadCal(data) {

@@ -22,7 +22,8 @@ const tasksSchema = new Schema({
 	endsOnDate: Date,
 	afterCompletes: Number,
 	lastCompleted: Date,
-	totalCompletes: {type: Number, default: 0}
+	totalCompletes: {type: Number, default: 0},
+	taskDuration: String
 });
 
 mongoose.model('tasks', tasksSchema);

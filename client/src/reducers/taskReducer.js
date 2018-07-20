@@ -4,7 +4,8 @@ import {
 	COMPLETE_TASK,
 	UPDATE_TASK_MESSAGE,
 	UPDATE_TASK_LIST,
-	DELETED_TASK
+	DELETED_TASK,
+	DAY_CALENDAR_TASKS
 } from '../actions/types';
 import _ from 'lodash';
 
@@ -45,6 +46,8 @@ export default function(state = initState, action) {
 	case DAILY_TASK_LIST:
 		var sortedTasks = _.sortBy(action.payload, ['index', action.payload.index]);
 		return {...state, list:sortedTasks};
+	case DAY_CALENDAR_TASKS:
+		return {...state, list: action.payload};
 	default:
 		return {...state};
 	}

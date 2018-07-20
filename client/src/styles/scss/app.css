@@ -5940,15 +5940,235 @@ button:focus {
     flex-wrap: wrap; }
   .rbc-calendar .rbc-show-more {
     color: #000; }
-  .rbc-calendar .rbc-row {
-    flex: 1 1 0; }
-    .rbc-calendar .rbc-row .rbc-row-segment {
-      height: 24px; }
+  .rbc-calendar .rbc-row .rbc-row-segment {
+    height: 1.375rem; }
   .rbc-calendar .rbc-row .rbc-event {
     width: 100%;
-    position: absolute; }
+    position: absolute;
+    height: 21px; }
   .rbc-calendar .rbc-month-row {
     flex: 1 1 0%; }
+  .rbc-calendar .rbc-row-segment {
+    padding: 0; }
+
+.rbc-row .rbc-event {
+  padding: 0px 2px;
+  background-color: #d5f2ff;
+  border-radius: 0px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid #DDD;
+  border-left: 1px solid #DDD;
+  color: #000;
+  cursor: pointer;
+  font-size: 14px; }
+  .rbc-row .rbc-event.rbc-selected {
+    background: #0083BB; }
+
+.rbc-row .rbc-event:hover {
+  box-shadow: 1px 2px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  z-index: 2;
+  transition: 0.2s box-shadow linear; }
+
+.rbc-event-content {
+  width: 100%;
+  z-index: 20; }
+
+.rbc-row-segment {
+  position: relative; }
+
+.rbc-month-row,
+.rbc-selected > .rbc-event-content {
+  overflow: visible !important; }
+  @media screen and (max-width: 39.99875em) {
+    .rbc-month-row,
+    .rbc-selected > .rbc-event-content {
+      overflow: hidden !important; } }
+  .rbc-month-row .hide-x,
+  .rbc-selected > .rbc-event-content .hide-x {
+    overflow: hidden;
+    text-overflow: ellipsis; }
+
+.rbc-row-segment {
+  position: relative; }
+
+.fade {
+  opacity: 0;
+  transition: opacity 0.15s linear; }
+
+.fade.in {
+  opacity: 1; }
+
+.popover {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1060;
+  display: none;
+  max-width: 400px;
+  padding: 1px;
+  font-style: normal;
+  font-weight: normal;
+  letter-spacing: normal;
+  line-break: auto;
+  line-height: 1.42857143;
+  text-align: left;
+  text-align: start;
+  text-decoration: none;
+  text-shadow: none;
+  text-transform: none;
+  white-space: normal;
+  word-break: normal;
+  word-spacing: normal;
+  word-wrap: normal;
+  font-size: 14px;
+  background-color: #ffffff;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  border: 1px solid #cccccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2); }
+
+.popover.top {
+  margin-top: -10px; }
+
+.popover.right {
+  margin-left: 10px; }
+
+.popover.bottom {
+  margin-top: 10px; }
+
+.popover.left {
+  margin-left: -10px; }
+
+.popover-title {
+  margin: 0;
+  padding: 4px 14px;
+  font-size: 14px;
+  background-color: #f7f7f7;
+  border-bottom: 1px solid #ebebeb;
+  border-radius: 5px 5px 0 0;
+  font-weight: 400;
+  color: #000; }
+
+.popover-content {
+  padding: 5px 14px; }
+
+.popover > .arrow,
+.popover > .arrow:after {
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid; }
+
+.popover > .arrow {
+  border-width: 11px; }
+
+.popover > .arrow:after {
+  border-width: 10px;
+  content: ''; }
+
+.popover.top > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-bottom-width: 0;
+  border-top-color: #999999;
+  border-top-color: rgba(0, 0, 0, 0.25);
+  bottom: -11px; }
+
+.popover.top > .arrow:after {
+  content: ' ';
+  bottom: 1px;
+  margin-left: -10px;
+  border-bottom-width: 0;
+  border-top-color: #ffffff; }
+
+.popover.right > .arrow {
+  top: 50%;
+  left: -11px;
+  margin-top: -11px;
+  border-left-width: 0;
+  border-right-color: #999999;
+  border-right-color: rgba(0, 0, 0, 0.25); }
+
+.popover.right > .arrow:after {
+  content: ' ';
+  left: 1px;
+  bottom: -10px;
+  border-left-width: 0;
+  border-right-color: #ffffff; }
+
+.popover.bottom > .arrow {
+  left: 50%;
+  margin-left: -11px;
+  border-top-width: 0;
+  border-bottom-color: #999999;
+  border-bottom-color: rgba(0, 0, 0, 0.25);
+  top: -11px; }
+
+.popover.bottom > .arrow:after {
+  content: ' ';
+  top: 1px;
+  margin-left: -10px;
+  border-top-width: 0;
+  border-bottom-color: #ffffff; }
+
+.popover.left > .arrow {
+  top: 50%;
+  right: -11px;
+  margin-top: -11px;
+  border-right-width: 0;
+  border-left-color: #999999;
+  border-left-color: rgba(0, 0, 0, 0.25); }
+
+.popover.left > .arrow:after {
+  content: ' ';
+  right: 1px;
+  border-right-width: 0;
+  border-left-color: #ffffff;
+  bottom: -10px; }
+
+.quickFunctions {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+  [data-whatinput='mouse'] .quickFunctions li {
+    outline: 0; }
+  .quickFunctions a,
+  .quickFunctions .button {
+    line-height: 1;
+    text-decoration: none;
+    display: block;
+    padding: 0.7rem 1rem; }
+  .quickFunctions input,
+  .quickFunctions select,
+  .quickFunctions a,
+  .quickFunctions button {
+    margin-bottom: 0; }
+  .quickFunctions input {
+    display: inline-block; }
+  .quickFunctions .dateStart {
+    text-align: center;
+    padding: 4px 10px; }
+    .quickFunctions .dateStart button {
+      background: #0083BB;
+      padding: 8px 5px;
+      color: #fff;
+      border-radius: 2px;
+      box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12); }
+      .quickFunctions .dateStart button:active {
+        box-shadow: none; }
 
 /* ---------------------------------------------------
     CALENDAR
@@ -6048,30 +6268,6 @@ button:focus {
 .radio-button:hover {
   -webkit-animation: quantumWizPaperAnimateSelectIn 0.2s 0.1s forwards;
   animation: quantumWizPaperAnimateSelectIn 0.2s 0.1s forwards; }
-
-.rbc-row .rbc-event {
-  padding: 0px 5px;
-  background-color: rgba(0, 0, 255, 0.1);
-  border-radius: 2px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #000;
-  cursor: pointer;
-  font-size: 14px; }
-
-.rbc-row .rbc-event:hover {
-  box-shadow: 2px 3px rgba(0, 0, 0, 0.5);
-  position: absolute;
-  float: left;
-  font-size: 18px;
-  width: 100%;
-  z-index: 2;
-  transition: 0.2s; }
-
-.rbc-event-content {
-  width: 100%; }
-
-.rbc-row-segment {
-  position: relative; }
 
 /* ---------------------------------------------------
     QUICK TASK

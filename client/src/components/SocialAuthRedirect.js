@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 class SocialAuthRedirect extends Component {
 	componentWillMount() {
-		console.log(123);
 		const cookieMe = document.cookie.split('=')[1];
 		this.props.facebookLogin(cookieMe);
 		document.cookie = 'jwtToken=; expires=Thu, 01-Jan-70 00:00:01 GMT;';

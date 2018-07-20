@@ -46,3 +46,5 @@ export const Q_UPDATE_END_TIME_MINS = 'Q_UPDATE_END_TIME_MINS';
 export const Q_FROM_START = 'Q_FROM_START';
 export const Q_TO_END = 'Q_TO_END';
 export const Q_UPDATE_DURATION = 'Q_UPDATE_DURATION';
+
+export const DAY_CALENDAR_TASKS = 'DAY_CALENDAR_TASKS';

@@ -150,7 +150,7 @@ module.exports = app => {
 		_.map(
 			monthlyTasks,
 			value => {
-				const { repeat, timeInterval, activeRepeatRadio, daysSelected } = value;
+				const { repeat, timeInterval, activeRepeatRadio, daysSelected, _id } = value;
 				if (repeat) {
 					if (timeInterval === 'day') {
 						switch (activeRepeatRadio) {
@@ -192,11 +192,15 @@ module.exports = app => {
 							return fullCal.push(...repeatDays);
 						}
 						case 'after': {
-							const repeatDays = repeatFunctions.weeklyRepeatCompletes(
-								value,
-								date
-							);
-							return fullCal.push(...repeatDays);
+							const realOccursDate = moment(value.start_date).add(value.afterCompletes, 'weeks');
+							if (moment(date).startOf('month').isBefore(realOccursDate)){
+								const repeatDays = repeatFunctions.weeklyRepeatCompletes(
+									value,
+									date
+								);
+								return fullCal.push(...repeatDays);
+							}
+
 						}
 						}
 					} else if (timeInterval === 'month') {
@@ -226,11 +230,13 @@ module.exports = app => {
 	});
 
 	app.post('/api/create_calendar_task', async (req, res) => {
-		let { message, user, start_date, end_date } = req.body;
+		let { message, user } = req.body;
 		let {
 			journal,
 			track,
 			hat,
+			startDate,
+			endDate,
 			timeInterval,
 			timePlural,
 			repeatTime,
@@ -243,13 +249,15 @@ module.exports = app => {
 			switchRepeats,
 			monthChoice,
 			monthlyRepeat,
-			totalCompletes
+			totalCompletes,
+			rptDisabled,
+			taskDuration
 		} = req.body.rdxStore;
 		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
 		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
-		start_date = moment(start_date, 'MMMM Do YYYY, h:mm').toDate();
-		end_date = moment(end_date, 'MMMM Do YYYY, h:mm').toDate();
-		// first we find the task with the lowest index for that day.
+		let start_date = startDate;
+		let end_date = endDate;
+		// first we find the task with the lowest index for that day and then we add this to the index prop.
 		let highestIndex = await Tasks.findOne({ _user: user._id })
 			.where('created_at')
 			.gt(moment(start_date).startOf('day'))
@@ -258,7 +266,7 @@ module.exports = app => {
 			.exec();
 		let newIndex = highestIndex === null ? -1 : highestIndex.index;
 		let task;
-		if (switchRepeats === null) {
+		if (rptDisabled || switchRepeats === null) {
 			task = new Tasks({
 				message,
 				journal,
@@ -266,7 +274,7 @@ module.exports = app => {
 				index: (newIndex += 1),
 				created_at: Date.now(),
 				start_date,
-				end_date: moment(start_date).add(1, 'hours')
+				end_date
 			});
 		} else if (switchRepeats === 'repeat') {
 			task = new Tasks({
@@ -287,7 +295,8 @@ module.exports = app => {
 				endsOnDate,
 				afterCompletes,
 				lastCompleted: null,
-				totalCompletes
+				totalCompletes,
+				taskDuration
 			});
 		} else if (switchRepeats === 'redue') {
 			task = new Tasks({
@@ -300,7 +309,15 @@ module.exports = app => {
 				end_date: moment(start_date).add(1, 'hours')
 			});
 		}
-		const saveTask = await task.save();
+		let saveTask = await task.save();
+		// try {
+		// 	const foo = await task.save();
+		// 	saveTask = foo;
+		// 	return true;
+		// } catch (err) {
+		// 	res.send({success:false});
+		// }
+		// TODO needs to be refactored at some point.
 		if (track === '') {
 			await Tracks.update(
 				{
@@ -355,8 +372,10 @@ module.exports = app => {
 				{ upsert: true }
 			).exec();
 		}
+		res.status(200).send(saveTask);
+	});
+	app.post('api/create_repeat_task', async(req,res) => {
 
-		res.send(saveTask);
 	});
 	app.post('/api/create_track', async (req, res) => {});
 };

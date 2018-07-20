@@ -15,10 +15,7 @@ class DailyTaskList extends Component {
 		this.onSortEnd = this.onSortEnd.bind(this);
 	}
 	componentWillMount() {
-		if (localStorage.getItem('jwtToken')) {
-			this.props.dbTasks();
-			this.props.createJournal();
-		}
+		this.props.createJournal();
 	}
 	onSortEnd({ oldIndex, newIndex }) {
 		const newOrderedList = arrayMove(
@@ -29,6 +26,7 @@ class DailyTaskList extends Component {
 		this.props.newOrder(newOrderedList);
 	}
 	render() {
+		console.log(this.props.tasks.list);
 		return (
 			<div className="dailyTaskList">
 				<div className="card">

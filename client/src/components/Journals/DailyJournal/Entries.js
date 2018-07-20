@@ -68,7 +68,9 @@ class Entries extends Component {
 					</div>
 					<div className="row tasks-notes" ref={this.setWrapperRef}>
 						<div className="must-complete">
-							<DailyTasksList />
+							<DailyTasksList
+								taskList={this.props.taskList}
+							/>
 							{this.props.notes.tab === 'journal' ? <DailyJournalText /> : null}
 							{this.props.notes.tab === 'tsettings' ? <TaskSettings /> : null}
 						</div>

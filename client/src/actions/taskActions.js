@@ -12,10 +12,12 @@ import {
 	HELPER_POP,
 	TASK_OFF_CLICK,
 	JOURNAL_AUTOSAVE,
-	DELETED_TASK
+	DELETED_TASK,
+	DAY_CALENDAR_TASKS
 } from './types';
 import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
+import moment from 'moment';
 
 export const newTaskRequest = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
@@ -25,8 +27,14 @@ export const newTaskRequest = data => async dispatch => {
 };
 export const dbTasks = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
-	const res = await axios.post('/api/daily_tasks', user);
-	dispatch({ type: DAILY_TASK_LIST, payload: res.data });
+	const date = Date.now();
+	const res = await axios.post('/api/init_cal', {date,user});
+	const today = res.data.filter((x) => {
+		if (moment(x.start_date).isSame(moment(date), 'day')){
+			return x;
+		}
+	});
+	dispatch({ type: DAILY_TASK_LIST, payload: today});
 };
 
 export const createJournal = data => async dispatch => {
@@ -82,8 +90,8 @@ export function onClickNotes(data) {
 		dispatch({ type: UPDATE_TABS, payload: data });
 	};
 }
-export const newOrder = (data) => dispatch => {
-	axios.post('/api/update_task_index', {items:data});
+export const newOrder = data => dispatch => {
+	axios.post('/api/update_task_index', { items: data });
 	dispatch({ type: UPDATE_TASK_LIST, payload: data });
 };
 export const clickComplete = data => async dispatch => {
@@ -93,10 +101,27 @@ export const clickComplete = data => async dispatch => {
 };
 export const deleteTask = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
-	const res = await axios.post('/api/delete_task', {data, user});
-	dispatch({type: DELETED_TASK, payload: res});
+	const res = await axios.post('/api/delete_task', { data, user });
+	dispatch({ type: DELETED_TASK, payload: res });
 };
 
 export const helperPop = data => async dispatch => {
 	dispatch({ type: HELPER_POP, payload: data });
+};
+export const renderTasks = (events, date) => dispatch => {
+	const arr = [];
+	events.map(x => {
+		if (moment(x.start_date).isSame(moment(date), 'day')) {
+			arr.push({
+				start_date: x.start_date,
+				end_date: x.end_date,
+				message: x.message,
+				_id: x._id,
+				// need to work on these values
+				index: 1,
+				completed: false
+			});
+		}
+	});
+	dispatch({type: DAY_CALENDAR_TASKS, payload: arr});
 };

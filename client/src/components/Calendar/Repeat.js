@@ -132,6 +132,7 @@ class Repeat extends Component {
 					<div className="addMarginTop">
 						<Ends
 							handleRadio={this.props.handleRepeatRadio}
+							handleCal={this.props.handleCal}
 							activeRepeatRadio={activeRepeatRadio}
 							handleCompletes={this.props.handleCompletes}
 						/>
