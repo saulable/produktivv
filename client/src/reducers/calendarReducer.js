@@ -244,7 +244,8 @@ export default (state = initState, action) => {
 				startDate: action.payload,
 				taskDurationFormat: 'd',
 				taskDuration: Math.round(asDays),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		} else if (asDays >= 7 && asDays < inMonth) {
 			return {
@@ -252,7 +253,8 @@ export default (state = initState, action) => {
 				startDate: action.payload,
 				taskDurationFormat: 'w',
 				taskDuration: Math.round(duration.asWeeks()),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		} else if (asDays >= inMonth) {
 			return {
@@ -260,7 +262,8 @@ export default (state = initState, action) => {
 				startDate: action.payload,
 				taskDurationFormat: 'm',
 				taskDuration: Math.round(duration.asMonths()),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		} else {
 			return { ...state, startDate: action.payload, taskDuration: 'ERR' };
@@ -286,7 +289,8 @@ export default (state = initState, action) => {
 				endDate: action.payload,
 				taskDurationFormat: 'd',
 				taskDuration: Math.round(asDays),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		} else if (asDays >= 7 && asDays < inMonth) {
 			return {
@@ -294,7 +298,8 @@ export default (state = initState, action) => {
 				endDate: action.payload,
 				taskDurationFormat: 'w',
 				taskDuration: Math.round(duration.asWeeks()),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		} else {
 			return {
@@ -302,7 +307,8 @@ export default (state = initState, action) => {
 				endDate: action.payload,
 				taskDurationFormat: 'm',
 				taskDuration: Math.round(duration.asMonths()),
-				rptDisabled: true
+				rptDisabled: true,
+				switchRepeats: null
 			};
 		}
 	}

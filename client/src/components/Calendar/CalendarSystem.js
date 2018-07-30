@@ -80,7 +80,6 @@ class CalendarSystem extends Component {
 }
 
 function mapStateToProps({ calendar }) {
-	console.log(calendar.events);
 	return { calendar };
 }
 

@@ -12,10 +12,22 @@ const pug = require('pug');
 const path = require('path');
 const gulp = require('gulp');
 
-require('./server/models/Tasks');
+
+mongoose
+	.connect(keys.mongoURI)
+	.then(() => console.log('connection successful'))
+	.catch(err => console.log(err));
+
+require('./server/models/SimpleTask');
+require('./server/models/simpleLongTask');
 require('./server/models/DailyJournals');
 require('./server/models/Tracks');
 require('./server/models/Hats');
+require('./server/models/DailyTaskList');
+require('./server/models/RepeatTask');
+require('./server/models/RedueTask');
+
+
 
 // used for development purposes.
 const morgan = require('morgan');
@@ -23,10 +35,7 @@ const options = {
 	key: fs.readFileSync('./server/key.pem'),
 	cert: fs.readFileSync('./server/cert.pem'),
 };
-mongoose
-	.connect(keys.mongoURI)
-	.then(() => console.log('connection successful'))
-	.catch(err => console.log(err));
+
 
 const app = express();
 
@@ -46,6 +55,7 @@ require('./server/routes/book')(app);
 require('./server/routes/auth')(app, passport);
 require('./server/routes/loginRoutes')(app, passport);
 require('./server/routes/tasksRoutes')(app);
+require('./server/routes/calendarRoutes')(app);
 // require('./server/routes/frontEnd')(app);
 
 
@@ -59,7 +69,7 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
-// 
+//
 // // reload code
 // app.use(express.static('./dist/', {
 //     extensions: ['html', 'htm']

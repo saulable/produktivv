@@ -19,7 +19,6 @@ class LeftNavigation extends Component {
 		window.location.reload();
 	}
 	handleClick(event) {
-		console.log(event.target);
 		event.target.className = '-active';
 		if (this.state.isClosed) {
 			this.setState({

@@ -5384,7 +5384,7 @@ button:focus {
 
 .bottom-section {
   width: 100%;
-  height: 80vh;
+  height: 70vh;
   position: relative; }
   .bottom-section .home-page-container {
     padding-right: 0.625rem;
@@ -5394,7 +5394,7 @@ button:focus {
     padding-top: 1rem !important;
     display: flex;
     flex-flow: row wrap;
-    height: 80vh;
+    height: 70vh;
     z-index: 2; }
     @media print, screen and (min-width: 40em) {
       .bottom-section .home-page-container {
@@ -5950,6 +5950,9 @@ button:focus {
     flex: 1 1 0%; }
   .rbc-calendar .rbc-row-segment {
     padding: 0; }
+  .rbc-calendar .rbc-date-cell {
+    text-align: left;
+    padding-left: 5px; }
 
 .rbc-row .rbc-event {
   padding: 0px 2px;

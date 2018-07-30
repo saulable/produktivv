@@ -2,49 +2,85 @@ const mongoose = require('mongoose');
 const express = require('express');
 const moment = require('moment');
 const _ = require('lodash');
-const Tasks = mongoose.model('tasks');
+const SimpleTask = mongoose.model('simpleTask');
 const DailyJ = mongoose.model('dailyjournals');
 const Tracks = mongoose.model('tracks');
 const Hats = mongoose.model('hats');
+const DailyTaskList = mongoose.model('dailyTaskList');
 
 const repeatFunctions = require('./repeatFunctions');
 
 module.exports = app => {
 	app.post('/api/create_task', async (req, res) => {
 		const { message, journal, user } = req.body;
-		let highestIndex = await Tasks.findOne({ _user: user._id })
+		let highestIndex = await SimpleTask.findOne({ _user: user._id })
 			.where('created_at')
 			.gt(moment().startOf('day'))
 			.lt(moment().endOf('day'))
 			.sort('-index')
 			.exec();
 		let newIndex = highestIndex === null ? -1 : highestIndex.index;
-		const task = new Tasks({
+		const task = new SimpleTask({
 			message,
 			journal,
 			_user: user._id,
 			index: (newIndex += 1),
-			created_at: Date.now(),
+			created_at: new Date(),
 			start_date: moment().toDate(),
 			end_date: moment()
-				.add(5, 'minutes')
+				.add(1, 'hours')
 				.toDate()
-		});
+		}
+		);
+		let highestIndexDaily = await DailyTaskList.findOne(
+			{ _user: user._id }
+		)
+			.where('forDate')
+			.gt(moment().startOf('day'))
+			.lt(moment().endOf('day'))
+			.sort('-index')
+			.exec();
+		const taskLength = (highestIndexDaily.taskList.length);
 		try {
+			// taskDailyList.save();
 			const saveTask = await task.save();
+			highestIndexDaily.taskList.push({
+				id: saveTask._id,
+				completed: false,
+				note: '',
+				message,
+				journal,
+				_user: user._id,
+				index: (newIndex += 1),
+				created_at: new Date(),
+				start_date: moment().toDate(),
+				end_date: moment()
+					.add(1, 'hours')
+					.toDate()
+			});
+			await DailyTaskList.findOneAndUpdate({_id: highestIndexDaily._id}, {taskList: highestIndexDaily.taskList}).exec();
 			res.send(saveTask);
 		} catch (err) {
 			res.status(422).send(err);
 		}
 	});
 	app.post('/api/update_task_index', (req, res) => {
-		req.body.items.map((x, index) => {
-			Tasks.update({ _id: x._id }, { $set: { index: index } }).exec();
+		// need to find the dailytasklist id, then just insert the new updated array.
+		const taskList = req.body.items.map((x, index) => {
+			return x._id;
 		});
+		DailyTaskList.update(
+			{ _id: req.body.id },
+			{ $set: { indexes: taskList } }
+		).exec();
 		res.status(200).send({ success: true });
+		// req.body.items.map((x, index) => {
+		// 	DailyTaskList.update({ _id: x._id }, { $set: { index: index } }).exec();
+		// });
+		// res.status(200).send({ success: true });
 	});
 	app.post('/api/daily_tasks', async (req, res) => {
-		const dailyTasks = await Tasks.find({ _user: req.body._id })
+		const dailyTasks = await SimpleTask.find({ _user: req.body._id })
 			.where('start_date')
 			.gt(moment().startOf('day'))
 			.lt(moment().endOf('day'));
@@ -72,13 +108,15 @@ module.exports = app => {
 		}
 	});
 	app.post('/api/task_retrieve', async (req, res) => {
-		const getNote = await Tasks.find({ _id: req.body.id }).exec((err, data) => {
-			if (err) res.status(500).send(err);
-			res.status(200).send(data);
-		});
+		const getNote = await SimpleTask.find({ _id: req.body.id }).exec(
+			(err, data) => {
+				if (err) res.status(500).send(err);
+				res.status(200).send(data);
+			}
+		);
 	});
 	app.post('/api/notes_update', async (req, res) => {
-		Tasks.updateOne(
+		SimpleTask.updateOne(
 			{ _id: req.body.id },
 			{ $set: { note: req.body.dataNote } }
 		).exec();
@@ -92,15 +130,15 @@ module.exports = app => {
 		res.send({ success: true });
 	});
 	app.post('/api/task_update', async (req, res) => {
-		Tasks.updateOne(
+		SimpleTask.updateOne(
 			{ _id: req.body.id },
 			{ $set: { message: req.body.dataNote } }
 		).exec();
 		res.send({ draftSaved: true });
 	});
 	app.post('/api/complete_task', async (req, res) => {
-		const taskComplete = await Tasks.findById(req.body.id);
-		const completed = await Tasks.findOneAndUpdate(
+		const taskComplete = await SimpleTask.findById(req.body.id);
+		const completed = await SimpleTask.findOneAndUpdate(
 			{ _id: req.body.id },
 			{ $set: { completed: !taskComplete.completed } },
 			{ new: true }
@@ -109,22 +147,22 @@ module.exports = app => {
 	});
 	app.post('/api/delete_task', async (req, res) => {
 		try {
-			const deleteTask = await Tasks.deleteOne({
+			const deleteTask = await SimpleTask.deleteOne({
 				_id: req.body.data._id
 			}).exec();
-			const dailyTasks = await Tasks.find({ _user: req.body.user._id })
+			const dailyTasks = await SimpleTask.find({ _user: req.body.user._id })
 				.where('start_date')
 				.gt(moment().startOf('day'))
 				.lt(moment().endOf('day'))
 				.sort({ index: 'asc' })
 				.exec();
 			const newIndexTasks = await dailyTasks.map((x, index) => {
-				Tasks.findOneAndUpdate(
+				SimpleTask.findOneAndUpdate(
 					{ _id: x._id },
 					{ $set: { index: index } }
 				).exec();
 			});
-			const updatedTasks = await Tasks.find({ _user: req.body.user._id })
+			const updatedTasks = await SimpleTask.find({ _user: req.body.user._id })
 				.where('start_date')
 				.gt(moment().startOf('day'))
 				.lt(moment().endOf('day'))
@@ -135,247 +173,4 @@ module.exports = app => {
 			res.status(500).json({ err });
 		}
 	});
-	app.post('/api/init_cal', async (req, res) => {
-		const { date, user } = req.body;
-		const monthTasks = await Tasks.find({ _user: user._id })
-			.where('start_date')
-			.gt(moment(date).startOf('month'))
-			.lt(moment(date).endOf('month'));
-		const repeatTasks = await Tasks.find({ _user: user._id, repeat: true });
-		const ccTasks = [...repeatTasks, ...monthTasks];
-		const monthlyTasks = _.uniqBy(ccTasks, e => {
-			return e.id;
-		});
-		let fullCal = [];
-		_.map(
-			monthlyTasks,
-			value => {
-				const { repeat, timeInterval, activeRepeatRadio, daysSelected, _id } = value;
-				if (repeat) {
-					if (timeInterval === 'day') {
-						switch (activeRepeatRadio) {
-						case 'never': {
-							const repeatDays = repeatFunctions.dailyRepeatNever(
-								value,
-								date
-							);
-							return fullCal.push(...repeatDays);
-						}
-						case 'on': {
-							const repeatDays = repeatFunctions.dailyRepeatEnds(value);
-							return fullCal.push(...repeatDays);
-						}
-						case 'after': {
-							const repeatDays = repeatFunctions.dailyRepeatCompletes(value);
-							return fullCal.push(...repeatDays);
-						}
-						}
-					} else if (timeInterval === 'week') {
-						switch (activeRepeatRadio) {
-						case 'never': {
-							let repeatDays;
-							if (daysSelected.length === 0) {
-								repeatDays = repeatFunctions.weeklyRepeatNever(value, date);
-							} else {
-								repeatDays = repeatFunctions.weeklyRepeatNeverDays(
-									value,
-									date
-								);
-							}
-							return fullCal.push(...repeatDays);
-						}
-						case 'on': {
-							const repeatDays = repeatFunctions.weeklyRepeatEnds(
-								value,
-								date
-							);
-							return fullCal.push(...repeatDays);
-						}
-						case 'after': {
-							const realOccursDate = moment(value.start_date).add(value.afterCompletes, 'weeks');
-							if (moment(date).startOf('month').isBefore(realOccursDate)){
-								const repeatDays = repeatFunctions.weeklyRepeatCompletes(
-									value,
-									date
-								);
-								return fullCal.push(...repeatDays);
-							}
-
-						}
-						}
-					} else if (timeInterval === 'month') {
-						switch (activeRepeatRadio) {
-						case 'never': {
-							const repeatDays = repeatFunctions.monthlyRepeatNever(value);
-							return fullCal.push(...repeatDays);
-						}
-						case 'on': {
-							const repeatDays = repeatFunctions.monthlyRepeatEnds(value);
-							return fullCal.push(...repeatDays);
-						}
-						case 'after': {
-							const repeatDays = repeatFunctions.monthlyRepeatCompletes(
-								value
-							);
-							return fullCal.push(...repeatDays);
-						}
-						}
-					}
-				}
-				fullCal.push(value);
-			},
-			date
-		);
-		res.send(fullCal);
-	});
-
-	app.post('/api/create_calendar_task', async (req, res) => {
-		let { message, user } = req.body;
-		let {
-			journal,
-			track,
-			hat,
-			startDate,
-			endDate,
-			timeInterval,
-			timePlural,
-			repeatTime,
-			activeRepeatRadio,
-			afterCompletes,
-			endsOnDate,
-			daysSelected,
-			monthlyRepeatswitchRepeats,
-			nthdayMonth,
-			switchRepeats,
-			monthChoice,
-			monthlyRepeat,
-			totalCompletes,
-			rptDisabled,
-			taskDuration
-		} = req.body.rdxStore;
-		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
-		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
-		let start_date = startDate;
-		let end_date = endDate;
-		// first we find the task with the lowest index for that day and then we add this to the index prop.
-		let highestIndex = await Tasks.findOne({ _user: user._id })
-			.where('created_at')
-			.gt(moment(start_date).startOf('day'))
-			.lt(moment(end_date).endOf('day'))
-			.sort('-index')
-			.exec();
-		let newIndex = highestIndex === null ? -1 : highestIndex.index;
-		let task;
-		if (rptDisabled || switchRepeats === null) {
-			task = new Tasks({
-				message,
-				journal,
-				_user: user._id,
-				index: (newIndex += 1),
-				created_at: Date.now(),
-				start_date,
-				end_date
-			});
-		} else if (switchRepeats === 'repeat') {
-			task = new Tasks({
-				message,
-				journal,
-				_user: user._id,
-				index: (newIndex += 1),
-				created_at: Date.now(),
-				start_date,
-				end_date,
-				repeat: true,
-				repeatTime,
-				timeInterval,
-				daysSelected,
-				nthdayMonth,
-				monthlyRepeat,
-				activeRepeatRadio,
-				endsOnDate,
-				afterCompletes,
-				lastCompleted: null,
-				totalCompletes,
-				taskDuration
-			});
-		} else if (switchRepeats === 'redue') {
-			task = new Tasks({
-				message,
-				journal,
-				_user: user._id,
-				index: (newIndex += 1),
-				created_at: Date.now(),
-				start_date,
-				end_date: moment(start_date).add(1, 'hours')
-			});
-		}
-		let saveTask = await task.save();
-		// try {
-		// 	const foo = await task.save();
-		// 	saveTask = foo;
-		// 	return true;
-		// } catch (err) {
-		// 	res.send({success:false});
-		// }
-		// TODO needs to be refactored at some point.
-		if (track === '') {
-			await Tracks.update(
-				{
-					$and: [{ _user: user._id }, { name: 'inbox' }]
-				},
-				{
-					name: 'inbox',
-					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
-					_user: user._id
-				},
-				{ upsert: true }
-			).exec();
-		} else {
-			await Tracks.update(
-				{
-					$and: [{ _user: user._id }, { name: track }]
-				},
-				{
-					name: track,
-					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
-					_user: user._id
-				},
-				{ upsert: true }
-			).exec();
-		}
-		if (hat === '') {
-			await Hats.update(
-				{
-					$and: [{ _user: user._id }, { name: 'No Hat' }]
-				},
-				{
-					name: 'No Hat',
-					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
-					_user: user._id
-				},
-				{ upsert: true }
-			).exec();
-		} else {
-			await Hats.update(
-				{
-					$and: [{ _user: user._id }, { name: hat }]
-				},
-				{
-					name: hat,
-					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
-					_user: user._id
-				},
-				{ upsert: true }
-			).exec();
-		}
-		res.status(200).send(saveTask);
-	});
-	app.post('api/create_repeat_task', async(req,res) => {
-
-	});
-	app.post('/api/create_track', async (req, res) => {});
 };

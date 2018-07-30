@@ -7,4 +7,4 @@ const dailyJournalSchema = new Schema({
 	_user: {type: Schema.Types.ObjectId, ref: 'User'}
 });
 
-mongoose.model('dailyjournals', dailyJournalSchema);
+mongoose.model('dailyjournals', dailyJournalSchema, 'daily_journals');

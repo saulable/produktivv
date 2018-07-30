@@ -10,7 +10,8 @@ import {
 import _ from 'lodash';
 
 const initState = {
-	list: []
+	list: [],
+	dailyId:  ''
 };
 
 export default function(state = initState, action) {
@@ -44,8 +45,8 @@ export default function(state = initState, action) {
 		// return arrayMove([...state], action.payload.oldIndex, action.payload.newIndex);
 	}
 	case DAILY_TASK_LIST:
-		var sortedTasks = _.sortBy(action.payload, ['index', action.payload.index]);
-		return {...state, list:sortedTasks};
+		// var sortedTasks = _.sortBy(action.payload.taskList, ['index', action.payload.index]);
+		return {...state, list:action.payload.taskList, dailyId: action.payload._id};
 	case DAY_CALENDAR_TASKS:
 		return {...state, list: action.payload};
 	default:

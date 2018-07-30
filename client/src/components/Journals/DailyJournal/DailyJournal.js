@@ -21,4 +21,8 @@ class DailyJournal extends Component {
 		);
 	}
 }
+
+function mapStateToProps({calendar}){
+	return {calendar};
+}
 export default connect(null, actions)(DailyJournal);

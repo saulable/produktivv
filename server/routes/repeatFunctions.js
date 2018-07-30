@@ -1,93 +1,52 @@
 const moment = require('moment');
 
-function dailyRepeatNever({ start_date, message, repeatTime }, date) {
-	let startLoopDay;
-	let endLoopDay;
-	if (moment(start_date).isBefore(moment(date))) {
+function dailyRepeatNever({ start_date, message, repeatTime, _id, taskDuration }, date) {
+	let startLoopDay, endLoopDay;
+	// console.log(start_date);
+	if (moment(start_date).startOf('day').isBefore(moment(date).startOf('month'))) {
 		startLoopDay = moment(date).startOf('month');
 		endLoopDay = moment(date).endOf('month');
 	} else {
-		startLoopDay = moment(start_date).startOf('day');
+		startLoopDay = moment(start_date);
 		endLoopDay = moment(start_date).endOf('month');
 	}
 	let arr = [];
-	for (
-		let m = startLoopDay;
-		m.isBefore(endLoopDay);
-		m.add(repeatTime, 'days')
-	) {
+	for (	let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({
-			start_date: m.clone().toDate(),
-			end_date: m
-				.clone()
-				.add(1, 'hours')
-				.toDate(),
-			message
-		});
+		arr.push({ start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
 	}
 	return arr;
 }
-const dailyRepeatEnds = ({ start_date, endsOnDate, message, repeatTime }) => {
-	const startLoopDay = moment(start_date).startOf('day');
-	const endLoopDay = moment(endsOnDate);
+const dailyRepeatEnds = ({ start_date, endsOnDate, message, repeatTime, _id, taskDuration }, date) => {
+	let endLoopDay, startLoopDay;
+	if (moment(endsOnDate).isSame(moment(date), 'month')) {
+		endLoopDay = moment(endsOnDate);
+		startLoopDay = moment(date).startOf('month');
+	}else if (moment(start_date).isSame(moment(date), 'month')) {
+		startLoopDay = moment(start_date);
+		endLoopDay = moment(start_date).endOf('month');
+	} else if (moment(start_date).isBefore(moment(date).startOf('month'))){
+		endLoopDay = moment(date).endOf('month');
+		startLoopDay = moment(date).startOf('month');
+	}
+	// const endLoopDay = moment(endsOnDate).endOf('month');
 	let arr = [];
-	for (
-		let m = startLoopDay;
-		m.isBefore(endLoopDay);
-		m.add(repeatTime, 'days')
-	) {
+	for ( let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({
-			start_date: m.clone().toDate(),
-			end_date: m
-				.clone()
-				.add(1, 'hours')
-				.toDate(),
-			message
-		});
+		arr.push({start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id });
 	}
 	return arr;
 };
-const dailyRepeatCompletes = (
-	{
-		start_date,
-		endsOnDate,
-		message,
-		repeatTime,
-		totalCompletes,
-		lastCompleted,
-		afterCompletes
-	},
-	date
-) => {
+const dailyRepeatCompletes = ({start_date, endsOnDate, message, repeatTime, totalCompletes, lastCompleted, afterCompletes, taskDuration }, date ) => {
 	let startLoopDay;
 	// if there are no last completes
-	if (lastCompleted === null) {
-		startLoopDay = moment(start_date).startOf('day');
-	} else {
-		// we need to work on the part where we update the completes - or give user option to set?
-		startLoopDay = moment(lastCompleted).startOf('day');
-	}
-	const endLoopDay = moment(startLoopDay).add(
-		afterCompletes * repeatTime,
-		'days'
-	);
+	// we need to work on the part where we update the completes - or give user option to set?
+	(lastCompleted === null ) ? startLoopDay = moment(start_date).startOf('day') : startLoopDay = moment(lastCompleted).startOf('day');
+	const endLoopDay = moment(startLoopDay).add( afterCompletes * repeatTime,'days' );
 	let arr = [];
-	for (
-		let m = startLoopDay;
-		m.isBefore(endLoopDay);
-		m.add(repeatTime, 'days')
-	) {
+	for ( let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({
-			start_date: m.clone().toDate(),
-			end_date: m
-				.clone()
-				.add(1, 'hours')
-				.toDate(),
-			message
-		});
+		arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message});
 	}
 	return arr;
 };

@@ -18,15 +18,15 @@ class DailyTaskList extends Component {
 		this.props.createJournal();
 	}
 	onSortEnd({ oldIndex, newIndex }) {
+		const {list, dailyId} = this.props.tasks;
 		const newOrderedList = arrayMove(
-			this.props.tasks.list,
+			list,
 			oldIndex,
 			newIndex
 		);
-		this.props.newOrder(newOrderedList);
+		this.props.newOrder(newOrderedList, dailyId);
 	}
 	render() {
-		console.log(this.props.tasks.list);
 		return (
 			<div className="dailyTaskList">
 				<div className="card">

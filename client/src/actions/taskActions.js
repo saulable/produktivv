@@ -29,12 +29,13 @@ export const dbTasks = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
 	const date = Date.now();
 	const res = await axios.post('/api/init_cal', {date,user});
-	const today = res.data.filter((x) => {
+	const todayTasks = res.data.filter((x) => {
 		if (moment(x.start_date).isSame(moment(date), 'day')){
 			return x;
 		}
 	});
-	dispatch({ type: DAILY_TASK_LIST, payload: today});
+	const createDailyTask = await axios.post('/api/create_daily_tasks', {user, date, todayTasks});
+	dispatch({ type: DAILY_TASK_LIST, payload: createDailyTask.data});
 };
 
 export const createJournal = data => async dispatch => {
@@ -90,8 +91,8 @@ export function onClickNotes(data) {
 		dispatch({ type: UPDATE_TABS, payload: data });
 	};
 }
-export const newOrder = data => dispatch => {
-	axios.post('/api/update_task_index', { items: data });
+export const newOrder = (data, id) => dispatch => {
+	axios.post('/api/update_task_index', { items: data, id });
 	dispatch({ type: UPDATE_TASK_LIST, payload: data });
 };
 export const clickComplete = data => async dispatch => {
@@ -118,7 +119,7 @@ export const renderTasks = (events, date) => dispatch => {
 				message: x.message,
 				_id: x._id,
 				// need to work on these values
-				index: 1,
+				index: 3,
 				completed: false
 			});
 		}
