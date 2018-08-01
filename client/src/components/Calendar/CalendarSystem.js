@@ -21,12 +21,14 @@ class CalendarSystem extends Component {
 		this.state = {
 			showComponent: 'BigCalendar',
 			slotStartState: '',
-			slotEndState: ''
+			slotEndState: '',
+			currentMonth: ''
 		};
 	}
 	componentDidMount() {
 		this.props.initCal();
 		this.props.clearRepeats();
+		this.setState({currentMonth: Date.now()});
 	}
 	handleSlotEvent(slotInfo) {
 		const nowHours = moment().hour();
@@ -43,7 +45,10 @@ class CalendarSystem extends Component {
 		this.props.clearRepeats();
 	}
 	onNavigate = e => {
-		this.props.initCal(e);
+		if (!moment(this.state.currentMonth).isSame(moment(e), 'month')){
+			this.setState({currentMonth: e});
+			this.props.initCal(e);
+		}
 	};
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {

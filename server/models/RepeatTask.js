@@ -17,7 +17,7 @@ const repeatTaskSchema = new Schema({
 	timeInterval: String,
 	daysSelected: Array,
 	nthdayMonth: String,
-	monthlyRepeat: String,
+	monthChoice: String,
 	activeRepeatRadio: String,
 	endsOnDate: Date,
 	afterCompletes: Number,

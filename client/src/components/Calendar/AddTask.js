@@ -21,7 +21,7 @@ class AddTask extends Component {
 		};
 		this.taskChange = this.taskChange.bind(this);
 	}
-
+	
 	taskChange(e) {
 		e.preventDefault();
 		this.setState({ message: e.target.value });

@@ -105,15 +105,15 @@ module.exports = app => {
 				} else if (timeInterval === 'month') {
 					switch (activeRepeatRadio) {
 					case 'never': {
-						const repeatDays = repeatFunctions.monthlyRepeatNever(value);
+						const repeatDays = repeatFunctions.monthlyRepeatNever(value, date);
 						return fullCal.push(...repeatDays);
 					}
 					case 'on': {
-						const repeatDays = repeatFunctions.monthlyRepeatEnds(value);
+						const repeatDays = repeatFunctions.monthlyRepeatEnds(value, date);
 						return fullCal.push(...repeatDays);
 					}
 					case 'after': {
-						const repeatDays = repeatFunctions.monthlyRepeatCompletes(value);
+						const repeatDays = repeatFunctions.monthlyRepeatCompletes(value, date);
 						return fullCal.push(...repeatDays);
 					}
 					}
@@ -178,43 +178,6 @@ module.exports = app => {
 				if (err) res.status(401).send({success: false});
 				res.status(200).send(doc);
 			});
-
-		// let createDailyJournal = await DailyTaskList.findOne( { _user: user._id } )
-		// .where('forDate')
-		// .gt(moment(date).startOf('day'))
-		// .lt(moment(date).endOf('day'))
-		// 	.exec();
-		// if (createDailyJournal === null){
-		//
-		// 	dailyTasksList = new DailyTaskList({
-		// 		currentDate: date,
-		// 		taskList: todayTasks,
-		// 		user: user._id
-		// 	});
-		// 	await dailyTasksList.save((err,doc) => {
-		// 		if (err) res.status(202).send(err);
-		// 		res.status(200).send(doc);
-		// 	});
-		// }else {
-		// 	res.status(200).send(createDailyJournal);
-		// }
-
-		// let createDailyJournal = await DailyTaskList.findOne( { _user: user._id } )
-		// 	.where('currentDate')
-		// 	.gt(moment(date).startOf('day'))
-		// 	.lt(moment(date).endOf('day'))
-		// 	.exec();
-		// if (createDailyJournal === null) {
-		// 	dailyTasksList = new DailyTaskList({
-		// 		currentDate: date,
-		// 		taskList: todayTasks,
-		// 		_user: user._id
-		// 	});
-		// 	await dailyTasksList.save();
-		// 	res.status(200).send(dailyTasksList);
-		// } else {
-		// 	res.status(200).send(createDailyJournal);
-		// }
 	});
 	app.post('/api/create_calendar_task', async (req, res) => {
 		let { message, user } = req.body;
@@ -235,11 +198,10 @@ module.exports = app => {
 			nthdayMonth,
 			switchRepeats,
 			monthChoice,
-			monthlyRepeat,
 			totalCompletes,
 			rptDisabled,
 			taskDuration,
-			taskDurationFormat
+			taskDurationFormat,
 		} = req.body.rdxStore;
 		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
 		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
@@ -283,7 +245,7 @@ module.exports = app => {
 				timeInterval,
 				daysSelected,
 				nthdayMonth,
-				monthlyRepeat,
+				monthChoice,
 				activeRepeatRadio,
 				endsOnDate,
 				afterCompletes,

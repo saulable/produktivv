@@ -111,6 +111,7 @@ export const helperPop = data => async dispatch => {
 };
 export const renderTasks = (events, date) => dispatch => {
 	const arr = [];
+	// const res = await 
 	events.map(x => {
 		if (moment(x.start_date).isSame(moment(date), 'day')) {
 			arr.push({

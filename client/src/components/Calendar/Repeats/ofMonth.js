@@ -5,6 +5,7 @@ import moment from 'moment';
 
 class ofMonth extends Component {
 	componentDidMount() {
+
 		const curDay = moment(this.props.startDate);
 		var monday = moment(this.props.startDate)
 			.startOf('month')

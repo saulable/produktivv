@@ -34,12 +34,11 @@ import moment from 'moment';
 
 const initState = {
 	events: [],
-	monthChoice: 'noDays',
 	showBoth: false,
 	timeInterval: 'week',
 	timePlural: false,
 	repeatTime: '1',
-	monthlyRepeat: 'noDays',
+	monthChoice: 'noDays',
 	monthlyBoth: false,
 	repeatDropdown: false,
 	redueCompletes: '1',
