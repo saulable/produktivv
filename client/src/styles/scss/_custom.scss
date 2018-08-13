@@ -227,14 +227,24 @@ button:focus {
 	display: flex;
 }
 .sidebar {
-	width: 200px;
-	min-width: 200px;
+	width: 125px;
+	min-width: 125px;
 	height: auto;
 	min-height: 100vh;
 	background: $fourth-color;
 	transition: all 0.2s cubic-bezier(0.945, 0.02, 0.27, 0.665);
 	transform-origin: bottom left;
-
+	justify-content: space-between;
+	.left-nav{
+		text-align: center;
+		margin: 0;
+		li{
+			padding: 10px 0;
+			display: flex;
+			@include flex-align(center, middle);
+			border-top: 1px solid darken($fourth-color, 10%);
+		}
+	}
 	@include breakpoint(small only) {
 		margin-left: -200px;
 		transform: rotateY(100deg);
@@ -245,6 +255,10 @@ button:focus {
 		.sidebar-profile-image {
 			@include flex;
 			@include flex-align(center);
+			img{
+				width: 40px;
+				height: 40px;
+			}
 		}
 	}
 }
@@ -643,22 +657,85 @@ button:focus {
 	flex: 1;
 	.rbc-toolbar {
 		flex-wrap: wrap;
+		&.button{
+			border: none;
+		}
+	.todayButton{
+		border-top: none;
+		border-right: none;
+		border-left:none;
+		border-radius: 0;
+		border-bottom: 3px solid $secondary-color;
+		margin-right: 10px;
+	}
+	.rbc-btn-group {
+	.fa{
+		padding: 8px;
+		border-radius: 50%;
+		border:none;
+		color: $fourth-color;
+		margin-right:5px;
+		&:hover{
+			border:none;
+		}
+		}
+		button{
+			border:none;
+			border-radius: 0px;
+			box-shadow: none;
+			border-bottom: 3px solid $white;
+			margin:0;
+			&:hover{
+				background-color: rgb(230, 230, 230);
+				border-bottom: 3px solid $fourth-color;
+				box-shadow: none;
+			}
+			&.rbc-active{
+				background-color: rgb(230, 230, 230);
+				border-bottom: 3px solid $secondary-color;
+			}
+		}
+	}
+	.rbc-toolbar-label{
+		text-align: left;
+		font-size: 22px;
+		color: darken($fourth-color, 40%);
+	}
 	}
 	.rbc-show-more {
 		color: #000;
+    padding: 3px;
+    background-color: rgba(0,0,0,0.1);
+    z-index: 4;
+    font-weight: bold;
+    font-size: 75%;
+    height: auto;
+    line-height: normal;
+    white-space: nowrap;
+		margin:1px 2px;
 	}
 	.rbc-row {
 		.rbc-row-segment {
-			height: rem-calc(22);
+			height: rem-calc(19);
 		}
 	}
 	.rbc-row .rbc-event {
 		width: 100%;
 		position: absolute;
-		height: 21px;
+		height: 19px;
+	}
+	.rbc-row-bg{
+		overflow: visible;
 	}
 	.rbc-month-row {
 		flex: 1 1 0%;
+		.rbc-today{
+			border: 1px solid $fourth-color;
+			border-radius: 1px;
+			background: none;
+			box-shadow: 4px 4px rgba(0,0,0,0.2);
+		}
+		overflow: visible;
 	}
 	.rbc-row-segment{
 		padding: 0;
@@ -669,25 +746,84 @@ button:focus {
 	}
 }
 .rbc-row .rbc-event {
-	padding: 0px 2px;
-	background-color: lighten($secondary-color, 55%);
-	border-radius: 0px;
-	border-top: 1px solid rgba(0, 0, 0, 0.1);
-	border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-	border-right: 1px solid #DDD;
-	border-left: 1px solid #DDD;
+	padding: 0 2px;
+	// background-color: lighten($secondary-color, 55%);
+	// border-radius: 0px;
+	// border-top: 1px solid rgba(0, 0, 0, 0.1);
+	// border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+	// border-right: 1px solid #DDD;
+	// border-left: 1px solid #DDD;
+	border-radius: 0;
+	background: none;
 	color: #000;
 	cursor: pointer;
-	font-size: 14px;
+	font-size: 12px;
+	transition: width 1s;
+
+	.hide-x{
+		padding: 0 3px;
+		display: flex;
+		align-items: center;
+		& > div:first-child {
+			float: left;
+			margin-right: 3px;
+		}
+		.message{
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.completedTick{
+			min-width: 8px;
+			height: 8px;
+			background: url('../check.png') no-repeat;
+			background-size: 8px 8px;
+		}
+		.taskSimpleS{
+			min-width: 8px;
+			height:8px;
+			border-radius: 50%;
+			border: 1px solid $dark-gray;
+		}
+		.inProgress{
+			min-width: 12px;
+			height: 12px;
+			background: url('../img/inprogress.png') no-repeat;
+			background-size: 12px 12px;
+		}
+		.taskRepeat{
+			background: url('../img/repeat.png') no-repeat;
+			background-size: 13px 13px;
+			min-width: 13px;
+			height: 13px;
+		}
+		.taskRedue{
+			height: 12px;
+			min-width: 12px;
+			background: url('../img/redue.png') no-repeat;
+			background-size: 12px 12px;;
+		}
+
+	}
+	.simplelong{
+		background: rgba($secondary-color, 0.1);
+	}
+	.inprogress_bar{
+		background-color: rgba($warning-color, 0.15) !important;
+	}
+	.completed{
+		background: rgba($third-color, 0.3);
+		color: #000;
+	}
 	&.rbc-selected{
-		background: $secondary-color;
+		box-shadow: 1px 2px rgba(0, 0, 0, 0.4);
+		transition: 0.2s box-shadow linear;
+		background: none;
+		z-index: 2;
 	}
 }
 .rbc-row .rbc-event:hover {
-	box-shadow: 1px 2px rgba(0, 0, 0, 0.5);
 	width: 100%;
-	z-index: 2;
-	transition: 0.2s box-shadow linear;
+
 }
 .rbc-event-content {
 	width: 100%;
@@ -748,6 +884,7 @@ button:focus {
 	border-radius: 6px;
 	-webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	min-width: 350px;
 }
 .popover.top {
 	margin-top: -10px;
@@ -762,17 +899,37 @@ button:focus {
 	margin-left: -10px;
 }
 .popover-title {
-	margin: 0;
-	padding: 4px 14px;
-	font-size: 14px;
-	background-color: #f7f7f7;
-	border-bottom: 1px solid #ebebeb;
-	border-radius: 5px 5px 0 0;
-	font-weight: 400;
-	color: #000;
+	// margin: 0;
+	// padding: 4px 10px;
+	// font-size: rem-calc(20);
+	// font-weight: bold;
+	// background-color: #f7f7f7;
+	// border-bottom: 1px solid #ebebeb;
+	// border-radius: 5px 5px 0 0;
+	// color: #000;
+	// min-height: 50px;
+	font-size: 20px;
+  line-height: 26px;
+  max-height: 52px;
+  margin-top: auto;
+  padding: 0 32px 0 64px;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 .popover-content {
-	padding: 5px 14px;
+	min-height: 250px;
+	.header{
+		height: 128px;
+		background: $secondary-color;
+		.row-icons{
+			padding: 10px 15px;
+			min-height: 30px;
+		}
+	}
 }
 .popover > .arrow,
 .popover > .arrow:after {
@@ -874,6 +1031,9 @@ button:focus {
 /* ---------------------------------------------------
     CALENDAR
 ----------------------------------------------------- */
+.flexFix{
+	flex: 1;
+}
 .dailyCalendarContainer {
 	.calendar {
 		padding: 20px;

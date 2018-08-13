@@ -6,6 +6,7 @@ import * as actions from '../../actions/calendarActions';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 
+import Toolbar from 'react-big-calendar/lib/Toolbar';
 import AddTask from './AddTask';
 import CustomEvent from './CustomEvent';
 
@@ -14,6 +15,28 @@ import DayJournal from './DayJournal';
 // Setup the localizer by providing the moment (or globalize) Object
 // to the correct localizer.
 BigCalendar.momentLocalizer(moment); // or globalizeLocalizer
+
+class CustomToolbar extends Toolbar{
+	constructor(props){
+		super(props);
+		this.viewNamesGroup = this.viewNamesGroup.bind(this);
+	}
+	render(){
+		return (
+			<div className='rbc-toolbar'>
+				<button className="todayButton" type="button" onClick={() => this.navigate('TODAY')} >Today</button>
+				<span className="rbc-btn-group">
+					<button className="fa fa-arrow-left" type="button" onClick={() => this.navigate('PREV')}></button>
+					<button className="fa fa-arrow-right" type="button" onClick={() => this.navigate('NEXT')}></button>
+				</span>
+				<span className="rbc-toolbar-label">{this.props.label}</span>
+				<span className="rbc-btn-group">
+					{this.viewNamesGroup({month: 'month', week: 'week', day: 'day'})}
+				</span>
+			</div>
+		);
+	}
+}
 
 class CalendarSystem extends Component {
 	constructor(props) {
@@ -50,6 +73,7 @@ class CalendarSystem extends Component {
 			this.props.initCal(e);
 		}
 	};
+
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {
 			return (
@@ -69,6 +93,7 @@ class CalendarSystem extends Component {
 						day: DayJournal,
 					}}
 					components={{
+						toolbar: CustomToolbar,
 						month:{
 							event: CustomEvent
 						}

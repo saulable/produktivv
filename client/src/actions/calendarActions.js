@@ -10,7 +10,9 @@ import {
 	MONTH_CHOICE,
 	CHANGE_EVERY_TIME,
 	HANDLE_REPEAT_DROPDOWN,
+	HANDLE_REDUE_DROPDOWN,
 	REPEAT_EVERY_CHOICE,
+	REDUE_EVERY_CHOICE,
 	DAY_PICKERS,
 	HANDLE_COMPLETES,
 	REDUE_DAYS_CHANGE,
@@ -28,7 +30,7 @@ import {
 	Q_UPDATE_END_TIME_MINS,
 	Q_FROM_START,
 	Q_TO_END,
-	Q_UPDATE_DURATION
+	Q_UPDATE_DURATION,
 } from './types';
 import {
 	dailyRepeatNever,
@@ -51,6 +53,7 @@ export const initCal = dataDate => async dispatch => {
 		.toDate();
 	const info = { date, user };
 	const data = await axios.post('/api/init_cal', info);
+	console.log(data);
 	data.data.map((x, index) => {
 		x.start = new Date(x.start_date);
 		x.end = new Date(x.end_date);
@@ -93,7 +96,6 @@ export const quickTaskMessage = data => async dispatch => {
 	}
 	let res = await axios.post('/api/create_calendar_task', { ...data, user });
 	const { repeat, timeInterval, activeRepeatRadio, start_date, end_date } = res.data;
-
 	if (repeat) {
 		if (timeInterval === 'day') {
 			switch (activeRepeatRadio) {
@@ -148,6 +150,12 @@ export function handleMonthTime(e) {
 		dispatch({ type: REPEAT_EVERY_CHOICE, payload: name });
 	};
 }
+export function handleMonthTimeRedue(e) {
+	return dispatch => {
+		const { name } = e.currentTarget.dataset;
+		dispatch({ type: REDUE_EVERY_CHOICE, payload: name });
+	};
+}
 export function changeTime(e) {
 	return dispatch => {
 		const data = e.target.value;
@@ -172,6 +180,11 @@ export function handleDayClick(e) {
 export function handleRepeatDropdown(e) {
 	return dispatch => {
 		dispatch({ type: HANDLE_REPEAT_DROPDOWN, payload: e });
+	};
+}
+export function handleRedueDropdown(e) {
+	return dispatch => {
+		dispatch({ type: HANDLE_REDUE_DROPDOWN, payload: e });
 	};
 }
 export function handleRedueCompletes(e) {

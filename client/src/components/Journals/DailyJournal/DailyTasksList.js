@@ -24,7 +24,7 @@ class DailyTaskList extends Component {
 			oldIndex,
 			newIndex
 		);
-		this.props.newOrder(newOrderedList, dailyId);
+		this.props.newOrder(newOrderedList, dailyId, this.props.tasks.date);
 	}
 	render() {
 		return (

@@ -18,12 +18,14 @@ const redueTaskSchema = new Schema({
 	daysSelected: Array,
 	nthdayMonth: String,
 	monthlyRepeat: String,
-	activeRepeatRadio: String,
+	activeRedueRadio: String,
 	endsOnDate: Date,
 	afterCompletes: Number,
 	lastCompleted: Date,
 	totalCompletes: {type: Number, default: 0},
-	taskDuration: String
+	taskDuration: String,
+	taskType: {type: String, default: 'redue'},
+	datesCompleted: {type: Array, default: []}
 });
 
 mongoose.model('redueTask', redueTaskSchema, 'redue_tasks');

@@ -5,7 +5,7 @@ const simpleLongTaskSchema = new Schema({
 	message: String,
 	completed: {type: Boolean, default: false},
 	journal: String,
-	note: {type: String, default: ''},
+	note: String,
 	created_at: Date,
 	completed_at: Date,
 	start_date: Date,
@@ -22,9 +22,11 @@ const simpleLongTaskSchema = new Schema({
 	endsOnDate: Date,
 	afterCompletes: Number,
 	lastCompleted: Date,
-	totalCompletes: {type: Number, default: 0},
+	totalCompletes: String,
 	taskDuration: String,
-	switchRepeats: String
+	switchRepeats: String,
+	taskType: {type: String, default: 'simplelong'},
+	task_status: String
 });
 
 mongoose.model('simpleLongTask', simpleLongTaskSchema, 'simple_long_tasks');

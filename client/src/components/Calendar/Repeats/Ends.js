@@ -9,6 +9,7 @@ import MomentLocaleUtils, {
 	parseDate
 } from 'react-day-picker/moment';
 
+import {handleCompletes} from '../../../actions/calendarActions';
 import 'moment/locale/en-gb';
 
 class Ends extends Component {
@@ -98,4 +99,4 @@ class Ends extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-export default connect(mapStateToProps)(Ends);
+export default connect(mapStateToProps, {handleCompletes})(Ends);

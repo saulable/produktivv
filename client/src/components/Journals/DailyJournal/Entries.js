@@ -31,7 +31,7 @@ class Entries extends Component {
 	}
 	onSubmit(e) {
 		e.preventDefault();
-		this.props.newTaskRequest(this.state).then(res => {
+		this.props.newTaskRequest(this.state, this.props.tasks.date).then(res => {
 			this.setState({ message: '' });
 		});
 	}
@@ -82,8 +82,8 @@ class Entries extends Component {
 	}
 }
 
-function mapStateToProps({ notes }) {
-	return { notes };
+function mapStateToProps({ notes, tasks }) {
+	return { notes, tasks };
 }
 
 export default connect(

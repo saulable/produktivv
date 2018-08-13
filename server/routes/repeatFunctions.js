@@ -1,6 +1,6 @@
 const moment = require('moment');
 
-function dailyRepeatNever({ start_date, message, repeatTime, _id, taskDuration }, date) {
+function dailyRepeatNever({ start_date, message, repeatTime, _id, taskDuration, datesCompleted }, date) {
 	let startLoopDay, endLoopDay;
 	// console.log(start_date);
 	if (moment(start_date).startOf('day').isBefore(moment(date).startOf('month'))) {
@@ -13,11 +13,16 @@ function dailyRepeatNever({ start_date, message, repeatTime, _id, taskDuration }
 	let arr = [];
 	for (	let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({ start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
+		const dateC = new Date(m.clone()).getTime();
+		if ( datesCompleted.includes(dateC) ) {
+			arr.push({ start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat', completed: true});
+		}else {
+			arr.push({ start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat', completed: false});
+		}
 	}
 	return arr;
 }
-const dailyRepeatEnds = ({ start_date, endsOnDate, message, repeatTime, _id, taskDuration }, date) => {
+const dailyRepeatEnds = ({ start_date, endsOnDate, message, repeatTime, _id, taskDuration, datesCompleted }, date) => {
 	let endLoopDay, startLoopDay;
 	if (moment(endsOnDate).isSame(moment(date), 'month')) {
 		endLoopDay = moment(endsOnDate);
@@ -33,11 +38,17 @@ const dailyRepeatEnds = ({ start_date, endsOnDate, message, repeatTime, _id, tas
 	let arr = [];
 	for ( let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id });
+		const dateC = new Date(m.clone()).getTime();
+		if ( datesCompleted.includes(dateC) ) {
+			arr.push({start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat' , completed: true});
+		}
+		else {
+			arr.push({start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat' , completed: false});
+		}
 	}
 	return arr;
 };
-const dailyRepeatCompletes = ({start_date, endsOnDate, message, repeatTime, totalCompletes, lastCompleted, afterCompletes, taskDuration, _id }, date ) => {
+const dailyRepeatCompletes = ({start_date, endsOnDate, message, repeatTime, totalCompletes, lastCompleted, afterCompletes, taskDuration, _id, datesCompleted}, date ) => {
 	let startLoopDay;
 	// if there are no last completes
 	// we need to work on the part where we update the completes - or give user option to set?
@@ -46,12 +57,17 @@ const dailyRepeatCompletes = ({start_date, endsOnDate, message, repeatTime, tota
 	let arr = [];
 	for ( let m = startLoopDay; m.isBefore(endLoopDay); m.add(repeatTime, 'days')) {
 		// we skip the first day.
-		arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
+		const dateC = new Date(m.clone()).getTime();
+		if ( datesCompleted.includes(dateC) ) {
+			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat', completed: true});
+		}	else {
+			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat', completed: false});
+		}
 	}
 	return arr;
 };
 
-let dailyArr = (init1week,m,daysSelected,message,afterCompletes,counter, _id, taskDuration) => {
+let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, taskDuration, datesCompleted}) => {
 	// we cycle through 7 days, checking each day if it is inside the daysSelected array.
 	let start = m.clone();
 	let end = m.clone().add(7, 'days');
@@ -65,7 +81,12 @@ let dailyArr = (init1week,m,daysSelected,message,afterCompletes,counter, _id, ta
 		if (daysSelected.indexOf(m.format('dddd')) !== -1) {
 			// skip the first entry
 			if(!m.isSame(init1week[0].start_date, 'day')){
-				arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id});
+				const dateC = new Date(m.clone()).getTime();
+				if ( datesCompleted.includes(dateC) ) {
+					arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: true});
+				}else {
+					arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: false});
+				}
 				counter += 1;
 				// if ( m.clone().format('D') === m.clone().endOf('month').format('D')) {return arr;}
 			}
@@ -73,7 +94,7 @@ let dailyArr = (init1week,m,daysSelected,message,afterCompletes,counter, _id, ta
 	}
 	return arr;
 };
-const weeklyRepeatNever = ({ start_date, end_date, message, repeatTime, daysSelected, taskDuration, _id },date) => {
+const weeklyRepeatNever = ({ start_date, end_date, message, repeatTime, daysSelected, taskDuration, _id, datesCompleted },date) => {
 	let startLoopDay;
 	let endLoopDay;
 	// if the task start_date is before the passed in month, we set the start to loop from start.
@@ -81,28 +102,31 @@ const weeklyRepeatNever = ({ start_date, end_date, message, repeatTime, daysSele
 		startLoopDay = moment(start_date);
 		endLoopDay = moment(date).endOf('month');
 	} else {
-		// else we loop from the start of the month.
-		startLoopDay = moment(start_date).add(1, 'month');
+		// else we loop from the last occurence of the previous month.
+		const dayOf = moment(start_date).day();
+		const startCheck = moment(date).day(dayOf);
+		if (startCheck.isSame(date)){
+			startLoopDay = moment(date).day(dayOf);
+		}else {
+			//TODO needs to check that the start date is from within the month range.
+			startLoopDay = moment(date).day(dayOf);
+		}
 		endLoopDay = moment(date).endOf('month');
 	}
 	let arr = [];
 	// if there are no days selected, then loop from startday to endloopday adding all the dates.
-	for (
-		let m = moment(startLoopDay);
-		m.isBefore(endLoopDay);
-		m.add(repeatTime, 'weeks')
-	) {
-		arr.push({
-			start_date: new Date(m.clone()),
-			end_date: new Date(m.clone().add(taskDuration, 'hours')),
-			message,
-			_id
-		});
+	for (let m = moment(startLoopDay);m.isBefore(endLoopDay); m.add(repeatTime, 'weeks')) {
+		const dateC = new Date(m.clone()).getTime();
+		if ( datesCompleted.includes(dateC) ){
+			arr.push({start_date: new Date(m.clone()),end_date: new Date(m.clone().add(taskDuration, 'hours')), message, _id, taskType: 'repeat', completed: true});
+		} else {
+			arr.push({start_date: new Date(m.clone()),end_date: new Date(m.clone().add(taskDuration, 'hours')), message, _id, taskType: 'repeat', completed: false});
+		}
 	}
 	return arr;
 };
 
-const weeklyRepeatNeverDays = ({ start_date, end_date, message, repeatTime, daysSelected, _id  },date ) => {
+const weeklyRepeatNeverDays = ({ start_date, end_date, message, repeatTime, daysSelected, _id , datesCompleted },date ) => {
 	let startLoopDay;
 	let endLoopDay;
 	if (moment(start_date).isSame(date, 'month')) {
@@ -124,7 +148,8 @@ const weeklyRepeatNeverDays = ({ start_date, end_date, message, repeatTime, days
 				.add(1, 'hours')
 				.toDate(),
 			message,
-			_id
+			_id,
+			taskType: 'repeat'
 		});
 	} else {
 		init1week.push({
@@ -135,22 +160,20 @@ const weeklyRepeatNeverDays = ({ start_date, end_date, message, repeatTime, days
 				.add(1, 'hours')
 				.toDate(),
 			message,
-			_id
+			_id,
+			taskType: 'repeat'
 		});
 	}
+	let counter = 1;
 	// loop through from start of month to end of month, cycling through each day checking if it matches a day in daysSelected, then pushing to the array.
-	for (
-		let m = moment(startLoopDay);
-		m.isBefore(endLoopDay);
-		m.add(repeatTime, 'weeks')
-	) {
-		const val = dailyArr(init1week, m, daysSelected, message, 1);
+	for (let m = moment(startLoopDay);m.isBefore(endLoopDay);m.add(repeatTime, 'weeks')) {
+		const val = dailyArr({init1week, m, daysSelected, message, _id, counter, datesCompleted});
 		init1week.push(...val);
 	}
 	return init1week;
 };
 
-const weeklyRepeatEnds = ({ start_date, end_date, endsOnDate, message, repeatTime, daysSelected, _id },date) => {
+const weeklyRepeatEnds = ({ start_date, end_date, endsOnDate, message, repeatTime, daysSelected, _id, datesCompleted },date) => {
 	let startLoopDay;
 	let endLoopDay;
 	if (moment(start_date).isBefore(moment(date))) {
@@ -188,21 +211,19 @@ const weeklyRepeatEnds = ({ start_date, end_date, endsOnDate, message, repeatTim
 			start_date: moment(startLoopDay).toDate(),
 			end_date: moment(startLoopDay).toDate(),
 			message,
-			_id
+			_id,
+			taskType: 'repeat'
 		});
-		for (
-			let m = moment(startLoopDay).clone();
-			m < endLoopDay;
-			m.add(repeatTime, 'weeks')
-		) {
-			const val = dailyArr(init1week, m, daysSelected, message, 1);
+		let counter = 1;
+		for (let m = moment(startLoopDay).clone(); m < endLoopDay; m.add(repeatTime, 'weeks')) {
+			const val = dailyArr({init1week, m, daysSelected, message, counter, datesCompleted});
 			init1week.push(...val);
 		}
 		return init1week;
 	}
 };
 
-const weeklyRepeatCompletes = ({start_date,lastCompleted,end_date,endsOnDate,message,repeatTime,daysSelected,afterCompletes, _id, taskDuration}, date) => {
+const weeklyRepeatCompletes = ({start_date,lastCompleted,end_date,endsOnDate,message,repeatTime,daysSelected,afterCompletes, _id, taskDuration, datesCompleted}, date) => {
 	let startLoopDay;
 	if (lastCompleted === null && moment(start_date).isSame(date, 'month')) { startLoopDay = moment(start_date);}
 	else {
@@ -231,14 +252,14 @@ const weeklyRepeatCompletes = ({start_date,lastCompleted,end_date,endsOnDate,mes
 			// if (count === afterCompletes) { return arr; }
 			if (count === 0){ return arr;}
 			// wrong date values, but keep it for now.
-			arr.push({ start_date: new Date(m.clone()), end_date: new Date(m.clone().add(taskDuration,'hours')), message, _id });
+			arr.push({ start_date: new Date(m.clone()), end_date: new Date(m.clone().add(taskDuration,'hours')), message, _id, taskType: 'repeat' });
 			count -= 1;
 		}
 		return arr;
 	} else {
 		let init1week = [];
 		let thisMonth = [];
-		init1week.push({ start_date: moment(start_date).toDate(), end_date: moment(end_date).toDate(), message, _id});
+		init1week.push({ start_date: moment(start_date).toDate(), end_date: moment(end_date).toDate(), message, _id, taskType: 'repeat'});
 		let counter = 1;
 		for ( let m = moment(startLoopDay); m.isBefore(realOccursDate); m.add(repeatTime, 'weeks')) {
 			const val = dailyArr(init1week,m,daysSelected, message, afterCompletes, counter, _id, taskDuration);
@@ -260,7 +281,7 @@ const monthlyRepeatNever = ({start_date,end_date, message,repeatTime,monthChoice
 	switch(monthChoice){
 	case 'noDays':{
 		for ( let m = moment(start_date).startOf('day'); m.isBefore(moment(date).endOf('month')); m.add(repeatTime, 'months')){
-			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
+			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}
@@ -275,7 +296,7 @@ const monthlyRepeatNever = ({start_date,end_date, message,repeatTime,monthChoice
 		if (newDate.isSame(moment(date), 'month') && (diffTime % repeatTime) === 0) {
 			const start_date = dayOfWeek.set({hour: curDay.hour(), minute: curDay.minute()}).toDate();
 			const end_date = moment(start_date).add(taskDuration, 'hours').toDate();
-			arr.push({ start_date, end_date, message, _id});
+			arr.push({ start_date, end_date, message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}
@@ -288,7 +309,7 @@ const monthlyRepeatEnds = ({start_date,end_date, message,repeatTime,monthChoice,
 	switch(monthChoice){
 	case 'noDays': {
 		for ( let m = moment(start_date).startOf('day'); m.isBefore(endLoopDay); m.add(repeatTime, 'months')){
-			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
+			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}
@@ -302,7 +323,7 @@ const monthlyRepeatEnds = ({start_date,end_date, message,repeatTime,monthChoice,
 	// 	if (newDate.isSame(moment(date), 'month') && newDate.isBefore(moment(endsOnDate))) {
 	// 		const start_date = dayOfWeek.set({hour: curDay.hour(), minute: curDay.minute()}).toDate();
 	// 		const end_date = moment(start_date).add(taskDuration, 'hours').toDate();
-	// 		arr.push({ start_date, end_date, message, _id});
+	// 		arr.push({ start_date, end_date, message, _id, taskType: 'repeat'});
 	// 	}
 	// 	return arr;
 	// }
@@ -318,7 +339,7 @@ const monthlyRepeatEnds = ({start_date,end_date, message,repeatTime,monthChoice,
 			const newDate = dayOfWeek.add((nthdayMonth -1), 'weeks');
 			const start_date = newDate.set({hour: curDay.hour(), minute: curDay.minute()}).toDate();
 			const end_date = moment(start_date).add(taskDuration, 'hours').toDate();
-			arr.push({ start_date, end_date, message, _id});
+			arr.push({ start_date, end_date, message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}
@@ -330,7 +351,7 @@ const monthlyRepeatCompletes= ({start_date,end_date, message,repeatTime,monthCho
 	switch(monthChoice){
 	case 'noDays': {
 		for ( let m = moment(start_date).startOf('day'); m.isBefore(endLoopDay); m.add(repeatTime, 'months')){
-			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id});
+			arr.push({ start_date: m.clone().toDate(), end_date: m.clone().add(taskDuration, 'hours').toDate(), message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}
@@ -347,7 +368,7 @@ const monthlyRepeatCompletes= ({start_date,end_date, message,repeatTime,monthCho
 			const newDate = dayOfWeek.add((nthdayMonth -1), 'weeks');
 			const start_date = newDate.set({hour: curDay.hour(), minute: curDay.minute()}).toDate();
 			const end_date = moment(start_date).add(taskDuration, 'hours').toDate();
-			arr.push({ start_date, end_date, message, _id});
+			arr.push({ start_date, end_date, message, _id, taskType: 'repeat'});
 		}
 		return arr;
 	}

@@ -12,7 +12,7 @@ const DailyTaskList = mongoose.model('dailyTaskList');
 const RepeatTask = mongoose.model('repeatTask');
 const RedueTask = mongoose.model('redueTask');
 
-
+const retrieve = require('./repeatRetrieve');
 const repeatFunctions = require('./repeatFunctions');
 
 function mapOrder(array, order, key) {
@@ -46,97 +46,13 @@ module.exports = app => {
 		const repeatTasks = await RepeatTask.find({
 			_user: user._id
 		});
-		// const ccTasks = [...repeatTasks, ...monthTasks];
-		// const monthlyTasks = _.uniqBy(ccTasks, e => {
-		// 	return e.id;
-		// });
-		_.map(
-			repeatTasks,
-			value => {
-				const { timeInterval, activeRepeatRadio, daysSelected, _id, taskDuration } = value;
-				if (timeInterval === 'day') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						const repeatDays = repeatFunctions.dailyRepeatNever(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.dailyRepeatEnds(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.dailyRepeatCompletes(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					}
-				} else if (timeInterval === 'week') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						let repeatDays;
-						if (daysSelected.length === 0) {
-							repeatDays = repeatFunctions.weeklyRepeatNever(value, date);
-						} else {
-							repeatDays = repeatFunctions.weeklyRepeatNeverDays(value, date);
-						}
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.weeklyRepeatEnds(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const realOccursDate = moment(value.start_date).add(
-							value.afterCompletes,
-							'weeks'
-						);
-						if (
-							moment(date)
-								.startOf('month')
-								.isBefore(realOccursDate)
-						) {
-							const repeatDays = repeatFunctions.weeklyRepeatCompletes(
-								value,
-								date
-							);
-							return fullCal.push(...repeatDays);
-						}
-					}
-					}
-				} else if (timeInterval === 'month') {
-					switch (activeRepeatRadio) {
-					case 'never': {
-						const repeatDays = repeatFunctions.monthlyRepeatNever(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.monthlyRepeatEnds(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.monthlyRepeatCompletes(value, date);
-						return fullCal.push(...repeatDays);
-					}
-					}
-				} else if (timeInterval === 'year'){
-					switch (activeRepeatRadio) {
-					case 'never': {
-						const repeatDays = repeatFunctions.yearlyRepeatNever(value);
-						return fullCal.push(...repeatDays);
-					}
-					case 'on': {
-						const repeatDays = repeatFunctions.yearlyRepeatEnds(value);
-						return fullCal.push(...repeatDays);
-					}
-					case 'after': {
-						const repeatDays = repeatFunctions.yearlyRepeatCompletes(value);
-						return fullCal.push(...repeatDays);
-					}
-					}
-				}
-				fullCal.push(value);
-			},
-			date
-		);
+		const sortedTasks = retrieve.repeats(repeatTasks, fullCal, date );
+		const redueTasks = await RedueTask.find({
+			_user: user._id
+		});
+		if (redueTasks.length !== 0){
+			const sortedRedueTasks = retrieve.redues(redueTasks, fullCal, date );
+		}
 		res.send(fullCal);
 	});
 
@@ -144,11 +60,10 @@ module.exports = app => {
 	app.post('/api/create_daily_tasks', async (req, res) => {
 		const { user, todayTasks, date } = req.body;
 		let dailyTasksList, indexTodayTasks;
-
 		let findDaily = await DailyTaskList.findOne({_user: user._id})
 			.where('forDate')
-			.gt(moment(date).startOf('day'))
-			.lt(moment(date).endOf('day'))
+			.gte(moment(date).startOf('day'))
+			.lte(moment(date).endOf('day'))
 			.exec();
 		// if there is no DailyTaskList, we create one.
 		if (findDaily === null){
@@ -162,6 +77,7 @@ module.exports = app => {
 				return val._id;
 			});
 		} else {
+			// Sort current tasks by their ids
 			dailyTasksList = _.sortBy(todayTasks, (item)=> {
 				return findDaily.indexes.indexOf(item._id);
 			});
@@ -172,10 +88,38 @@ module.exports = app => {
 		const options = { upsert: true, new: true, setDefaultsOnInsert: true };
 		await DailyTaskList.findOneAndUpdate({ _user: user._id }, {taskList: dailyTasksList, forDate: date, indexes: indexTodayTasks}, options)
 			.where('forDate')
+			.gte(moment(date).startOf('day'))
+			.lte(moment(date).endOf('day'))
+			.exec((err, doc) => {
+				if (err) res.status(401).send({success: false});
+				res.status(200).send(doc);
+			});
+	});
+	app.post('/api/update_daily_calendar_tasks', async (req, res) => {
+		// we are creating a daily list here.
+		const { user, todayTasks, date } = req.body;
+		// if there is no DailyTaskList, we create one.
+		const indexTodayTasks = todayTasks.map((val, index) => {
+			return val._id;
+		});
+		const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+		await DailyTaskList.findOneAndUpdate({ _user: user._id }, {taskList: todayTasks, forDate: date, indexes: indexTodayTasks}, options)
+			.where('forDate')
 			.gt(moment(date).startOf('day'))
 			.lt(moment(date).endOf('day'))
 			.exec((err, doc) => {
 				if (err) res.status(401).send({success: false});
+				res.status(200).send(doc);
+			});
+	});
+	app.post('/api/check_daily_tasks', async(req,res) => {
+		const { user, date } = req.body;
+		let findDaily = await DailyTaskList.findOne({_user: user._id})
+			.where('forDate')
+			.gte(moment(date).startOf('day'))
+			.lte(moment(date).endOf('day'))
+			.exec((err, doc)=> {
+				if (err) res.status(202).send(err);
 				res.status(200).send(doc);
 			});
 	});
@@ -190,7 +134,9 @@ module.exports = app => {
 			timeInterval,
 			timePlural,
 			repeatTime,
+			redueTime,
 			activeRepeatRadio,
+			activeRedueRadio,
 			afterCompletes,
 			endsOnDate,
 			daysSelected,
@@ -214,57 +160,96 @@ module.exports = app => {
 			if (moment(startDate).isSame(moment(endDate), 'day')){
 				task = new SimpleTask({
 					message,
-					journal,
 					_user: user._id,
 					created_at: Date.now(),
 					start_date,
-					end_date
+					end_date,
+					task_status: 'uncomplete'
 				});
 				break;
 			} else {
 				task = new SimpleLongTask({
 					message,
-					journal,
 					_user: user._id,
 					created_at: Date.now(),
 					start_date,
-					end_date
+					end_date,
+					task_status: 'uncomplete'
 				});
 				break;
 			}
 		}
 		case 'repeat': {
-			task = new RepeatTask({
-				message,
-				journal,
-				_user: user._id,
-				created_at: Date.now(),
-				start_date,
-				end_date,
-				repeatTime,
-				timeInterval,
-				daysSelected,
-				nthdayMonth,
-				monthChoice,
-				activeRepeatRadio,
-				endsOnDate,
-				afterCompletes,
-				lastCompleted: null,
-				totalCompletes,
-				taskDuration,
-				taskDurationFormat
-			});
+			if (timeInterval === 'day'){
+				task = new RepeatTask({
+					message,
+					_user: user._id,
+					created_at: Date.now(),
+					start_date,
+					end_date,
+					repeatTime,
+					timeInterval,
+					activeRepeatRadio,
+					endsOnDate,
+					afterCompletes,
+					taskDuration,
+					taskDurationFormat
+				});
+			}
+			if (timeInterval === 'week'){
+				task = new RepeatTask({
+					message,
+					journal,
+					_user: user._id,
+					created_at: Date.now(),
+					start_date,
+					end_date,
+					repeatTime,
+					timeInterval,
+					daysSelected,
+					activeRepeatRadio,
+					endsOnDate,
+					afterCompletes,
+					taskDuration
+				});
+			}
+			else {
+				task = new RepeatTask({
+					message,
+					journal,
+					_user: user._id,
+					created_at: Date.now(),
+					start_date,
+					end_date,
+					repeatTime,
+					timeInterval,
+					daysSelected,
+					nthdayMonth,
+					monthChoice,
+					activeRepeatRadio,
+					endsOnDate,
+					afterCompletes,
+					totalCompletes,
+					taskDuration,
+					taskDurationFormat
+				});
+			}
 			break;
 		}
 		case 'redue': {
 			task = new RedueTask({
 				message,
 				journal,
-				_user: user._id,
-				// index: (newIndex += 1),
 				created_at: Date.now(),
 				start_date,
-				end_date: moment(start_date).add(1, 'hours')
+				end_date,
+				_user: user._id,
+				timeInterval,
+				repeatTime,
+				activeRedueRadio,
+				endsOnDate,
+				afterCompletes
+				// index: (newIndex += 1),
 			});
 			break;
 		}
@@ -272,6 +257,11 @@ module.exports = app => {
 			break;
 		}
 		let saveTask = await task.save();
+		DailyTaskList.findOneAndUpdate({ _user: user._id }, {$push: {indexes: saveTask._id.toString()}})
+			.where('forDate')
+			.gt(moment().startOf('day'))
+			.lt(moment().endOf('day'))
+			.exec();
 		// TODO needs to be refactored at some point.
 		if (track === '') {
 			await Tracks.update(

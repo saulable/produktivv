@@ -21,7 +21,7 @@ class AddTask extends Component {
 		};
 		this.taskChange = this.taskChange.bind(this);
 	}
-	
+
 	taskChange(e) {
 		e.preventDefault();
 		this.setState({ message: e.target.value });
@@ -59,7 +59,7 @@ class AddTask extends Component {
 
 	render() {
 		return (
-			<div>
+			<div className="flexFix">
 				<div className="dailyCalendarContainer">
 					<div className="card">
 						<div className="sortHead">

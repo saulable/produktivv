@@ -9,7 +9,9 @@ import {
 	MONTH_CHOICE,
 	CHANGE_EVERY_TIME,
 	HANDLE_REPEAT_DROPDOWN,
+	HANDLE_REDUE_DROPDOWN,
 	REPEAT_EVERY_CHOICE,
+	REDUE_EVERY_CHOICE,
 	DAY_PICKERS,
 	HANDLE_COMPLETES,
 	REDUE_DAYS_CHANGE,
@@ -41,8 +43,8 @@ const initState = {
 	monthChoice: 'noDays',
 	monthlyBoth: false,
 	repeatDropdown: false,
+	redueDropdown: false,
 	redueCompletes: '1',
-	redueDays: '1',
 	daysSelected: [],
 	endsOnDate: '',
 	afterCompletes: '',
@@ -93,6 +95,13 @@ export default (state = initState, action) => {
 		};
 	}
 	case SWITCH_REPEATS:
+		if (action.payload === 'redue'){
+			if (state.timePlural) {
+				return { ...state, switchRepeats: action.payload, timeInterval: 'days'};
+			} else {
+				return {...state, switchRepeats: action.payload, timeInterval: 'day'};
+			}
+		}
 		return { ...state, switchRepeats: action.payload };
 	case RELOAD_CAL:
 		return { ...state };
@@ -126,6 +135,8 @@ export default (state = initState, action) => {
 	}
 	case HANDLE_REPEAT_DROPDOWN:
 		return { ...state, repeatDropdown: !state.repeatDropdown };
+	case HANDLE_REDUE_DROPDOWN:
+		return { ...state, redueDropdown: !state.redueDropdown };
 	case REPEAT_EVERY_CHOICE: {
 		if (state.timePlural) {
 			return {
@@ -138,6 +149,21 @@ export default (state = initState, action) => {
 				...state,
 				timeInterval: action.payload,
 				repeatDropdown: false
+			};
+		}
+	}
+	case REDUE_EVERY_CHOICE: {
+		if (state.timePlural) {
+			return {
+				...state,
+				timeInterval: action.payload + 's',
+				redueDropdown: false
+			};
+		} else {
+			return {
+				...state,
+				timeInterval: action.payload,
+				redueDropdown: false
 			};
 		}
 	}
@@ -159,7 +185,7 @@ export default (state = initState, action) => {
 	case HANDLE_COMPLETES:
 		return { ...state, afterCompletes: action.payload };
 	case REDUE_DAYS_CHANGE:
-		return { ...state, redueDays: action.payload };
+		return { ...state, redueTime: action.payload };
 	case REDUE_COMPLETES:
 		return { ...state, redueCompletes: action.payload };
 	case TRACKS_CHANGE: {

@@ -1,8 +1,6 @@
-'use strict';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/taskActions';
-import moment from 'moment';
 import Entries from '../Journals/DailyJournal/Entries';
 var _dates = require('react-big-calendar/lib/utils/dates');
 
@@ -19,9 +17,6 @@ var _localizer = require('react-big-calendar/lib/localizer');
 // 	return
 // };
 class DayJournal extends Component {
-	constructor(props) {
-		super(props);
-	}
 	componentDidMount() {
 		this.props.renderTasks(this.props.events, this.props.date);
 	}

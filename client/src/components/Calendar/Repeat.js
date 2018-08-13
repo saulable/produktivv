@@ -134,7 +134,6 @@ class Repeat extends Component {
 							handleRadio={this.props.handleRepeatRadio}
 							handleCal={this.props.handleCal}
 							activeRepeatRadio={activeRepeatRadio}
-							handleCompletes={this.props.handleCompletes}
 						/>
 					</div>
 				</div>

@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import classnames from 'classnames';
 import Ends from './Repeats/Ends';
 import { connect } from 'react-redux';
-import { switchRedueRepeat, handleRedueRadio } from '../../actions/calendarActions';
+import * as actions from '../../actions/calendarActions';
+import _ from 'lodash';
+import DROP_DOWN_FIELDS from './Repeats/DropDownFields';
 
 class Redue extends Component {
 	constructor(props) {
@@ -21,18 +23,41 @@ class Redue extends Component {
 		this.setState({ endsOnDate: e });
 	};
 	handleSwitch = e => {
-		if (this.props.calendar.switchRepeats !== 'redue'){
+		if (this.props.calendar.switchRepeats !== 'redue') {
 			this.props.switchRedueRepeat(e);
-		}else {
+		} else {
 			this.props.switchRedueRepeat({});
 		}
+	};
+	renderDropDown() {
+		const timePlural = this.props.calendar.timePlural ? 's' : '';
+		return _.map(DROP_DOWN_FIELDS, ({ name }) => {
+			return (
+				<div
+					key={name}
+					data-name={name}
+					onClick={this.props.handleMonthTimeRedue}
+					className="dropdown-item">
+					{name}
+					{timePlural}
+				</div>
+			);
+		});
 	}
 	renderRedue() {
-		const {switchRepeats, activeRedueRadio, rptDisabled} = this.props.calendar;
+		const {
+			switchRepeats,
+			activeRedueRadio,
+			rptDisabled,
+			timeInterval,
+			redueDropdown,
+			repeatTime
+		} = this.props.calendar;
 		return (
-			<div className={classnames('switchHeaders', {
-				'd-none': rptDisabled
-			})}>
+			<div
+				className={classnames('switchHeaders', {
+					'd-none': rptDisabled
+				})}>
 				<div>
 					<span>ReDue</span>
 					<label className="switch switch2">
@@ -42,22 +67,47 @@ class Redue extends Component {
 							onChange={this.handleSwitch}
 							checked={switchRepeats === 'redue'}
 						/>
-						<span className={classnames('sliders round', {
-							'checked': (switchRepeats === 'redue') ? true : false
-						})} />
+						<span
+							className={classnames('sliders round', {
+								checked: switchRepeats === 'redue' ? true : false
+							})}
+						/>
 					</label>
 				</div>
 				<div
 					className={classnames('', {
-						'd-none': (switchRepeats === 'redue') ? false : true
-					})}
-				>
+						'd-none': switchRepeats === 'redue' ? false : true
+					})}>
 					<div className="addMarginTop">
-						Redue in <input onChange={this.props.redueDaysChange} value={this.props.redueDays} className="repeatEvery" /> days.
+						<div className="repeatChoose">
+							Redue in
+							<input
+								value={repeatTime}
+								onChange={this.props.changeTime}
+								className="repeatEvery"
+							/>
+							<div className="dropdown show">
+								<button
+									onClick={this.props.handleRedueDropdown}
+									className="btn btn-secondary dropdown-toggle"
+									id="dropdownMenuLink">
+									{timeInterval}
+								</button>
+								<div
+									className={classnames('dropdown-menu dropdownRepeat', {
+										'd-block': redueDropdown
+									})}
+									aria-labelledby="dropdownMenuLink">
+									{this.renderDropDown()}
+								</div>
+							</div>
+						</div>
 					</div>
-					<div></div>
 					<div className="addMarginTop">
-						<Ends handleRadio={this.props.handleRedueRadio} activeRepeatRadio={activeRedueRadio} />
+						<Ends
+							handleRadio={this.props.handleRedueRadio}
+							activeRepeatRadio={activeRedueRadio}
+						/>
 					</div>
 				</div>
 			</div>
@@ -71,4 +121,6 @@ class Redue extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-export default connect(mapStateToProps, { switchRedueRepeat, handleRedueRadio })(Redue);
+export default connect(
+	mapStateToProps,actions
+)(Redue);

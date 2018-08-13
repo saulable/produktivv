@@ -23,7 +23,9 @@ const repeatTaskSchema = new Schema({
 	afterCompletes: Number,
 	lastCompleted: Date,
 	totalCompletes: {type: Number, default: 0},
-	taskDuration: String
+	taskDuration: String,
+	taskType: {type: String, default: 'repeat'},
+	datesCompleted: {type: Array, default: []}
 });
 
 mongoose.model('repeatTask', repeatTaskSchema, 'repeat_tasks');

@@ -13,29 +13,55 @@ import {
 	TASK_OFF_CLICK,
 	JOURNAL_AUTOSAVE,
 	DELETED_TASK,
-	DAY_CALENDAR_TASKS
+	UPDATE_DAILY_ID
 } from './types';
 import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 
-export const newTaskRequest = data => async dispatch => {
+export const newTaskRequest = (data, date) => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
-	const pass = { ...data, journal: 'daily', user };
-	const res = await axios.post('/api/create_task', pass);
+	const pass = { ...data, user, date };
+	let res;
+	if (moment(date).isSame(moment(), 'day')){
+		res = await axios.post('/api/create_task', pass);
+	}else {
+		res = await axios.post('/api/create_calendar_simpletask', pass);
+	}
 	await dispatch({ type: CREATE_TASK, payload: res.data });
 };
-export const dbTasks = data => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
-	const date = Date.now();
+
+async function initCalTasks(date, user){
 	const res = await axios.post('/api/init_cal', {date,user});
 	const todayTasks = res.data.filter((x) => {
 		if (moment(x.start_date).isSame(moment(date), 'day')){
 			return x;
+		}else{
+			return todayTasks;
 		}
 	});
 	const createDailyTask = await axios.post('/api/create_daily_tasks', {user, date, todayTasks});
-	dispatch({ type: DAILY_TASK_LIST, payload: createDailyTask.data});
+	createDailyTask.data.date = createDailyTask.data.forDate;
+	return createDailyTask.data;
+}
+export const dbTasks = data => async dispatch => {
+	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const date = Date.now();
+	// check to see if there is a dailytaskList already created
+	const resCheckDaily = await axios.post('/api/check_daily_tasks', {date, user});
+	if (resCheckDaily.data !== ''){
+		if (resCheckDaily.data.taskList.length !== resCheckDaily.data.indexes.length ){
+			const dailyTasks = await initCalTasks(date, user);
+			dispatch({ type: DAILY_TASK_LIST, payload: dailyTasks});
+		}else {
+			const taskList = resCheckDaily.data.taskList;
+			const _id = resCheckDaily.data._id;
+			dispatch({type: DAILY_TASK_LIST, payload: {taskList, _id, date}});
+		}
+	} else {
+		const dailyTasks = await initCalTasks(date, user);
+		dispatch({ type: DAILY_TASK_LIST, payload: dailyTasks});
+	}
 };
 
 export const createJournal = data => async dispatch => {
@@ -91,39 +117,57 @@ export function onClickNotes(data) {
 		dispatch({ type: UPDATE_TABS, payload: data });
 	};
 }
-export const newOrder = (data, id) => dispatch => {
-	axios.post('/api/update_task_index', { items: data, id });
-	dispatch({ type: UPDATE_TASK_LIST, payload: data });
+export const newOrder = (data, id, date) => async dispatch => {
+	// if there is no ID assocated, then we go to create_daily_tasks with the items.
+	if (id === undefined){
+		const user = jwtDecode(localStorage.getItem('jwtToken'));
+		const todayTasks = data;
+		dispatch({ type: UPDATE_TASK_LIST, payload: data });
+		const res = await axios.post('/api/update_daily_calendar_tasks', {user, date, todayTasks});
+		await axios.post('/api/update_task_index', { items: todayTasks, id: res.data._id });
+		dispatch({type: UPDATE_DAILY_ID, payload: res.data._id});
+	} else {
+		axios.post('/api/update_task_index', { items: data, id });
+		dispatch({ type: UPDATE_TASK_LIST, payload: data });
+	}
 };
-export const clickComplete = data => async dispatch => {
-	const id = data.currentTarget.dataset.id;
-	const res = await axios.post('/api/complete_task', { id });
-	dispatch({ type: COMPLETE_TASK, payload: res });
+export const clickComplete = (data, list, curDate) => async dispatch => {
+	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const {id, tasktype, start_date, end_date} = data.currentTarget.dataset;
+	const date = start_date;
+	const todayTasks = list;
+	axios.post('/api/complete_task', { id, tasktype, start_date, curDate, end_date});
+	axios.post('/api/create_daily_tasks', {user, date, todayTasks});
+	dispatch({ type: COMPLETE_TASK, payload: {id} });
 };
 export const deleteTask = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
 	const res = await axios.post('/api/delete_task', { data, user });
 	dispatch({ type: DELETED_TASK, payload: res });
 };
-
 export const helperPop = data => async dispatch => {
 	dispatch({ type: HELPER_POP, payload: data });
 };
-export const renderTasks = (events, date) => dispatch => {
-	const arr = [];
-	// const res = await 
-	events.map(x => {
-		if (moment(x.start_date).isSame(moment(date), 'day')) {
-			arr.push({
-				start_date: x.start_date,
-				end_date: x.end_date,
-				message: x.message,
-				_id: x._id,
-				// need to work on these values
-				index: 3,
-				completed: false
-			});
-		}
-	});
-	dispatch({type: DAY_CALENDAR_TASKS, payload: arr});
+export const renderTasks = (events, date) => async dispatch => {
+	let taskList = [];
+	let _id = '';
+	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const res = await axios.post('/api/check_daily_tasks', {date, user});
+	if (res.data !== ''){
+		taskList = res.data.taskList;
+		_id = res.data._id;
+		dispatch({type: DAILY_TASK_LIST, payload: {taskList, _id, date}});
+	}else {
+		events.map(x => {
+			if (x.taskType === 'simplelong' && moment(x.end_date).isSame(moment(date), 'day')){
+				taskList.push({start_date: x.start_date,end_date: x.end_date,message: x.message,_id: x._id,completed: x.completed ,taskType: x.taskType});
+			}
+			if (moment(x.start_date).isSame(moment(date), 'day')) {
+				taskList.push({start_date: x.start_date,end_date: x.end_date,message: x.message,_id: x._id,completed: x.completed,taskType: x.taskType,
+				});
+			}
+			return events;
+		});
+		dispatch({type: DAILY_TASK_LIST, payload: {taskList, date}});
+	}
 };

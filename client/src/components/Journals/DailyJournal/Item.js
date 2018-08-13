@@ -16,6 +16,7 @@ class Item extends Component {
 		};
 		this.taskChange = this.taskChange.bind(this);
 		this.onKeyDown = this.onKeyDown.bind(this);
+		this.clickComplete = this.clickComplete.bind(this);
 	}
 	taskChange(e) {
 		e.preventDefault();
@@ -26,9 +27,10 @@ class Item extends Component {
 	}
 	onKeyDown(e) {
 		const { value, name } = e.target;
+		const {dailyId} = this.props.tasks;
 		const _id = e.currentTarget.dataset.id;
 		if (e.target.value === '' && e.keyCode === 8) {
-			this.props.deleteTask({ _id, value, name });
+			this.props.deleteTask({ _id, value, name, dailyId });
 		}
 		// console.log(e.keyCode);
 	}
@@ -43,6 +45,10 @@ class Item extends Component {
 				this.props.saveNoteChange({ id, dataNote, name });
 			}, 500)
 		});
+	}
+	clickComplete(e){
+		const {list, date} = this.props.tasks;
+		this.props.clickComplete(e, list, date);
 	}
 	render() {
 		const { value } = this.props;
@@ -72,10 +78,13 @@ class Item extends Component {
 							<div className="round">
 								<div
 									data-id={value._id}
+									data-tasktype={value.taskType}
+									data-start_date={value.start_date}
+									data-end_date={value.end_date}
 									className={classnames('inputGroup', {
 										completed: value.completed
 									})}
-									onClick={this.props.clickComplete}
+									onClick={this.clickComplete}
 								/>
 							</div>
 						</div>

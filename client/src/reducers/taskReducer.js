@@ -5,13 +5,15 @@ import {
 	UPDATE_TASK_MESSAGE,
 	UPDATE_TASK_LIST,
 	DELETED_TASK,
-	DAY_CALENDAR_TASKS
+	DAY_CALENDAR_TASKS,
+	UPDATE_DAILY_ID
 } from '../actions/types';
 import _ from 'lodash';
 
 const initState = {
 	list: [],
-	dailyId:  ''
+	dailyId:  '',
+	date: ''
 };
 
 export default function(state = initState, action) {
@@ -24,7 +26,7 @@ export default function(state = initState, action) {
 		return {...state, list: action.payload.data};
 	case COMPLETE_TASK: {
 		// find the item that we clicked, by the passed in ID
-		const index = _.findIndex([...state.list], { _id: action.payload.data._id });
+		const index = _.findIndex([...state.list], { _id: action.payload.id });
 		if (index >= 0) {
 			// if there is a match, toggle the state.
 			state.list[index].completed = !state.list[index].completed;
@@ -44,11 +46,14 @@ export default function(state = initState, action) {
 		return {...state, list: action.payload};
 		// return arrayMove([...state], action.payload.oldIndex, action.payload.newIndex);
 	}
+	case UPDATE_DAILY_ID: {
+		return {...state, dailyId:action.payload};
+	}
 	case DAILY_TASK_LIST:
 		// var sortedTasks = _.sortBy(action.payload.taskList, ['index', action.payload.index]);
-		return {...state, list:action.payload.taskList, dailyId: action.payload._id};
+		return {...state, list:action.payload.taskList, dailyId: action.payload._id, date: action.payload.date};
 	case DAY_CALENDAR_TASKS:
-		return {...state, list: action.payload};
+		return {...state, list: action.payload, dailyId: null};
 	default:
 		return {...state};
 	}

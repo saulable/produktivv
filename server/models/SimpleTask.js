@@ -5,7 +5,7 @@ const simpleTaskSchema = new Schema({
 	message: String,
 	completed: {type: Boolean, default: false},
 	journal: String,
-	note: {type: String, default: ''},
+	note: String,
 	created_at: Date,
 	completed_at: Date,
 	start_date: Date,
@@ -15,16 +15,17 @@ const simpleTaskSchema = new Schema({
 	repeat: Boolean,
 	repeatTime: Number,
 	timeInterval: String,
-	daysSelected: Array,
 	nthdayMonth: String,
 	monthlyRepeat: String,
 	activeRepeatRadio: String,
 	endsOnDate: Date,
 	afterCompletes: Number,
 	lastCompleted: Date,
-	totalCompletes: {type: Number, default: 0},
+	totalCompletes: Number,
 	taskDuration: String,
-	switchRepeats: String
+	switchRepeats: String,
+	taskType: {type: String, default: 'simple'},
+	task_status: String
 });
 
 mongoose.model('simpleTask', simpleTaskSchema, 'simple_tasks');
