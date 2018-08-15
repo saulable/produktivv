@@ -29,7 +29,8 @@ import {
 	Q_UPDATE_END_TIME_MINS,
 	Q_FROM_START,
 	Q_TO_END,
-	Q_UPDATE_DURATION
+	Q_UPDATE_DURATION,
+	COMPLETE_CAL_TASK
 } from '../actions/types';
 import _ from 'lodash';
 import moment from 'moment';
@@ -68,6 +69,18 @@ export default (state = initState, action) => {
 	switch (action.type) {
 	case INIT_CAL_TASKS:
 		return { ...state, events: action.payload.data };
+	case COMPLETE_CAL_TASK: {
+		const index = _.findIndex([...state.events], { _id: action.payload.id });
+		if (index >= 0) {
+			// if there is a match, toggle the state.
+			const item = state.events[index];
+			item.completed = !item.completed;
+			let newArray = state.events.slice();
+			newArray.splice(index, 1, item);
+			return {...state, events: newArray};
+		}
+		return state;
+	}
 	case SET_TASK_TIMES: {
 		return {
 			...state,

@@ -53,7 +53,6 @@ export const initCal = dataDate => async dispatch => {
 		.toDate();
 	const info = { date, user };
 	const data = await axios.post('/api/init_cal', info);
-	console.log(data);
 	data.data.map((x, index) => {
 		x.start = new Date(x.start_date);
 		x.end = new Date(x.end_date);

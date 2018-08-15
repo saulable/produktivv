@@ -112,6 +112,20 @@ module.exports = app => {
 				res.status(200).send(doc);
 			});
 	});
+	app.post('/api/update_daily_calendar_complete_task', async(req,res) => {
+		const {start_date, id, user} = req.body;
+		const findDailyList = await DailyTaskList.findOne({ _user: user._id})
+			.where('forDate')
+			.gte(moment(start_date).startOf('day'))
+			.lte(moment(start_date).endOf('day'));
+		if (findDailyList !== null){
+			const index = findDailyList.indexes.indexOf(id);
+			const {taskList} = findDailyList;
+			taskList[index].completed = !taskList[index].completed;
+			const options = { upsert: true, new: true};
+			await DailyTaskList.findOneAndUpdate({_id: findDailyList._id}, {$set: {taskList}}, options).exec();
+		}
+	});
 	app.post('/api/check_daily_tasks', async(req,res) => {
 		const { user, date } = req.body;
 		let findDaily = await DailyTaskList.findOne({_user: user._id})

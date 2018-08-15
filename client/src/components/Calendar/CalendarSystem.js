@@ -73,7 +73,6 @@ class CalendarSystem extends Component {
 			this.props.initCal(e);
 		}
 	};
-
 	renderContent() {
 		if (this.state.showComponent === 'BigCalendar') {
 			return (

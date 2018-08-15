@@ -13,7 +13,8 @@ import {
 	TASK_OFF_CLICK,
 	JOURNAL_AUTOSAVE,
 	DELETED_TASK,
-	UPDATE_DAILY_ID
+	UPDATE_DAILY_ID,
+	COMPLETE_CAL_TASK
 } from './types';
 import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
@@ -140,6 +141,14 @@ export const clickComplete = (data, list, curDate) => async dispatch => {
 	axios.post('/api/create_daily_tasks', {user, date, todayTasks});
 	dispatch({ type: COMPLETE_TASK, payload: {id} });
 };
+export const clickCompleteCal = (data, list, curDate) => async dispatch => {
+	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const {id, tasktype, start_date, end_date} = data.currentTarget.dataset;
+	axios.post('/api/complete_task', { id, tasktype, start_date, curDate, end_date});
+	axios.post('/api/update_daily_calendar_complete_task', {id, start_date, user});
+	dispatch({ type: COMPLETE_CAL_TASK, payload: {id} });
+};
+
 export const deleteTask = data => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
 	const res = await axios.post('/api/delete_task', { data, user });

@@ -5948,10 +5948,23 @@ button:focus {
     background-color: #ddd;
     border: 1px solid #e0e0e0; }
 
+.grid-x .calendar {
+  padding: 0; }
+
 .rbc-calendar {
   flex: 1; }
+  .rbc-calendar .rbc-month-view {
+    border-top: none; }
+    .rbc-calendar .rbc-month-view .rbc-month-header .rbc-header {
+      border-bottom: 2px solid #0083BB;
+      padding: 5px 5px 5px 5px; }
+      .rbc-calendar .rbc-month-view .rbc-month-header .rbc-header span {
+        border-radius: 5px 5px 0 0; }
+    .rbc-calendar .rbc-month-view .rbc-month-header .rbc-header + .rbc-header {
+      border-left: none; }
   .rbc-calendar .rbc-toolbar {
-    flex-wrap: wrap; }
+    flex-wrap: wrap;
+    padding: 10px 10px 0 10px; }
     .rbc-calendar .rbc-toolbar.button {
       border: none; }
     .rbc-calendar .rbc-toolbar .todayButton {
@@ -6070,7 +6083,6 @@ button:focus {
     background: rgba(41, 191, 137, 0.3);
     color: #000; }
   .rbc-row .rbc-event.rbc-selected {
-    box-shadow: 1px 2px rgba(0, 0, 0, 0.4);
     transition: 0.2s box-shadow linear;
     background: none;
     z-index: 2; }
@@ -6165,14 +6177,98 @@ button:focus {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical; }
 
+.popover {
+  padding: 0; }
+
 .popover-content {
-  min-height: 250px; }
+  min-height: 300px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 24px 38px 3px rgba(0, 0, 0, 0.17), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2); }
   .popover-content .header {
-    height: 128px;
+    min-height: 95px;
+    max-height: 150px;
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
     background: #0083BB; }
     .popover-content .header .row-icons {
-      padding: 10px 15px;
+      padding: 5px 5px 10px 0;
       min-height: 30px; }
+      .popover-content .header .row-icons .icons {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center; }
+        .popover-content .header .row-icons .icons i {
+          cursor: pointer;
+          font-size: 20px;
+          color: #ffffff;
+          display: flex;
+          padding: 5px 10px 0px 5px; }
+          .popover-content .header .row-icons .icons i:hover {
+            color: #cccccc; }
+        .popover-content .header .row-icons .icons .fa-times {
+          margin-top: 2px; }
+    .popover-content .header .title {
+      font-size: 20px;
+      line-height: 26px;
+      max-height: 125px;
+      margin-top: auto;
+      color: #ffffff;
+      padding: 0 32px 20px 32px;
+      overflow-wrap: break-word;
+      word-wrap: break-word;
+      overflow: hidden; }
+  .popover-content .taskContent {
+    padding: 15px;
+    flex: 1 1 auto;
+    position: relative; }
+    .popover-content .taskContent .edit {
+      height: 40px;
+      width: 40px;
+      background: #29BF89;
+      border-radius: 50%;
+      display: flex;
+      cursor: pointer;
+      justify-content: center;
+      align-items: center;
+      margin-left: -15px;
+      position: absolute;
+      right: -20px;
+      top: -20px; }
+  .popover-content .complete {
+    display: flex;
+    padding: 10px 15px 10px 15px;
+    text-align: center;
+    border-top: 1px solid #e0e0e0; }
+    .popover-content .complete .buttonComplete {
+      flex: 1;
+      text-align: left;
+      justify-content: space-between;
+      display: flex;
+      justify-content: start;
+      align-items: center; }
+      .popover-content .complete .buttonComplete .clickComplete {
+        background-color: #29BF89;
+        padding: 8px 20px;
+        border-radius: 2px;
+        color: #ffffff;
+        font-weight: bold;
+        cursor: pointer; }
+        .popover-content .complete .buttonComplete .clickComplete i {
+          padding-left: 20px; }
+    .popover-content .complete .clickPostpone {
+      background-color: #ffa849;
+      padding: 8px 20px;
+      border-radius: 2px;
+      color: #ffffff;
+      font-weight: bold;
+      display: flex;
+      cursor: pointer; }
+      .popover-content .complete .clickPostpone i {
+        padding-left: 15px;
+        font-size: 20px;
+        position: relative;
+        top: 1px; }
 
 .popover > .arrow,
 .popover > .arrow:after {
@@ -6293,12 +6389,16 @@ button:focus {
 .flexFix {
   flex: 1; }
 
-.dailyCalendarContainer .calendar {
-  padding: 20px; }
+.dailyCalendarContainer {
+  padding: 10px; }
+  .dailyCalendarContainer .calendar {
+    padding: 20px; }
+  .dailyCalendarContainer .card {
+    border: none;
+    overflow: visible; }
 
-.dailyCalendarContainer .card {
-  border: none;
-  overflow: visible; }
+.rbc-calendar .journal-content {
+  padding: 10px; }
 
 .sortHead {
   display: flex;
