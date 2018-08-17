@@ -49,6 +49,7 @@ export const Q_FROM_START = 'Q_FROM_START';
 export const Q_TO_END = 'Q_TO_END';
 export const Q_UPDATE_DURATION = 'Q_UPDATE_DURATION';
 export const COMPLETE_CAL_TASK = 'COMPLETE_CAL_TASK';
+export const DELETE_CAL_TASK = 'DELETE_CAL_TASK';
 
 export const DAY_CALENDAR_TASKS = 'DAY_CALENDAR_TASKS';
 export const UPDATE_DAILY_ID = 'UPDATE_DAILY_ID';

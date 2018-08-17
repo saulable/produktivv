@@ -1,5 +1,6 @@
 import {
 	INIT_CAL_TASKS,
+	DELETE_CAL_TASK,
 	WRITE_QUICK_TASK,
 	SWITCH_REPEATS,
 	RELOAD_CAL,
@@ -77,6 +78,16 @@ export default (state = initState, action) => {
 			item.completed = !item.completed;
 			let newArray = state.events.slice();
 			newArray.splice(index, 1, item);
+			return {...state, events: newArray};
+		}
+		return state;
+	}
+	case DELETE_CAL_TASK: {
+		const index = _.findIndex([...state.events], { _id: action.payload.id });
+		console.log(index);
+		if (index >= 0) {
+			let newArray = state.events.slice();
+			newArray.splice(index, 1);
 			return {...state, events: newArray};
 		}
 		return state;

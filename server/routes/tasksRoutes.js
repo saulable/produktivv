@@ -226,25 +226,20 @@ module.exports = app => {
 				// need to check there is a taskList for that day.
 
 			}
-			// const dailyTasks = await SimpleTask.find({ _user: req.body.user._id })
-			// 	.where('start_date')
-			// 	.gt(moment().startOf('day'))
-			// 	.lt(moment().endOf('day'))
-			// 	.sort({ index: 'asc' })
-			// 	.exec();
-			// const newIndexTasks = await dailyTasks.map((x, index) => {
-			// 	SimpleTask.findOneAndUpdate(
-			// 		{ _id: x._id },
-			// 		{ $set: { index: index } }
-			// 	).exec();
-			// });
-			// const updatedTasks = await SimpleTask.find({ _user: req.body.user._id })
-			// 	.where('start_date')
-			// 	.gt(moment().startOf('day'))
-			// 	.lt(moment().endOf('day'))
-			// 	.sort({ index: 'asc' })
-			// 	.exec();
 			res.status(200).send(updatedTasks.taskList);
+		} catch (err) {
+			res.status(500).json({ err });
+		}
+	});
+	app.post('/api/delete_cal_month_task', async (req, res) => {
+		const { dailyId, _id } = req.body;
+		try {
+			const deleteTask = await SimpleTask.deleteOne({
+				_id
+			}).exec();
+			if (dailyId !== undefined){
+				await DailyTaskList.findOneAndUpdate({_id:  dailyId}, {$pull: {indexes: _id, taskList:{_id: _id} } }, {new: true}).exec();
+			}
 		} catch (err) {
 			res.status(500).json({ err });
 		}

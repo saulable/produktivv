@@ -1,6 +1,8 @@
 import axios from 'axios';
 import {
 	INIT_CAL_TASKS,
+	COMPLETE_CAL_TASK,
+	DELETE_CAL_TASK,
 	WRITE_QUICK_TASK,
 	SWITCH_REPEATS,
 	RELOAD_CAL,
@@ -31,6 +33,7 @@ import {
 	Q_FROM_START,
 	Q_TO_END,
 	Q_UPDATE_DURATION,
+
 } from './types';
 import {
 	dailyRepeatNever,
@@ -60,6 +63,24 @@ export const initCal = dataDate => async dispatch => {
 	});
 	dispatch({ type: INIT_CAL_TASKS, payload: data });
 };
+export const clickCompleteCal = (data, list, curDate) => async dispatch => {
+	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const {id, tasktype, start_date, end_date} = data.currentTarget.dataset;
+	axios.post('/api/complete_task', { id, tasktype, start_date, curDate, end_date});
+	axios.post('/api/update_daily_calendar_complete_task', {id, start_date, user});
+	dispatch({ type: COMPLETE_CAL_TASK, payload: {id} });
+};
+export const clickDeleteCal = data => async dispatch => {
+	const {id, tasktype, start_date, dailyid} = data.currentTarget.dataset;
+	const dailyId = dailyid;
+	const _id = id;
+	switch (tasktype){
+	case 'simple':{
+		axios.post('/api/delete_cal_month_task', {dailyId, _id});
+		dispatch({type: DELETE_CAL_TASK, payload: {id}});
+	}
+	}
+};
 export const setTimes = data => dispatch => {
 	const a = data.slotEndState;
 	const b = data.slotStartState;
@@ -71,6 +92,7 @@ export const clickMonth = data => dispatch => {
 	const { name } = data.currentTarget.dataset;
 	dispatch({ type: MONTH_CHOICE, payload: name });
 };
+
 export const switchRedueRepeat = data => dispatch => {
 	if (data.hasOwnProperty('currentTarget')) {
 		data = data.currentTarget.dataset.tag;

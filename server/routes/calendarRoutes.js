@@ -53,6 +53,33 @@ module.exports = app => {
 		if (redueTasks.length !== 0){
 			const sortedRedueTasks = retrieve.redues(redueTasks, fullCal, date );
 		}
+		const allDailyTaskLists = await DailyTaskList.find({_user: user._id})
+			.where('forDate')
+			.gte(moment(date).startOf('year'))
+			.lte(moment(date).endOf('year'));
+		const dateSet = new Set();
+		const taskLists = [];
+		allDailyTaskLists.map((x) => {
+			x.indexes.map((y) => {
+				dateSet.add(y);
+			});
+			x.taskList.map((z, index) => {
+				z.start_date = moment(z.start_date).set({h:0,  m: index});
+				z.dailyId = x._id;
+			});
+			taskLists.push(...x.taskList);
+		});
+		for (let i = fullCal.length -1; i >= 0; --i){
+			if (dateSet.has(fullCal[i].id)){
+				fullCal.splice(i, 1);
+			}
+		}
+		// console.log(allDailyTaskLists.indexes);
+		// const dateSet = new Set(allDailyTaskLists.indexes);
+		fullCal.push(...taskLists);
+		// fullCal.map((x) => {
+		// 	if (moment(x.start_date))
+		// });
 		res.send(fullCal);
 	});
 

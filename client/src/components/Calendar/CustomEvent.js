@@ -3,7 +3,7 @@ import { Popover, OverlayTrigger } from 'react-bootstrap';
 import classnames from 'classnames';
 import moment from 'moment';
 import {connect} from 'react-redux';
-import * as actions from '../../actions/taskActions';
+import * as actions from '../../actions/calendarActions';
 
 class CustomEvent extends Component {
 	constructor(props) {
@@ -48,6 +48,18 @@ class CustomEvent extends Component {
 			}
 		}
 	}
+	dataItems(className, onClick, textBetween, icon){
+		return (
+			<div className={className} onClick={onClick}
+				data-id={this.props.event._id}
+				data-tasktype={this.props.event.taskType}
+				data-start_date={this.props.event.start_date}
+				data-end_date={this.props.event.end_date}
+				data-dailyid={this.props.event.dailyId} >
+				{textBetween}<i className={icon}></i>
+			</div>
+		);
+	}
 	render() {
 		let popoverClickRootClose = (
 			<Popover
@@ -56,7 +68,7 @@ class CustomEvent extends Component {
 				<div className="header">
 					<div className="row-icons">
 						<div className="icons">
-							<i className="far fa-trash-alt"></i>
+							{this.dataItems('deleteCal', this.props.clickDeleteCal, '', 'far fa-trash-alt' )}
 							<i onClick={() => document.body.click()} className="fas fa-times"></i>
 						</div>
 					</div>
@@ -82,19 +94,10 @@ class CustomEvent extends Component {
 				</div>
 				<div className="complete">
 					<div className="buttonComplete">
-						<div onClick={this.props.clickCompleteCal}
-							data-id={this.props.event._id}
-							data-tasktype={this.props.event.taskType}
-							data-start_date={this.props.event.start_date}
-							data-end_date={this.props.event.end_date}
-							className="clickComplete">
-							Complete<i className="fas fa-check"></i>
-						</div>
+						{this.dataItems('clickComplete', this.props.clickCompleteCal, 'Complete', 'fas fa-check' )}
 					</div>
 					<div className="buttonPostpone">
-						<div className="clickPostpone">Postpone
-							<i className="fas fa-long-arrow-alt-right"></i>
-						</div>
+						{this.dataItems('clickPostpone', this.props.clickPostponeCal, 'Postpone', 'fas fa-long-arrow-alt-right' )}
 					</div>
 				</div>
 			</Popover>
