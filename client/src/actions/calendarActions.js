@@ -4,6 +4,8 @@ import {
 	CALENDAR_VIEW,
 	COMPLETE_CAL_TASK,
 	DELETE_CAL_TASK,
+	EDIT_CAL_TASK,
+	UPDATE_CAL_TASK_MESSAGE,
 	WRITE_QUICK_TASK,
 	SWITCH_REPEATS,
 	RELOAD_CAL,
@@ -75,21 +77,25 @@ export const clickCompleteCal = (data, list, curDate) => async dispatch => {
 	dispatch({ type: COMPLETE_CAL_TASK, payload: {id, start_date, tasktype} });
 };
 export const clickDeleteCal = data => async dispatch => {
-	const {id, tasktype, start_date, dailyid} = data.currentTarget.dataset;
+	const {id, tasktype, dailyid} = data.currentTarget.dataset;
 	const dailyId = dailyid;
 	const _id = id;
 	switch (tasktype){
 	case 'simple':{
 		axios.post('/api/delete_cal_month_task', {dailyId, _id});
 		dispatch({type: DELETE_CAL_TASK, payload: {id}});
+		break;
 	}
+	default: break;
 	}
 };
 export const editCalTask = data => async dispatch => {
-	const {id, tasktype, start_date, dailyid} = data.currentTarget.dataset;
+	const {id, tasktype, dailyid} = data.currentTarget.dataset;
 	const res = await axios.post('/api/edit_cal_task', {id, tasktype, dailyid});
-	console.log(res);
-
+	return dispatch({ type: EDIT_CAL_TASK, payload: res.data});
+};
+export const setTaskMessage = data => async dispatch => {
+	return dispatch ({ type: UPDATE_CAL_TASK_MESSAGE, payload: data.message});
 };
 export const setTimes = data => dispatch => {
 	const a = data.slotEndState;

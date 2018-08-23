@@ -2,6 +2,8 @@ import {
 	INIT_CAL_TASKS,
 	CALENDAR_VIEW,
 	DELETE_CAL_TASK,
+	EDIT_CAL_TASK,
+	UPDATE_CAL_TASK_MESSAGE,
 	WRITE_QUICK_TASK,
 	SWITCH_REPEATS,
 	RELOAD_CAL,
@@ -57,6 +59,7 @@ const initState = {
 	activeRepeatRadio: 'never',
 	activeRedueRadio: 'never',
 	switchRepeats: null,
+	message: '',
 	track: '',
 	hat: '',
 	journal: '',
@@ -76,6 +79,21 @@ export default (state = initState, action) => {
 		return { ...state, events: action.payload.data };
 	case CALENDAR_VIEW:
 		return { ...state, calendarView: action.payload };
+	case EDIT_CAL_TASK: {
+		const {message, start_date, end_date, note, track, hat, journal} = action.payload;
+		const startTimeHours = moment(start_date).hours();
+		const startTimeMinutes = moment(start_date).minutes();
+		const endTimeHours = moment(end_date).hours();
+		const endTimeMinutes = moment(end_date).minutes();
+		// const duration = moment.duration(.diff(startTime)).asHours();
+		const taskDuration = (moment(end_date).diff(moment(start_date), 'hours'));
+		const startDate = start_date;
+		const endDate = end_date;
+		return {...state, calendarView: 'AddTask', message, startTimeHours, startTimeMinutes, endTimeHours, endTimeMinutes, note, startDate, endDate, taskDuration};
+	}
+	case UPDATE_CAL_TASK_MESSAGE: {
+		return {...state, message: action.payload};
+	}
 	case COMPLETE_CAL_TASK: {
 		let index = _.findIndex([...state.events], { _id: action.payload.id });
 		if (action.payload.tasktype === 'repeat') {

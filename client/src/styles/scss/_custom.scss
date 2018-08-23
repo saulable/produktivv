@@ -231,11 +231,13 @@ button:focus {
 	min-width: 125px;
 	height: auto;
 	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
 	background: $fourth-color;
 	transition: all 0.2s cubic-bezier(0.945, 0.02, 0.27, 0.665);
 	transform-origin: bottom left;
-	justify-content: space-between;
 	.left-nav {
+		@include flex-align(start);
 		text-align: center;
 		margin: 0;
 		li {
@@ -252,14 +254,26 @@ button:focus {
 	.sidebar-x {
 		@include flex;
 		@include flex-align(center);
-		.sidebar-profile-image {
-			@include flex;
-			@include flex-align(center);
-			img {
-				width: 40px;
-				height: 40px;
-			}
+		font-family: "Fredoka One";
+		font-size: 22px;
+		margin-top: 5px;
+	}
+	.sidebar-profile-image{
+		display: flex;
+		@include flex-align(center);
+		margin-bottom: 10px;
+		img {
+			width: 50px;
+			height: 50px;
 		}
+	}
+	.sidebar-header{
+		margin-top:auto;
+	}
+	.sidebar-profile-links{
+		border-top: 1px solid darken($fourth-color, 10%);
+		padding: 10px 0;
+		text-align: center;
 	}
 }
 .content-x {

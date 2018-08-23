@@ -5562,11 +5562,13 @@ button:focus {
   min-width: 125px;
   height: auto;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   background: #7E8D85;
   transition: all 0.2s cubic-bezier(0.945, 0.02, 0.27, 0.665);
-  transform-origin: bottom left;
-  justify-content: space-between; }
+  transform-origin: bottom left; }
   .sidebar .left-nav {
+    justify-content: start;
     text-align: center;
     margin: 0; }
     .sidebar .left-nav li {
@@ -5581,13 +5583,23 @@ button:focus {
       transform: rotateY(100deg); } }
   .sidebar .sidebar-x {
     display: flex;
-    justify-content: center; }
-    .sidebar .sidebar-x .sidebar-profile-image {
-      display: flex;
-      justify-content: center; }
-      .sidebar .sidebar-x .sidebar-profile-image img {
-        width: 40px;
-        height: 40px; }
+    justify-content: center;
+    font-family: "Fredoka One";
+    font-size: 22px;
+    margin-top: 5px; }
+  .sidebar .sidebar-profile-image {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px; }
+    .sidebar .sidebar-profile-image img {
+      width: 50px;
+      height: 50px; }
+  .sidebar .sidebar-header {
+    margin-top: auto; }
+  .sidebar .sidebar-profile-links {
+    border-top: 1px solid #65736c;
+    padding: 10px 0;
+    text-align: center; }
 
 .content-x {
   display: flex;

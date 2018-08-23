@@ -34,33 +34,24 @@ class LeftNavigation extends Component {
 		return (
 			<nav className="sidebar">
 				<div className="sidebar-x">
-					<div className="sidebar-header">
-						<Link to="/home">
-							<div className="logo" />
-						</Link>
-						<div className="sidebar-profile">
-							<div className="sidebar-profile-image">
-								<img
-									alt="profile"
-									src={ProfilePhoto}
-									className="profile-photo"
-								/>
-							</div>
-							<div className="sidebar-profile-links">
-								<a href="# " onClick={this.logout.bind(this)}>
-									<span>Logout</span>
-								</a>
-
-								<span>Edit Profile</span>
-								<span>0/3</span>
-							</div>
-						</div>
-					</div>
+					Produktivv
 				</div>
 
 				<ul className="left-nav list-unstyled components">
 					<li>
+						<Link to="/daily">Dashboard</Link>
+					</li>
+					<li>
 						<Link to="/daily">Daily Journal</Link>
+					</li>
+					<li>
+						<Link to="/weekly">Weekly Journal</Link>
+					</li>
+					<li>
+						<Link to="/weekly">Monthly Journal</Link>
+					</li>
+					<li>
+						<Link to="/weekly">Yearly Journal</Link>
 					</li>
 					<li>
 						<Link to="/daily_calendar">Calendar</Link>
@@ -69,15 +60,31 @@ class LeftNavigation extends Component {
 						<Link to="/tracks">Tracks</Link>
 					</li>
 					<li>
-						<Link to="/weekly">Weekly Journal</Link>
+						<Link to="/weekly">Hats</Link>
 					</li>
 					<li>
-						<Link to="/weekly">Yearly Journal</Link>
-					</li>
-					<li>
-						<Link to="/weekly">Life Stories</Link>
+						<Link to="/weekly">Review</Link>
 					</li>
 				</ul>
+				<div className="sidebar-header">
+					<Link to="/home">
+						<div className="logo" />
+					</Link>
+					<div className="sidebar-profile">
+						<div className="sidebar-profile-image">
+							<img
+								alt="profile"
+								src={ProfilePhoto}
+								className="profile-photo"
+							/>
+						</div>
+						<div className="sidebar-profile-links">
+							<a href="# " onClick={this.logout.bind(this)}>
+								<span>Logout</span>
+							</a>
+						</div>
+					</div>
+				</div>
 			</nav>
 		);
 	}

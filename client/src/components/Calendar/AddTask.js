@@ -16,15 +16,12 @@ import EndRepeatDate from './EndRepeatDate';
 class AddTask extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			message: ''
-		};
 		this.taskChange = this.taskChange.bind(this);
 	}
 
 	taskChange(e) {
 		e.preventDefault();
-		this.setState({ message: e.target.value });
+		this.props.setTaskMessage({ message: e.target.value });
 	}
 	renderDate = () => {
 		return (
@@ -49,7 +46,6 @@ class AddTask extends Component {
 			.format('MMMM Do YYYY, h:mm');
 		const rdxStore = this.props.calendar;
 		await this.props.quickTaskMessage({
-			...this.state,
 			start_date: startDateFormat,
 			end_date: endDateFormat,
 			rdxStore
@@ -72,7 +68,7 @@ class AddTask extends Component {
 									name="task"
 									placeholder="Add task"
 									onChange={this.taskChange}
-									value={this.state.taskMessage}
+									value={this.props.calendar.message}
 									style={{
 										height: '40px',
 										resize: 'none'
