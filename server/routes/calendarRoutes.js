@@ -85,11 +85,12 @@ module.exports = app => {
 	app.post('/api/edit_cal_task', async(req, res) => {
 		const {id, tasktype, dailyid} = req.body;
 		switch (tasktype){
-		case 'simple':
+		case 'simple':{
 			await SimpleTask.findById(id, (err, doc)=> {
 				if (err) res.status(500).send(err);
 				res.status(200).send(doc);
 			});
+		}
 		}
 	});
 	// The route to create the daily Journal and return it.
@@ -177,9 +178,10 @@ module.exports = app => {
 			});
 	});
 	app.post('/api/create_calendar_task', async (req, res) => {
-		let { message, user } = req.body;
+		let { user } = req.body;
 		let {
 			journal,
+			message,
 			track,
 			hat,
 			startDate,

@@ -67,7 +67,7 @@ const dailyRepeatCompletes = ({start_date, endsOnDate, message, repeatTime, tota
 	return arr;
 };
 
-let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, taskDuration, datesCompleted, date, lastCompleted, repeatCarry}) => {
+let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, taskDuration, datesCompleted, date, lastCompleted, repeatCarry, endsOnDate}) => {
 	// we cycle through 7 days, checking each day if it is inside the daysSelected array.
 	let start = m.clone();
 	let end = m.clone().add(7, 'days');
@@ -76,8 +76,13 @@ let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, t
 	// loop through each day between the dates we set in the parent function.
 	for (let m = moment(start); m.isBefore(end); m.add(1, 'days')) {
 		// if we hit total completes, return the array
-		// or if we hit the end of the month, return the array.
-		if (counter === afterCompletes) {return arr;}
+		// or if we hit the endsDate return
+		if (counter >= afterCompletes) {return {arr: arr, counter:counter};}
+		if (endsOnDate){
+			if (m.clone().startOf('day').isAfter(moment(endsOnDate))){
+				return {arr, counter};
+			}
+		}
 		// if the day exists in the array of days selected.
 		const checkDayContains = datesCompleted.filter((x) => {
 			if (m.isSame(moment(x), 'day')){
@@ -92,14 +97,14 @@ let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, t
 			completedDays += 1;
 			arr.push({start_date: m.clone().toDate(),	end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: true});
 			if (repeatCarry === 'push'){
-				counter -= 1;
+				counter += 1;
 			}
 		}
 		else if (daysSelected.indexOf(m.format('dddd')) !== -1) {
 			// skip the first entry
-			// here we define that the date is after...and thus start counting. We only want to count the completed tasks but still output the missed dates
-			if (m.isBefore(moment(lastCompleted)) && repeatCarry === 'push'){
-				// arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: false, missed: true});
+			// here we define that the date is after...and thus start counting. We only want to count the completed tasks but still output the missed date
+			if ((m.isBefore(moment(lastCompleted)) && lastCompleted !== undefined) && repeatCarry === 'push'){
+				arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: false, missed: true});
 			}else {
 				counter +=1;
 				arr.push({start_date: m.clone().toDate(),end_date: m.clone().add(taskDuration, 'hours').toDate(),message, _id, taskType: 'repeat', completed: false});
@@ -122,7 +127,7 @@ let dailyArr = ({init1week,m,daysSelected,message,afterCompletes,counter, _id, t
 		pushValue.completed = false;
 		arr.push(pushValue);
 	}
-	return arr;
+	return {arr: arr, counter: counter};
 };
 let counterAfter = () => {
 
@@ -209,12 +214,13 @@ const weeklyRepeatEnds = ({ start_date, end_date, endsOnDate, message, repeatTim
 		return arr;
 	} else {
 		let init1week = [];
-		init1week.push({start_date: moment(startLoopDay).toDate(), end_date: moment(startLoopDay).toDate(),message,_id, taskType: 'repeat'});
+		// init1week.push({start_date: moment(startLoopDay).toDate(), end_date: moment(startLoopDay).toDate(),message,_id, taskType: 'repeat'});
 		let counter = 1;
 		for (let m = moment(startLoopDay).clone(); m < endLoopDay; m.add(repeatTime, 'weeks')) {
-			const val = dailyArr({init1week, m, daysSelected, message, counter, datesCompleted});
-			init1week.push(...val);
+			const val = dailyArr({init1week, m, daysSelected, message, counter, datesCompleted, endsOnDate});
+			init1week.push(...val.arr);
 		}
+
 		return init1week;
 	}
 };
@@ -263,9 +269,9 @@ const weeklyRepeatCompletes = ({start_date,lastCompleted,end_date,endsOnDate,mes
 		let counter = 0;
 		for ( let m = moment(startLoopDay); m.isBefore(realOccursDate); m.add(repeatTime, 'weeks')) {
 			const val = dailyArr({init1week, m, daysSelected, message, afterCompletes, counter, _id, taskDuration, datesCompleted, date, lastCompleted, repeatCarry});
-			counter += val.length;
-			init1week.push(...val);
-			if (counter === afterCompletes) {	break; }
+			counter = val.counter;
+			init1week.push(...val.arr);
+			if (counter >= afterCompletes) {	break; }
 		}
 		return init1week;
 	}
