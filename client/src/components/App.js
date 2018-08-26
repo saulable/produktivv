@@ -12,9 +12,9 @@ import DailyJournal from './Journals/DailyJournal/DailyJournal';
 import WeeklyJournal from './Journals/WeeklyJournal/WeeklyJournal';
 import DailyCalendar from './Calendar/DailyCalendar';
 import AddTask from './Calendar/AddTask';
-import Tracks from './Tracks/Dashboard';
+import Tracks from './Tracks/TrackDashboard';
 import Hats from './Hats/Index';
-import Review from './Review/Dashboard';
+// import Review from './Review/Dashboard';
 
 import requireAuth from '../services/requireAuth';
 

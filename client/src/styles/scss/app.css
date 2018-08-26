@@ -6946,3 +6946,33 @@ input:checked + .sliders:before {
 .repeatCompletes {
   display: inline-block;
   margin-left: 10px; }
+
+/* ---------------------------------------------------
+    Tracks
+----------------------------------------------------- */
+.treeView {
+  width: 250px;
+  border-right: 1px solid #e0e0e0; }
+  .treeView .rc-tree li .rc-tree-node-content-wrapper {
+    height: 30px; }
+
+.no-padding {
+  padding: 0px !important; }
+
+.rc-tree .rc-tree-title {
+  position: relative;
+  top: 2px;
+  margin-left: 3px; }
+
+.rc-tree-contextmenu-placement-bottomRight {
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  z-index: 1070;
+  display: block;
+  background-color: #fff; }
+  .rc-tree-contextmenu-placement-bottomRight-hidden {
+    display: none; }
+  .rc-tree-contextmenu-placement-bottomRight-inner {
+    border: 1px solid #ddd;
+    padding: 10px 20px; }

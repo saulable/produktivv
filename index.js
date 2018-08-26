@@ -26,8 +26,7 @@ require('./server/models/Hats');
 require('./server/models/DailyTaskList');
 require('./server/models/RepeatTask');
 require('./server/models/RedueTask');
-
-
+require('./server/models/TrackTree');
 
 // used for development purposes.
 const morgan = require('morgan');
@@ -56,6 +55,7 @@ require('./server/routes/auth')(app, passport);
 require('./server/routes/loginRoutes')(app, passport);
 require('./server/routes/tasksRoutes')(app);
 require('./server/routes/calendarRoutes')(app);
+require('./server/routes/trackRoutes')(app);
 // require('./server/routes/frontEnd')(app);
 
 

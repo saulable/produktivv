@@ -80,7 +80,7 @@ export default (state = initState, action) => {
 	case CALENDAR_VIEW:
 		return { ...state, calendarView: action.payload };
 	case EDIT_CAL_TASK: {
-		const {message, start_date, end_date, note, track, hat, journal} = action.payload;
+		const {message, start_date, end_date, note} = action.payload;
 		const startTimeHours = moment(start_date).hours();
 		const startTimeMinutes = moment(start_date).minutes();
 		const endTimeHours = moment(end_date).hours();
@@ -95,7 +95,7 @@ export default (state = initState, action) => {
 		return {...state, message: action.payload};
 	}
 	case COMPLETE_CAL_TASK: {
-		let index = _.findIndex([...state.events], { _id: action.payload.id });
+		// let index = _.findIndex([...state.events], { _id: action.payload.id });
 		if (action.payload.tasktype === 'repeat') {
 			const indexRepeat = _.findIndex([...state.events], {
 				start_date: action.payload.start_date

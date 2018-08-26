@@ -14,7 +14,7 @@ import 'moment/locale/en-gb';
 
 class Ends extends Component {
 	catchUp(){
-		let {timeInterval, timePlural, activeRepeatRadio, switchRepeats, repeatCarry} = this.props.calendar;
+		let {timeInterval, timePlural, switchRepeats, repeatCarry} = this.props.calendar;
 		if (timePlural){
 			timeInterval = timeInterval.substring(0, timeInterval.length -1);
 		}

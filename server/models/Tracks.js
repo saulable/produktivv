@@ -2,12 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const trackSchema = new Schema({
-	name: String,
-	completed: { type: Boolean, default: false },
-	completed_date: Date,
-	created_at: Date,
-	tasks: Array,
-	journal: String,
+	tracks : Array,
 	_user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 

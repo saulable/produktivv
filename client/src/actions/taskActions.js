@@ -13,8 +13,7 @@ import {
 	TASK_OFF_CLICK,
 	JOURNAL_AUTOSAVE,
 	DELETED_TASK,
-	UPDATE_DAILY_ID,
-	COMPLETE_CAL_TASK
+	UPDATE_DAILY_ID
 } from './types';
 import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
