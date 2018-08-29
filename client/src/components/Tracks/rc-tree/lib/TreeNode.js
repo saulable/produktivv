@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
 var _defineProperty2 = require('babel-runtime/helpers/defineProperty');
 
 var _defineProperty3 = _interopRequireDefault(_defineProperty2);
@@ -255,7 +256,6 @@ var _initialiseProps = function _initialiseProps() {
     if (_this2.isDisabled()) return;
 
     var onNodeSelect = _this2.context.rcTree.onNodeSelect;
-
     e.preventDefault();
     onNodeSelect(e, _this2);
   };

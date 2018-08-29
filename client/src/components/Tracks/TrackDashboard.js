@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import LeftNavigation from '../../containers/LeftNavigation';
 import ReactDOM from 'react-dom';
+import { Popover } from 'react-bootstrap';
 import Tooltip from 'rc-tooltip';
 import './rc-tree/assets/index.css';
 import './contextmenu.less';
@@ -16,14 +17,37 @@ class TracksDashboard extends Component {
 		this.state = {
 			gData,
 			tree: [],
-			autoExpandParent: true
+			autoExpandParent: true,
+			editKey: ''
 			// expandedKeys: ['0-0-key', '0-0-0-key', '0-0-0-0-key']
 		};
+		this.input = React.createRef();
 		this.onRightClick = this.onRightClick.bind(this);
+		this.newFolder = this.newFolder.bind(this);
+		this.renameFolder = this.renameFolder.bind(this);
+		this.renameFolderWhenCreate = this.renameFolderWhenCreate.bind(this);
+		this.handleEditable = this.handleEditable.bind(this);
+		this.handleFocus = this.handleFocus.bind(this);
+		this.handleBlur = this.handleBlur.bind(this);
+		this.handleKeyPress = this.handleKeyPress.bind(this);
 	}
 	componentDidMount = () => {
 		this.props.treeView();
+		this.getContainer();
 	};
+	componentDidUpdate(prevProps, props){
+		if(prevProps.tracks.expandedKeys !== this.props.tracks.expandedKeys){
+			this.setState({expandedKeys: this.props.tracks.expandedKeys });
+			if (prevProps.tracks.editable !== this.props.tracks.editable){
+				this.input.current.focus();
+			}
+		}
+		if (prevProps.tracks.editable !== this.props.tracks.editable){
+			if (this.props.tracks.editable){
+				this.input.current.focus();
+			}
+		}
+	}
 	onDragStart = info => {
 		console.log('start', info);
 	};
@@ -41,6 +65,7 @@ class TracksDashboard extends Component {
 		const dropPosition =
 			info.dropPosition - Number(dropPos[dropPos.length - 1]);
 		console.log(dropPosition);
+		console.log(data);
 		// const dragNodesKeys = info.dragNodesKeys;
 		const loop = (data, key, callback) => {
 			data.forEach((item, index, arr) => {
@@ -99,6 +124,73 @@ class TracksDashboard extends Component {
 		}
 		return this.cmContainer;
 	}
+	handleFocus(event) {
+		event.target.select();
+	}
+	renameFolder(info) {
+		this.props.renameFolder({
+			tree: [...this.props.tracks.tree],
+			key: info.node.props.eventKey
+		});
+		if (this.toolTip) {
+			ReactDOM.unmountComponentAtNode(this.cmContainer);
+			this.toolTip = null;
+		}
+	}
+	renameFolderWhenCreate(info) {
+		console.log('renameFolder');
+		this.props.renameFolder({
+			tree: [...this.props.tracks.tree],
+			key: info
+		});
+		if (this.toolTip) {
+			ReactDOM.unmountComponentAtNode(this.cmContainer);
+			this.toolTip = null;
+		}
+	}
+	handleEditable(e) {
+		this.props.editTitle({
+			tree: [...this.props.tracks.tree],
+			value: e.target.value
+		});
+	}
+	handleBlur(e) {
+		this.props.saveTitle({
+			tree: [...this.props.tracks.tree],
+			key: this.props.tracks.key
+		});
+	}
+	handleKeyPress(e){
+		if (e.key == 'Enter' ){
+			this.props.saveTitle({
+				tree: [...this.props.tracks.tree],
+				key: this.props.tracks.key
+			});
+		}
+	}
+	newFolder = async (info) => {
+		let expandedKeys = this.state.expandedKeys;
+		await this.props.newFolder({ tree: [...this.props.tracks.tree], info, expandedKeys });
+		this.renameFolderWhenCreate(this.props.tracks.key);
+	}
+	deleteFolder(info) {
+		this.props.deleteFolder({tree: [...this.props.tracks.tree], info});
+	}
+	overlay = info => {
+		const arr = ['Inbox', 'Business', 'Personal'];
+		if (arr.indexOf(info.node.props.title) >= 0) {
+			return <h4 onClick={() => this.newFolder(info)}>New Folder</h4>;
+		} else {
+			return (
+				<div>
+					<h4 onClick={() => this.renameFolder(info)}>Rename</h4>
+					<h4 onClick={() => this.newFolder(info)}>New Folder</h4>
+					<h4 onClick={() => this.deleteFolder(info)}>Delete</h4>
+					{/* <h4>{info.node.props.title}</h4> */}
+				</div>
+			);
+		}
+	};
 	renderCm(info) {
 		if (this.toolTip) {
 			ReactDOM.unmountComponentAtNode(this.cmContainer);
@@ -107,10 +199,10 @@ class TracksDashboard extends Component {
 		this.toolTip = (
 			<Tooltip
 				trigger="click"
-				placement="bottomRight"
+				placement="bottomLeft"
 				prefixCls="rc-tree-contextmenu"
 				defaultVisible
-				overlay={<h4>{info.node.props.title}</h4>}>
+				overlay={this.overlay(info)}>
 				<span />
 			</Tooltip>
 		);
@@ -121,17 +213,29 @@ class TracksDashboard extends Component {
 			left: `${info.event.pageX}px`,
 			top: `${info.event.pageY}px`
 		});
-
 		ReactDOM.render(this.toolTip, container);
 	}
 	render() {
-		// console.log(gData);
-		// console.log(this.props.tracks.tree);
 		const loop = data => {
 			return data.map(item => {
+				if (item.editable) {
+					return (
+						<TreeNode
+							key={item.key}
+							thisRef={this.input}
+							handleEditable={this.handleEditable}
+							handleFocus={this.handleFocus}
+							handleKeyPress={this.handleKeyPress}
+							handleBlur={this.handleBlur}
+							title={item.title}
+							editable={true}
+							draggable={false}
+						/>
+					);
+				}
 				if (item.children && item.children.length) {
 					return (
-						<TreeNode key={item.key} title={item.title}>
+						<TreeNode id={item.key} key={item.key} title={item.title}>
 							{loop(item.children)}
 						</TreeNode>
 					);
@@ -148,13 +252,14 @@ class TracksDashboard extends Component {
 				} else if (item.title === 'Business' || item.title === 'Personal') {
 					return (
 						<TreeNode
+							id={item.key}
 							key={item.key}
 							title={item.title}
 							icon={<span className="rc-tree-iconEle rc-tree-icon__close" />}
 						/>
 					);
 				} else {
-					return <TreeNode key={item.key} title={item.title} />;
+					return <TreeNode key={item.key} ref={item.key} title={item.title} />;
 				}
 			});
 		};

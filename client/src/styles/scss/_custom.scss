@@ -1766,6 +1766,8 @@ input:checked + .sliders:before {
 	border-right: 1px solid #e0e0e0;
 	.rc-tree li .rc-tree-node-content-wrapper{
 		height: 30px;
+		// display: flex;
+		// @include flex-align(left, middle);
 	}
 }
 .no-padding{
@@ -1777,20 +1779,45 @@ input:checked + .sliders:before {
 		top:2px;
 		margin-left:3px;
 	}
+	li {
+		// display: flex;
+		// @include flex-align(left, middle);
+	}
 }
-.rc-tree-contextmenu-placement-bottomRight{
+.rc-tree-contextmenu{
 	position: absolute;
 	left: -9999px;
 	top: -9999px;
 	z-index: 1070;
 	display: block;
 	background-color: #fff;
-	&-hidden {
-    display: none;
-  }
+	@include shadow();
+	border: 1px solid #ddd;
+	border-radius: 5px;
+	&-inner {
+		font-size: 14px;
 
-  &-inner {
-    border: 1px solid #ddd;
-    padding: 10px 20px;
+		h4{
+			font-size: 14px;
+			padding:3px 10px;
+			margin: 4px 0 4px 0;
+			cursor: pointer;
+			&:hover{
+				color: #fff;
+				background: $secondary-color;
+			}
+		}
+	}
+	}
+	.rc-tree-contextmenu-hidden {
+    display: none !important;
   }
+.rc-input-text{
+	padding: 0 0 0 5px;
+	line-height: normal;
+	margin:0;
+	height:auto;
+	width: auto;
+	margin-top:3px;
+	display: inline-block;
 }
