@@ -1,25 +1,29 @@
 import axios from 'axios';
 import {TRACK_TREE_VIEW, UPDATE_TREE_VIEW, CREATE_TREE_FOLDER, RENAME_TREE_VIEW, EDIT_TITLE_VIEW, SAVE_TITLE_TREE} from './types';
 import jwtDecode from 'jwt-decode';
-// import moment from 'moment';
-import _ from 'lodash';
-let user;
-if (localStorage.getItem('jwtToken')) {
-	user = jwtDecode(localStorage.getItem('jwtToken'));
+
+function userToken(){
+	let user;
+	if (localStorage.getItem('jwtToken')) {
+		user = jwtDecode(localStorage.getItem('jwtToken'));
+	}
+	return user;
 }
 
-
 export const treeView = data => async dispatch => {
+	const user = userToken();
 	const res = await axios.post('/api/tracks/tracktree_render', user);
 	dispatch({type: TRACK_TREE_VIEW, payload: res});
 };
 
 export const updateTree = data => async dispatch => {
+	const user = userToken();
 	axios.post('/api/tracks/update_treetree_sort', {user, data});
 	dispatch({type: UPDATE_TREE_VIEW, payload: data});
 };
 export const newFolder = data => async dispatch => {
 	// find the highest key value
+	const user = userToken();
 	const arrIndexes = [];
 	const dataLoop = data.tree;
 	const loop = (data, key, callback) => {
@@ -106,6 +110,7 @@ export const editTitle	= data => async dispatch => {
 };
 
 export const saveTitle = data => async dispatch => {
+	const user = userToken();
 	let dataLoop = data.tree;
 	const dataKey = data.key;
 	const arrIndexes = [];
@@ -127,6 +132,7 @@ export const saveTitle = data => async dispatch => {
 };
 
 export const deleteFolder = data => async dispatch => {
+	const user = userToken();
 	let dataLoop = data.tree;
 	let dataKey = data.info.node.props.eventKey;
 	const loop = (data, key, callback) => {
