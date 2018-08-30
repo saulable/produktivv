@@ -9,6 +9,7 @@ import './contextmenu.less';
 import Tree, { TreeNode } from './rc-tree';
 import { gData } from './util';
 import * as actions from '../../actions/trackActions';
+import Resizable from 're-resizable';
 // import 'rc-tree/assets/index.css';
 
 class TracksDashboard extends Component {
@@ -267,7 +268,13 @@ class TracksDashboard extends Component {
 			<div className="container">
 				<LeftNavigation />
 				<div className="content-x no-padding">
-					<div className="treeView">
+					<Resizable
+						defaultSize={{
+							width: 200
+						}}
+						enable={{ top:false, right:true, bottom:false, left:false, topRight:false, bottomRight:false, bottomLeft:false, topLeft:false }}
+						className="treeView"
+					>
 						<div className="draggable-demo">
 							<div className="draggable-container">
 								<Tree
@@ -284,7 +291,7 @@ class TracksDashboard extends Component {
 								</Tree>
 							</div>
 						</div>
-					</div>
+					</Resizable>
 				</div>
 			</div>
 		);

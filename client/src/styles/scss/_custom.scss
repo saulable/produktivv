@@ -1762,13 +1762,15 @@ input:checked + .sliders:before {
     Tracks
 ----------------------------------------------------- */
 .treeView {
-	width: 250px;
+	width: 200px;
 	border-right: 1px solid #e0e0e0;
+	overflow: hidden;
 	.rc-tree li .rc-tree-node-content-wrapper{
 		height: 30px;
 		// display: flex;
 		// @include flex-align(left, middle);
 	}
+	resize: horizontal;
 }
 .no-padding{
 	padding: 0px !important;
