@@ -25,6 +25,7 @@ export const newFolder = data => async dispatch => {
 	// find the highest key value
 	const user = userToken();
 	const arrIndexes = [];
+	let newTrack = {};
 	const dataLoop = data.tree;
 	const loop = (data, key, callback) => {
 		data.forEach((item, index, arr) => {
@@ -35,10 +36,12 @@ export const newFolder = data => async dispatch => {
 				if (item.key === key){
 					if (item.children){
 						item.children.push({key: eventKey, title: 'New Folder'});
+						newTrack = {key: eventKey, titlte: 'New Folder'};
 						return;
 					}else {
 						item.children = [];
 						item.children.push({key: eventKey, title: 'New Folder'});
+						newTrack = {key: eventKey, titlte: 'New Folder'};
 					}
 				} else {
 				// get all the keys so we can sort and find the highest index.
@@ -67,7 +70,7 @@ export const newFolder = data => async dispatch => {
 			expandedKeys = [...data.expandedKeys];
 		}
 	}
-	axios.post('/api/tracks/create_new_folder', {user, dataLoop});
+	axios.post('/api/tracks/create_new_folder', {user, dataLoop, newTrack, eventKey });
 	dispatch({type: CREATE_TREE_FOLDER, payload: {dataLoop, eventKey, folderKey, expandedKeys} });
 	return;
 };
@@ -130,7 +133,6 @@ export const saveTitle = data => async dispatch => {
 	axios.post('/api/tracks/savetree', {user, dataLoop});
 	dispatch({type: SAVE_TITLE_TREE, payload: {data: dataLoop, key: null}});
 };
-
 export const deleteFolder = data => async dispatch => {
 	const user = userToken();
 	let dataLoop = data.tree;
@@ -149,4 +151,8 @@ export const deleteFolder = data => async dispatch => {
 	loop(dataLoop, dataKey);
 	axios.post('/api/tracks/delete_folder', {user, dataLoop});
 	dispatch({type: EDIT_TITLE_VIEW, payload: dataLoop});
+};
+
+export const onSelectTree = data => async dispatch => {
+
 };

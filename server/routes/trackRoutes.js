@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const express = require('express');
 
 const TrackTree = mongoose.model('trackstree');
+const Tracks = mongoose.model('tracks');
 
 module.exports = app => {
 	app.post('/api/tracks/tracktree_render', async (req, res) => {
@@ -36,9 +37,25 @@ module.exports = app => {
 		}
 	});
 	app.post('/api/tracks/create_new_folder', async (req,res) => {
-		const {eventKey} = req.body;
+		const {eventKey, newTrack, dataLoop} = req.body;
 		const {_id} = req.body.user;
-		const saveTree= await TrackTree.findOneAndUpdate({_user: _id}, {$set: {tree: req.body.dataLoop} } );
+		const options = {upsert: true, new: true};
+		const setOptions = {tasks: [], name: 'New Folder', key: eventKey};
+		const saveTrack = await Tracks.findOneAndUpdate({_user: _id, key: eventKey}, {$set: setOptions } ,options);
+		const loop = (data, key, callback) => {
+			data.forEach((item, index, arr) => {
+				if (item.children) {
+					loop(item.children, key, callback);
+				}
+				if (item.key === key) {
+					item.id = saveTrack._id;
+					return;
+				}
+			});
+			return data;
+		};
+		const newTreeWithId = await loop(dataLoop, eventKey);
+		const saveTree= await TrackTree.findOneAndUpdate({_user: _id}, {$set: {tree: newTreeWithId} } );
 		res.status(200).send(saveTree);
 	});
 	app.post('/api/tracks/savetree', async (req,res) => {

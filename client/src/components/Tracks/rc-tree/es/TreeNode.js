@@ -106,7 +106,6 @@ var TreeNode = (function(_React$Component) {
 					dragOverGapBottom = _props.dragOverGapBottom,
 					isLeaf = _props.isLeaf,
 					expanded = _props.expanded,
-					editable = _props.editable,
 					selected = _props.selected,
 					checked = _props.checked,
 					halfChecked = _props.halfChecked,
@@ -288,9 +287,8 @@ var _initialiseProps = function _initialiseProps() {
 
 	this.onSelect = function(e) {
 		if (_this2.isDisabled()) return;
-
 		var onNodeSelect = _this2.context.rcTree.onNodeSelect;
-
+		console.log(e, _this2);
 		e.preventDefault();
 		onNodeSelect(e, _this2);
 	};
@@ -613,7 +611,6 @@ var _initialiseProps = function _initialiseProps() {
 			$icon = _this2.renderIcon();
 		}
 		if (editable){
-			console.log(ref);
 			var $title =  React.createElement('input', {
 				type: 'text',
 				value: title,

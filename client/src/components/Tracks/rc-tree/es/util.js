@@ -7,7 +7,8 @@ import TreeNode from './TreeNode';
 var DRAG_SIDE_RANGE = 0.25;
 var DRAG_MIN_GAP = 2;
 
-var onlyTreeNodeWarned = false;
+// set this to true to ignore the warning....
+var onlyTreeNodeWarned = true;
 
 export function warnOnlyTreeNode() {
   if (onlyTreeNodeWarned) return;
