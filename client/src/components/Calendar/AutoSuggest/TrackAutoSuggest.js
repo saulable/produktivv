@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Autosuggest from 'react-autosuggest';
-import {handleTracksChange, getTracks} from '../../actions/calendarActions';
+import {handleTracksChange, getTracks} from '../../../actions/calendarActions';
 import {connect} from 'react-redux';
 
 // Imagine you have a list of languages that you'd like to autosuggest.
@@ -32,13 +32,13 @@ const languages = [
 ];
 
 // Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = value => {
+const getSuggestions = (value, trackSuggest) => {
 	const inputValue = value.trim().toLowerCase();
 	const inputLength = inputValue.length;
 
 	return inputLength === 0
 		? []
-		: languages.filter(
+		: trackSuggest.filter(
 			lang => lang.name.toLowerCase().slice(0, inputLength) === inputValue
 		);
 };
@@ -51,7 +51,7 @@ const getSuggestionValue = suggestion => suggestion.name;
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => <div>{suggestion.name}</div>;
 
-class ProjectAutoSuggest extends Component {
+class TrackAutoSuggest extends Component {
 	constructor(props) {
 		super(props);
 
@@ -65,9 +65,9 @@ class ProjectAutoSuggest extends Component {
 			value: ''
 		};
 	}
-	// componentDidMount(){
-	// 	this.props.getTracks();
-	// }
+	componentDidMount(){
+		this.props.getTracks();
+	}
 	onChange = (event, { newValue, method }) => {
 		this.props.onChange(this.props.id, event.target.value);
 		if ('enter') {
@@ -81,8 +81,9 @@ class ProjectAutoSuggest extends Component {
 	// Autosuggest will call this function every time you need to update suggestions.
 	// You already implemented this logic above, so just use it.
 	onSuggestionsFetchRequested = ({ value }) => {
+		const {trackSuggest} = this.props.calendar;
 		this.setState({
-			suggestions: getSuggestions(value)
+			suggestions: getSuggestions(value, trackSuggest)
 		});
 	};
 
@@ -119,4 +120,4 @@ class ProjectAutoSuggest extends Component {
 function mapStateToProps({calendar}){
 	return {calendar};
 }
-export default connect(mapStateToProps, {handleTracksChange, getTracks})(ProjectAutoSuggest);
+export default connect(mapStateToProps, {handleTracksChange, getTracks})(TrackAutoSuggest);

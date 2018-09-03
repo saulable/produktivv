@@ -4,13 +4,18 @@ import {
 	CREATE_TREE_FOLDER,
 	RENAME_TREE_VIEW,
 	EDIT_TITLE_VIEW,
-	SAVE_TITLE_TREE
+	SAVE_TITLE_TREE,
+	INIT_TRACK_VIEW,
+	TRACKS_CHANGE_TREE_VIEW
 } from '../actions/types';
 
 // this reducers handles all the interactions with the elements on the daily journal page.
 const initState = {
 	tree: [],
-	key: ''
+	key: '',
+	trackView: [],
+	hotSpot: [],
+	projectHeader: 'Inbox'
 };
 export default function(state = initState, action) {
 	switch (action.type) {
@@ -43,6 +48,21 @@ export default function(state = initState, action) {
 			key: action.payload.key,
 			editable: false
 		};
+	}
+	case INIT_TRACK_VIEW: {
+
+		return {...state, trackView: action.payload.data.allTasks, projectHeader: action.payload.data.projectHeader};
+	}
+	case TRACKS_CHANGE_TREE_VIEW: {
+		const index = state.hotSpot.indexOf(action.payload.type);
+		if ( index >= 0 ){
+			const keyPair = state.hotSpot[index];
+			keyPair.value = action.payload.value;
+			return {...state, hotSpot: [...state.hotSpot, keyPair] };
+		}else {
+			const newVal = {value: action.payload.value, id: action.payload.type};
+			return {...state, hotSpot: [...state.hotSpot, newVal]};
+		}
 	}
 	default:
 		return state;

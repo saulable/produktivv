@@ -36,7 +36,8 @@ import {
 	Q_FROM_START,
 	Q_TO_END,
 	Q_UPDATE_DURATION,
-	REPEAT_CATCH_UP
+	REPEAT_CATCH_UP,
+	GET_TRACKS_AUTOSUGGEST
 } from './types';
 import {
 	dailyRepeatNever,
@@ -315,3 +316,11 @@ export function catchUp(data){
 		dispatch({ type: REPEAT_CATCH_UP, payload: data.currentTarget.dataset.id});
 	};
 }
+export const getTracks = data => async dispatch => {
+	let user;
+	if (localStorage.getItem('jwtToken')) {
+		user = jwtDecode(localStorage.getItem('jwtToken'));
+	}
+	const res = await axios.post('/api/tracks/get_track_names', user);
+	dispatch({type: GET_TRACKS_AUTOSUGGEST, payload: res});
+};

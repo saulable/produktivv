@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const trackSchema = new Schema({
-	name: String,
+	title: String,
 	key: String,
 	created_at: {type: Date, default: Date.now() },
 	tasks: [],

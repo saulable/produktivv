@@ -29,6 +29,7 @@ class TrackTree extends Component {
 		this.handleFocus = this.handleFocus.bind(this);
 		this.handleBlur = this.handleBlur.bind(this);
 		this.handleKeyPress = this.handleKeyPress.bind(this);
+		this.onSelectTree = this.onSelectTree.bind(this);
 	}
 	componentDidMount = () => {
 		this.props.treeView();
@@ -37,9 +38,6 @@ class TrackTree extends Component {
 	componentDidUpdate(prevProps, props) {
 		if (prevProps.tracks.expandedKeys !== this.props.tracks.expandedKeys) {
 			this.setState({ expandedKeys: this.props.tracks.expandedKeys });
-			if (prevProps.tracks.editable !== this.props.tracks.editable) {
-				this.input.current.focus();
-			}
 		}
 		if (prevProps.tracks.editable !== this.props.tracks.editable) {
 			if (this.props.tracks.editable) {
@@ -137,7 +135,6 @@ class TrackTree extends Component {
 		}
 	}
 	renameFolderWhenCreate(info) {
-		console.log('renameFolder');
 		this.props.renameFolder({
 			tree: [...this.props.tracks.tree],
 			key: info
@@ -218,6 +215,13 @@ class TrackTree extends Component {
 		});
 		ReactDOM.render(this.toolTip, container);
 	}
+	onSelectTree(info){
+		const {eventKey, pos} = info.props;
+		const expandedKeys = this.state.expandedKeys;
+		const tree = this.props.tracks.tree;
+		this.props.onSelectTree({key: eventKey, expandedKeys, tree: info.props});
+		this.props.initTrackView({key: eventKey});
+	}
 	render() {
 		const loop = data => {
 			return data.map(item => {
@@ -279,7 +283,7 @@ class TrackTree extends Component {
 						onDragStart={this.onDragStart}
 						onDragEnter={this.onDragEnter}
 						onDrop={this.onDrop}
-						onSelect={this.props.onSelectTree}
+						onSelect={this.onSelectTree}
 					>
 						{loop(this.props.tracks.tree)}
 					</Tree>

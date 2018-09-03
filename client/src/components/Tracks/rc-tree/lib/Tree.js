@@ -280,7 +280,7 @@ var Tree = function (_React$Component) {
           selectedNodes: selectedNodes,
           nativeEvent: e.nativeEvent
         };
-        onSelect(selectedKeys, eventObj);
+        onSelect(selectedKeys, treeNode);
       }
     }, _this.onNodeCheck = function (e, treeNode, checked) {
       var _this$state2 = _this.state,

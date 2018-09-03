@@ -254,11 +254,11 @@ button:focus {
 	.sidebar-x {
 		@include flex;
 		@include flex-align(center);
-		font-family: "Fredoka One";
+		font-family: 'Fredoka One';
 		font-size: 22px;
 		margin-top: 5px;
 	}
-	.sidebar-profile-image{
+	.sidebar-profile-image {
 		display: flex;
 		@include flex-align(center);
 		margin-bottom: 10px;
@@ -267,10 +267,10 @@ button:focus {
 			height: 50px;
 		}
 	}
-	.sidebar-header{
-		margin-top:auto;
+	.sidebar-header {
+		margin-top: auto;
 	}
-	.sidebar-profile-links{
+	.sidebar-profile-links {
 		border-top: 1px solid darken($fourth-color, 10%);
 		padding: 10px 0;
 		text-align: center;
@@ -363,6 +363,7 @@ button:focus {
 			.drag-div {
 				width: 30px;
 				.drag_handle {
+					cursor: pointer;
 					@include flex;
 					@include flex-align(center, middle);
 				}
@@ -1035,8 +1036,8 @@ button:focus {
 				color: #ffffff;
 				font-weight: bold;
 				cursor: pointer;
-				i{
-					padding-left:20px;
+				i {
+					padding-left: 20px;
 				}
 			}
 		}
@@ -1048,11 +1049,11 @@ button:focus {
 			font-weight: bold;
 			display: flex;
 			cursor: pointer;
-			i{
-				padding-left:15px;
+			i {
+				padding-left: 15px;
 				font-size: 20px;
 				position: relative;
-				top:1px;
+				top: 1px;
 			}
 		}
 	}
@@ -1708,24 +1709,24 @@ input:checked + .sliders:before {
 }
 .endsWrap {
 	& > div {
-		margin-top:10px;
+		margin-top: 10px;
 	}
 }
-.catchUp{
+.catchUp {
 	background: url('../img/rightarrowdown.png') no-repeat;
 	background-size: 20px 20px;
 	background-position: 8px 5px;
 	padding-left: 40px;
 	font-size: 14px;
-	clear:both;
+	clear: both;
 	margin-bottom: 5px;
-	margin-top:5px !important;
-	.menu{
+	margin-top: 5px !important;
+	.menu {
 		display: flex;
 		cursor: pointer;
 		@include flex-align(left, middle);
 	}
-	.small-radio-button{
+	.small-radio-button {
 		cursor: pointer;
 		width: 12px;
 		height: 12px;
@@ -1735,10 +1736,10 @@ input:checked + .sliders:before {
 		display: flex;
 		@include flex-align(center, middle);
 		.small-radio-inside {
-			width:6px;
-			height:6px;
+			width: 6px;
+			height: 6px;
 			border-radius: 50%;
-			&.selected{
+			&.selected {
 				background: $secondary-color;
 			}
 		}
@@ -1762,31 +1763,31 @@ input:checked + .sliders:before {
     Tracks
 ----------------------------------------------------- */
 .treeView {
-	width: 200px;
+	width: 150px;
 	border-right: 1px solid #e0e0e0;
 	overflow: hidden;
-	.rc-tree li .rc-tree-node-content-wrapper{
+	.rc-tree li .rc-tree-node-content-wrapper {
 		height: 30px;
 		// display: flex;
 		// @include flex-align(left, middle);
 	}
 	resize: horizontal;
 }
-.no-padding{
+.no-padding {
 	padding: 0px !important;
 }
-.rc-tree{
-	.rc-tree-title{
+.rc-tree {
+	.rc-tree-title {
 		position: relative;
-		top:2px;
-		margin-left:3px;
+		top: 2px;
+		margin-left: 3px;
 	}
 	li {
 		// display: flex;
 		// @include flex-align(left, middle);
 	}
 }
-.rc-tree-contextmenu{
+.rc-tree-contextmenu {
 	position: absolute;
 	left: -9999px;
 	top: -9999px;
@@ -1799,27 +1800,340 @@ input:checked + .sliders:before {
 	&-inner {
 		font-size: 14px;
 
-		h4{
+		h4 {
 			font-size: 14px;
-			padding:3px 10px;
+			padding: 3px 10px;
 			margin: 4px 0 4px 0;
 			cursor: pointer;
-			&:hover{
+			&:hover {
 				color: #fff;
 				background: $secondary-color;
 			}
 		}
 	}
-	}
-	.rc-tree-contextmenu-hidden {
-    display: none !important;
-  }
-.rc-input-text{
+}
+.rc-tree-contextmenu-hidden {
+	display: none !important;
+}
+.rc-input-text {
 	padding: 0 0 0 5px;
 	line-height: normal;
-	margin:0;
-	height:auto;
+	margin: 0;
+	height: auto;
 	width: auto;
-	margin-top:3px;
+	margin-top: 3px;
 	display: inline-block;
 }
+// This is where the tracks actually sit.
+.trackView {
+	display: flex;
+	flex: 1 1 auto;
+	margin-left: 10px;
+	.textWrapper{
+		display: flex;
+	}
+	.react-autosuggest__container{
+		display: flex;
+		flex-basis: 150px;
+		align-self: center;
+		margin-left: 10px;
+		color: #000;
+		.react-autosuggest__input{
+			margin: 0;
+			font-size: 14px;
+			color: #000;
+		}
+		.react-autosuggest__suggestion{
+			font-size: 12px;
+			padding: 2px 5px;
+		}
+	}
+	.must-complete
+		.daily-task-list
+		.list-group-item
+		.dtWrapper
+		.textWrapper
+		textarea {
+		margin: rem-calc(5px) 0;
+		border: 1px solid darken(#e0e0e0, 10%);
+		min-height: 30px;
+		height: 40px !important;
+		padding: rem-calc(5 5);
+	}
+	.must-complete .daily-task-list .list-group-item {
+		margin-top: 0;
+		margin-bottom: 0;
+		z-index: 2;
+		position: relative;
+		border: 1px solid darken(#e0e0e0, 10%);
+		flex: 1;
+	}
+	.tab-container {
+		margin: 0px 0 0 0;
+		padding: 0;
+		max-height: 25px;
+		z-index: 1;
+
+	}
+	.drag_handle {
+		top: 10px;
+	}
+	.subTask {
+		float: left;
+		position: absolute;
+		bottom: 2px;
+		left: -1px;
+		text-align: center;
+		width: 30px;
+		color: $medium-gray;
+		cursor:pointer;
+		&:hover{
+			color: $black;
+		}
+		i {
+			position: relative;
+		}
+	}
+	.sendThis{
+		display: flex;
+		@include flex-align(center, middle);
+		width: 25px;
+		height: 30px;
+		border-right: 1px solid #e0e0e0;
+		border-top: 1px solid #e0e0e0;
+		border-bottom: 1px solid #e0e0e0;
+		border-top-right-radius: 3px;
+		border-bottom-right-radius: 3px;
+		.sendToJournal{
+			color: $medium-gray;
+			cursor: pointer;
+		}
+	}
+
+	.withButton{
+		display: flex;
+		@include flex-align(left, middle);
+
+	}
+	.hatImage{
+		display: flex;
+		width: 50px;
+		margin-right: -10px;
+		@include flex-align(center, middle);
+		.hatChange{
+			height: 35px;
+			width: 35px;
+			background: url('../img/students-cap.png') no-repeat;
+			background-size: 35px 35px;
+		}
+	}
+}
+.tabs {
+	border: none;
+}
+ul.tabs {
+	margin: 0;
+	list-style-type: none;
+	line-height: 35px;
+	max-height: 25px;
+	overflow: hidden;
+	display: inline-block;
+	padding-right: 20px;
+	padding-left: 5px;
+	background: none;
+
+}
+
+ul.tabs > li.active {
+	z-index: 2;
+	background: #efefef;
+}
+
+ul.tabs > li.active:before {
+	border-color: transparent #efefef transparent transparent;
+}
+
+ul.tabs > li.active:after {
+	border-color: transparent transparent transparent #efefef;
+}
+
+ul.tabs > li {
+	float: left;
+	margin: 5px -1px 0;
+	// border-top-right-radius: 25px 170px;
+	// border-top-left-radius: 20px 90px;
+	padding: 0 10px 0 10px;
+	height: 40px;
+	background: lighten($light-gray, 9%);
+	position: relative;
+	// box-shadow: 0 10px 20px rgba(0,0,0,.5);
+	max-width: 200px;
+	border: 1px solid $dark-gray;
+}
+
+ul.tabs > li > a {
+	display: flex;
+	@include flex-align(center, middle);
+	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	text-decoration: none;
+	color: $medium-gray;
+	height: 20px;
+	font-size: rem-calc(12);
+	&:hover{
+		color: $black;
+	}
+}
+
+ul.tabs > li:before,
+ul.tabs > li:after {
+	content: '';
+	background: transparent;
+	height: 20px;
+	width: 20px;
+	border-radius: 100%;
+	border-width: 10px;
+	top: 0px;
+	border-style: solid;
+	position: absolute;
+}
+
+ul.tabs > li:before {
+	border-color: transparent #ddd transparent transparent;
+	-webkit-transform: rotate(48deg);
+	left: 0px;
+	display: none;
+}
+
+ul.tabs > li:after {
+	border-color: transparent transparent transparent #ddd;
+	-webkit-transform: rotate(-48deg);
+	right: 8px;
+	display: none;
+}
+.clearfix:before,
+.clearfix:after {
+	content: '';
+	display: table;
+}
+.clearfix:after {
+	clear: both;
+}
+.clearfix {
+	zoom: 1;
+}
+
+.SortableHelper {
+	.trackView {
+		display: flex;
+		flex: 1 1 auto;
+		margin-left: 10px;
+		.tab-container {
+			margin: 0px 0 0 0;
+			padding: 0;
+			max-height: 25px;
+			z-index: 1;
+		}
+	}
+	.list-group-item {
+		margin-top: 0 !important;
+		margin-bottom: 0;
+		z-index: 2;
+		position: relative;
+		@include shadow();
+		border: 1px solid darken(#e0e0e0, 10%);
+		textarea {
+			margin: rem-calc(5 0) !important;
+			height: 40px !important;
+			padding: rem-calc(5 5) !important;
+			min-height: 0px;
+		}
+	}
+	.drag_handle {
+		top: 10px;
+	}
+	.tabs {
+		border: none;
+	}
+	ul.tabs {
+		margin: 0;
+		list-style-type: none;
+		line-height: 35px;
+		max-height: 25px;
+		position: relative;
+		top: 6px;
+		overflow: hidden;
+		display: inline-block;
+		padding-right: 20px;
+		padding-left: 5px;
+		background: none;
+	}
+
+	ul.tabs > li.active {
+		z-index: 2;
+		background: #efefef;
+	}
+
+	ul.tabs > li.active:before {
+		border-color: transparent #efefef transparent transparent;
+	}
+
+	ul.tabs > li.active:after {
+		border-color: transparent transparent transparent #efefef;
+	}
+
+	ul.tabs > li {
+		float: left;
+		margin: 5px -1px 0;
+		// border-top-right-radius: 25px 170px;
+		// border-top-left-radius: 20px 90px;
+		padding: 0 10px 0 10px;
+		height: 40px;
+		background: lighten($light-gray, 9%);
+		position: relative;
+		// box-shadow: 0 10px 20px rgba(0,0,0,.5);
+		max-width: 200px;
+		border: 1px solid $dark-gray;
+	}
+
+	ul.tabs > li > a {
+		display: flex;
+		@include flex-align(center, middle);
+		max-width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		text-decoration: none;
+		color: #222;
+		height: 20px;
+		font-size: rem-calc(12);
+	}
+
+	ul.tabs > li:before,
+	ul.tabs > li:after {
+		content: '';
+		background: transparent;
+		height: 20px;
+		width: 20px;
+		border-radius: 100%;
+		border-width: 10px;
+		top: 0px;
+		border-style: solid;
+		position: absolute;
+	}
+
+	ul.tabs > li:before {
+		border-color: transparent #ddd transparent transparent;
+		-webkit-transform: rotate(48deg);
+		left: 0px;
+		display: none;
+	}
+
+	ul.tabs > li:after {
+		border-color: transparent transparent transparent #ddd;
+		-webkit-transform: rotate(-48deg);
+		right: 8px;
+		display: none;
+	}
+}
+/* Clear Fix took for HTML 5 Boilerlate*/

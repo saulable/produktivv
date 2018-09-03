@@ -1,8 +1,18 @@
 import axios from 'axios';
-import {TRACK_TREE_VIEW, UPDATE_TREE_VIEW, CREATE_TREE_FOLDER, RENAME_TREE_VIEW, EDIT_TITLE_VIEW, SAVE_TITLE_TREE} from './types';
+import {
+	TRACK_TREE_VIEW,
+	UPDATE_TREE_VIEW,
+	CREATE_TREE_FOLDER,
+	RENAME_TREE_VIEW,
+	EDIT_TITLE_VIEW,
+	SAVE_TITLE_TREE,
+	INIT_TRACK_VIEW,
+	TRACKS_CHANGE_TREE_VIEW
+} from './types';
 import jwtDecode from 'jwt-decode';
+import _ from 'lodash';
 
-function userToken(){
+function userToken() {
 	let user;
 	if (localStorage.getItem('jwtToken')) {
 		user = jwtDecode(localStorage.getItem('jwtToken'));
@@ -13,13 +23,13 @@ function userToken(){
 export const treeView = data => async dispatch => {
 	const user = userToken();
 	const res = await axios.post('/api/tracks/tracktree_render', user);
-	dispatch({type: TRACK_TREE_VIEW, payload: res});
+	dispatch({ type: TRACK_TREE_VIEW, payload: res });
 };
 
 export const updateTree = data => async dispatch => {
 	const user = userToken();
-	axios.post('/api/tracks/update_treetree_sort', {user, data});
-	dispatch({type: UPDATE_TREE_VIEW, payload: data});
+	axios.post('/api/tracks/update_treetree_sort', { user, data });
+	dispatch({ type: UPDATE_TREE_VIEW, payload: data });
 };
 export const newFolder = data => async dispatch => {
 	// find the highest key value
@@ -32,28 +42,26 @@ export const newFolder = data => async dispatch => {
 			if (item.children) {
 				loop(item.children, key, callback);
 			}
-			if (item.key) {
-				if (item.key === key){
-					if (item.children){
-						item.children.push({key: eventKey, title: 'New Folder'});
-						newTrack = {key: eventKey, titlte: 'New Folder'};
-						return;
-					}else {
-						item.children = [];
-						item.children.push({key: eventKey, title: 'New Folder'});
-						newTrack = {key: eventKey, titlte: 'New Folder'};
-					}
-				} else {
-				// get all the keys so we can sort and find the highest index.
-					const val = item.key.split('-');
-					arrIndexes.push({key: item.key, val: Number(val[0])});
+			if (item.key === key) {
+				if (item.children) {
+					item.children.push({ key: eventKey, title: 'New Folder' });
+					newTrack = { key: eventKey, titlte: 'New Folder' };
 					return;
+				} else {
+					item.children = [];
+					item.children.push({ key: eventKey, title: 'New Folder' });
+					newTrack = { key: eventKey, titlte: 'New Folder' };
 				}
+			} else {
+				// get all the keys so we can sort and find the highest index.
+				const val = item.key.split('-');
+				arrIndexes.push({ key: item.key, val: Number(val[0]) });
+				return;
 			}
 		});
 	};
 	loop(dataLoop);
-	const highestVal = arrIndexes.sort((a,b) => {
+	const highestVal = arrIndexes.sort((a, b) => {
 		return a.val - b.val;
 	});
 	let num = highestVal[highestVal.length - 1].key.split('-');
@@ -63,15 +71,27 @@ export const newFolder = data => async dispatch => {
 	const folderKey = data.info.node.props.eventKey;
 	loop(dataLoop, folderKey, eventKey);
 	let expandedKeys;
-	if (data.expandedKeys){
-		if (data.expandedKeys[data.expandedKeys.length - 1] !== folderKey){
+	// if we have expanded keys already.
+	if (data.expandedKeys) {
+		// if the last key expanded is not equal to the current folder key
+		if (data.expandedKeys[data.expandedKeys.length - 1] !== folderKey) {
 			expandedKeys = [...data.expandedKeys, folderKey];
-		}else {
+		} else {
 			expandedKeys = [...data.expandedKeys];
 		}
+	} else {
+		expandedKeys = [eventKey];
 	}
-	axios.post('/api/tracks/create_new_folder', {user, dataLoop, newTrack, eventKey });
-	dispatch({type: CREATE_TREE_FOLDER, payload: {dataLoop, eventKey, folderKey, expandedKeys} });
+	axios.post('/api/tracks/create_new_folder', {
+		user,
+		dataLoop,
+		newTrack,
+		eventKey
+	});
+	dispatch({
+		type: CREATE_TREE_FOLDER,
+		payload: { dataLoop, eventKey, folderKey, expandedKeys }
+	});
 	return;
 };
 export const renameFolder = data => async dispatch => {
@@ -91,10 +111,10 @@ export const renameFolder = data => async dispatch => {
 		});
 	};
 	loop(dataLoop, key);
-	dispatch({type: RENAME_TREE_VIEW, payload: {tree:dataLoop, key}});
+	dispatch({ type: RENAME_TREE_VIEW, payload: { tree: dataLoop, key } });
 };
 
-export const editTitle	= data => async dispatch => {
+export const editTitle = data => async dispatch => {
 	let dataLoop = data.tree;
 	const valueText = data.value;
 	const loop = (data, key, callback) => {
@@ -109,7 +129,7 @@ export const editTitle	= data => async dispatch => {
 		});
 	};
 	loop(dataLoop);
-	dispatch({type: EDIT_TITLE_VIEW, payload: dataLoop});
+	dispatch({ type: EDIT_TITLE_VIEW, payload: dataLoop });
 };
 
 export const saveTitle = data => async dispatch => {
@@ -130,8 +150,13 @@ export const saveTitle = data => async dispatch => {
 		});
 	};
 	loop(dataLoop);
-	axios.post('/api/tracks/savetree', {user, dataLoop});
-	dispatch({type: SAVE_TITLE_TREE, payload: {data: dataLoop, key: null}});
+	axios.post('/api/tracks/savetree', {
+		user,
+		dataLoop,
+		dataKey,
+		item: arrIndexes[0]
+	});
+	dispatch({ type: SAVE_TITLE_TREE, payload: { data: dataLoop, key: null } });
 };
 export const deleteFolder = data => async dispatch => {
 	const user = userToken();
@@ -149,10 +174,51 @@ export const deleteFolder = data => async dispatch => {
 		});
 	};
 	loop(dataLoop, dataKey);
-	axios.post('/api/tracks/delete_folder', {user, dataLoop});
-	dispatch({type: EDIT_TITLE_VIEW, payload: dataLoop});
+	axios.post('/api/tracks/delete_folder', { user, dataLoop });
+	dispatch({ type: EDIT_TITLE_VIEW, payload: dataLoop });
+};
+export const initTrackView = data => async dispatch => {
+	const user = userToken();
+	let key;
+	if (data){
+		key = data.key;
+	}else {
+		key = '0-key';
+	}
+	const res = await axios.post('/api/tracks/init_trackview', {user, key});
+	console.log(res);
+	dispatch({ type: INIT_TRACK_VIEW, payload: res });
+};
+export const onSelectTree = data => async dispatch => {
+	const user = userToken();
+	const folderKey = data.key;
+	const rootKeys = data.tree.pos.split('-');
+	let keysOfTree = [];
+	if (rootKeys.length > 2) {
+		keysOfTree.push(folderKey);
+	}
+	const dataLoop = data.tree;
+	const loop = (data, key, callback) => {
+		for (let i = 0; i < data.length; i++) {
+			if (data) {
+				keysOfTree.push(data[i].key);
+			}
+			if (data[i].props.children) {
+				loop(data[i].props.children, key);
+			}
+		}
+	};
+	if (dataLoop.children) {
+		loop(dataLoop.children, folderKey);
+	} else {
+		keysOfTree.push(dataLoop.eventKey);
+	}
+	const keys = [...new Set(keysOfTree)];
+	const res = await axios.post('/api/tracks/retrieve_tasks', { keys, user });
+	initTrackView(folderKey);
 };
 
-export const onSelectTree = data => async dispatch => {
 
+export const hotSpotChange = (type, value) => async dispatch => {
+	return dispatch({ type: TRACKS_CHANGE_TREE_VIEW, payload: {type, value}});
 };

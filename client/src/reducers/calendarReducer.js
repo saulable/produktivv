@@ -35,7 +35,8 @@ import {
 	Q_TO_END,
 	Q_UPDATE_DURATION,
 	COMPLETE_CAL_TASK,
-	REPEAT_CATCH_UP
+	REPEAT_CATCH_UP,
+	GET_TRACKS_AUTOSUGGEST
 } from '../actions/types';
 import _ from 'lodash';
 import moment from 'moment';
@@ -70,7 +71,8 @@ const initState = {
 	startTimeMinutes: '',
 	endTimeHours: '',
 	endTimeMinutes: '',
-	rptDisabled: false
+	rptDisabled: false,
+	trackSuggest: ''
 };
 
 export default (state = initState, action) => {
@@ -456,7 +458,10 @@ export default (state = initState, action) => {
 	}
 	case REPEAT_CATCH_UP:
 		return { ...state, repeatCarry: action.payload };
+	case GET_TRACKS_AUTOSUGGEST:
+		return {...state, trackSuggest: action.payload.data};
 	default:
 		return state;
 	}
+
 };

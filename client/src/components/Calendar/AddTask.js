@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import * as actions from '../../actions/calendarActions';
 import TextareaAutosize from 'react-autosize-textarea';
 import ProjectAutoSuggest from './ProjectAutoSuggest';
+import TrackAutoSuggest from './AutoSuggest/TrackAutoSuggest';
 import Repeat from './Repeat';
 import Redue from './Redue';
 import Duration from './Duration';
@@ -82,7 +83,7 @@ class AddTask extends Component {
 						<div className="task-box-below">
 							<div className="row">
 								<div className="col-4">
-									<ProjectAutoSuggest
+									<TrackAutoSuggest
 										onChange={this.props.handleTracksChange}
 										id="track"
 										placeholder="Choose Track"

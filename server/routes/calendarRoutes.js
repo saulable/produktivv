@@ -59,6 +59,7 @@ module.exports = app => {
 			.lte(moment(date).endOf('year'));
 		const dateSet = new Set();
 		const taskLists = [];
+		// there's a bug here.
 		allDailyTaskLists.map((x) => {
 			x.indexes.map((y) => {
 				dateSet.add(y);
@@ -69,6 +70,7 @@ module.exports = app => {
 			});
 			taskLists.push(...x.taskList);
 		});
+		// if there's a match in the dailyTaskList, we remove this.
 		for (let i = fullCal.length -1; i >= 0; --i){
 			if (dateSet.has(fullCal[i].id)){
 				fullCal.splice(i, 1);
@@ -315,21 +317,16 @@ module.exports = app => {
 			break;
 		}
 		let saveTask = await task.save();
-		DailyTaskList.findOneAndUpdate({ _user: user._id }, {$push: {indexes: saveTask._id.toString()}})
-			.where('forDate')
-			.gt(moment().startOf('day'))
-			.lt(moment().endOf('day'))
-			.exec();
 		// TODO needs to be refactored at some point.
 		if (track === '') {
 			await Tracks.update(
 				{
-					$and: [{ _user: user._id }, { name: 'inbox' }]
+					$and: [{ _user: user._id }, { title: 'Inbox' }]
 				},
 				{
-					name: 'inbox',
+					title: 'Inbox',
 					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
+					$push: { tasks: {id:saveTask.id, taskType: saveTask.taskType }},
 					_user: user._id
 				},
 				{ upsert: true }
@@ -337,12 +334,12 @@ module.exports = app => {
 		} else {
 			await Tracks.update(
 				{
-					$and: [{ _user: user._id }, { name: track }]
+					$and: [{ _user: user._id }, { title: track }]
 				},
 				{
-					name: track,
+					title: track,
 					created_at: Date.now(),
-					$push: { tasks: saveTask.id },
+					$push: { tasks: {id:saveTask.id, taskType: saveTask.taskType }},
 					_user: user._id
 				},
 				{ upsert: true }
@@ -375,7 +372,27 @@ module.exports = app => {
 				{ upsert: true }
 			).exec();
 		}
-		res.status(200).send(saveTask);
+		// if the task is a simpleLong, then it's in progress until we mark complete on the end_date so we check if there is dailylist for the end date and the start_date then insert to both.
+		if (saveTask.taskType === 'simplelong'){
+			DailyTaskList.findOneAndUpdate({ _user: user._id }, {$push: {indexes: saveTask._id.toString(),taskList: saveTask}})
+				.where('forDate')
+				.gte(moment(saveTask.start_date).startOf('day'))
+				.lte(moment(saveTask.start_date).endOf('day'))
+				.exec();
+			DailyTaskList.findOneAndUpdate({ _user: user._id }, {$push: {indexes: saveTask._id.toString(), taskList: saveTask}})
+				.where('forDate')
+				.gte(moment(saveTask.end_date).startOf('day'))
+				.lte(moment(saveTask.end_date).endOf('day'))
+				.exec();
+			res.status(200).send(saveTask);
+		}else {
+			DailyTaskList.findOneAndUpdate({ _user: user._id }, {$push: {indexes: saveTask._id.toString(), taskList: saveTask}})
+				.where('forDate')
+				.gte(moment(saveTask.start_date).startOf('day'))
+				.lte(moment(saveTask.start_date).endOf('day'))
+				.exec();
+			res.status(200).send(saveTask);
+		}
 	});
 	app.post('api/create_repeat_task', async (req, res) => {});
 	app.post('/api/create_track', async (req, res) => {});

@@ -5584,7 +5584,7 @@ button:focus {
   .sidebar .sidebar-x {
     display: flex;
     justify-content: center;
-    font-family: "Fredoka One";
+    font-family: 'Fredoka One';
     font-size: 22px;
     margin-top: 5px; }
   .sidebar .sidebar-profile-image {
@@ -5682,6 +5682,7 @@ button:focus {
       .must-complete .daily-task-list .list-group-item .drag-div {
         width: 30px; }
         .must-complete .daily-task-list .list-group-item .drag-div .drag_handle {
+          cursor: pointer;
           display: flex;
           justify-content: center;
           align-items: center; }
@@ -6951,7 +6952,7 @@ input:checked + .sliders:before {
     Tracks
 ----------------------------------------------------- */
 .treeView {
-  width: 200px;
+  width: 150px;
   border-right: 1px solid #e0e0e0;
   overflow: hidden;
   resize: horizontal; }
@@ -6998,3 +6999,268 @@ input:checked + .sliders:before {
   width: auto;
   margin-top: 3px;
   display: inline-block; }
+
+.trackView {
+  display: flex;
+  flex: 1 1 auto;
+  margin-left: 10px; }
+  .trackView .textWrapper {
+    display: flex; }
+  .trackView .react-autosuggest__container {
+    display: flex;
+    flex-basis: 150px;
+    align-self: center;
+    margin-left: 10px;
+    color: #000; }
+    .trackView .react-autosuggest__container .react-autosuggest__input {
+      margin: 0;
+      font-size: 14px;
+      color: #000; }
+    .trackView .react-autosuggest__container .react-autosuggest__suggestion {
+      font-size: 12px;
+      padding: 2px 5px; }
+  .trackView .must-complete .daily-task-list .list-group-item .dtWrapper .textWrapper textarea {
+    margin: 0.3125rem 0;
+    border: 1px solid #c7c7c7;
+    min-height: 30px;
+    height: 40px !important;
+    padding: 0.3125rem 0.3125rem; }
+  .trackView .must-complete .daily-task-list .list-group-item {
+    margin-top: 0;
+    margin-bottom: 0;
+    z-index: 2;
+    position: relative;
+    border: 1px solid #c7c7c7;
+    flex: 1; }
+  .trackView .tab-container {
+    margin: 0px 0 0 0;
+    padding: 0;
+    max-height: 25px;
+    z-index: 1; }
+  .trackView .drag_handle {
+    top: 10px; }
+  .trackView .subTask {
+    float: left;
+    position: absolute;
+    bottom: 2px;
+    left: -1px;
+    text-align: center;
+    width: 30px;
+    color: #cacaca;
+    cursor: pointer; }
+    .trackView .subTask:hover {
+      color: #0a0a0a; }
+    .trackView .subTask i {
+      position: relative; }
+  .trackView .sendThis {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 30px;
+    border-right: 1px solid #e0e0e0;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px; }
+    .trackView .sendThis .sendToJournal {
+      color: #cacaca;
+      cursor: pointer; }
+  .trackView .withButton {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center; }
+  .trackView .hatImage {
+    display: flex;
+    width: 50px;
+    margin-right: -10px;
+    justify-content: center;
+    align-items: center; }
+    .trackView .hatImage .hatChange {
+      height: 35px;
+      width: 35px;
+      background: url("../img/students-cap.png") no-repeat;
+      background-size: 35px 35px; }
+
+.tabs {
+  border: none; }
+
+ul.tabs {
+  margin: 0;
+  list-style-type: none;
+  line-height: 35px;
+  max-height: 25px;
+  overflow: hidden;
+  display: inline-block;
+  padding-right: 20px;
+  padding-left: 5px;
+  background: none; }
+
+ul.tabs > li.active {
+  z-index: 2;
+  background: #efefef; }
+
+ul.tabs > li.active:before {
+  border-color: transparent #efefef transparent transparent; }
+
+ul.tabs > li.active:after {
+  border-color: transparent transparent transparent #efefef; }
+
+ul.tabs > li {
+  float: left;
+  margin: 5px -1px 0;
+  padding: 0 10px 0 10px;
+  height: 40px;
+  background: #fdfdfd;
+  position: relative;
+  max-width: 200px;
+  border: 1px solid #8a8a8a; }
+
+ul.tabs > li > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: #cacaca;
+  height: 20px;
+  font-size: 0.75rem; }
+  ul.tabs > li > a:hover {
+    color: #0a0a0a; }
+
+ul.tabs > li:before,
+ul.tabs > li:after {
+  content: '';
+  background: transparent;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  border-width: 10px;
+  top: 0px;
+  border-style: solid;
+  position: absolute; }
+
+ul.tabs > li:before {
+  border-color: transparent #ddd transparent transparent;
+  -webkit-transform: rotate(48deg);
+  left: 0px;
+  display: none; }
+
+ul.tabs > li:after {
+  border-color: transparent transparent transparent #ddd;
+  -webkit-transform: rotate(-48deg);
+  right: 8px;
+  display: none; }
+
+.clearfix:before,
+.clearfix:after {
+  content: '';
+  display: table; }
+
+.clearfix:after {
+  clear: both; }
+
+.clearfix {
+  zoom: 1; }
+
+.SortableHelper .trackView {
+  display: flex;
+  flex: 1 1 auto;
+  margin-left: 10px; }
+  .SortableHelper .trackView .tab-container {
+    margin: 0px 0 0 0;
+    padding: 0;
+    max-height: 25px;
+    z-index: 1; }
+
+.SortableHelper .list-group-item {
+  margin-top: 0 !important;
+  margin-bottom: 0;
+  z-index: 2;
+  position: relative;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  border: 1px solid #c7c7c7; }
+  .SortableHelper .list-group-item textarea {
+    margin: 0.3125rem 0 !important;
+    height: 40px !important;
+    padding: 0.3125rem 0.3125rem !important;
+    min-height: 0px; }
+
+.SortableHelper .drag_handle {
+  top: 10px; }
+
+.SortableHelper .tabs {
+  border: none; }
+
+.SortableHelper ul.tabs {
+  margin: 0;
+  list-style-type: none;
+  line-height: 35px;
+  max-height: 25px;
+  position: relative;
+  top: 6px;
+  overflow: hidden;
+  display: inline-block;
+  padding-right: 20px;
+  padding-left: 5px;
+  background: none; }
+
+.SortableHelper ul.tabs > li.active {
+  z-index: 2;
+  background: #efefef; }
+
+.SortableHelper ul.tabs > li.active:before {
+  border-color: transparent #efefef transparent transparent; }
+
+.SortableHelper ul.tabs > li.active:after {
+  border-color: transparent transparent transparent #efefef; }
+
+.SortableHelper ul.tabs > li {
+  float: left;
+  margin: 5px -1px 0;
+  padding: 0 10px 0 10px;
+  height: 40px;
+  background: #fdfdfd;
+  position: relative;
+  max-width: 200px;
+  border: 1px solid #8a8a8a; }
+
+.SortableHelper ul.tabs > li > a {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  color: #222;
+  height: 20px;
+  font-size: 0.75rem; }
+
+.SortableHelper ul.tabs > li:before,
+.SortableHelper ul.tabs > li:after {
+  content: '';
+  background: transparent;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  border-width: 10px;
+  top: 0px;
+  border-style: solid;
+  position: absolute; }
+
+.SortableHelper ul.tabs > li:before {
+  border-color: transparent #ddd transparent transparent;
+  -webkit-transform: rotate(48deg);
+  left: 0px;
+  display: none; }
+
+.SortableHelper ul.tabs > li:after {
+  border-color: transparent transparent transparent #ddd;
+  -webkit-transform: rotate(-48deg);
+  right: 8px;
+  display: none; }
+
+/* Clear Fix took for HTML 5 Boilerlate*/
