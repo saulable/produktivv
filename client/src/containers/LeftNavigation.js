@@ -38,13 +38,13 @@ class LeftNavigation extends Component {
 				</div>
 
 				<ul className="left-nav list-unstyled components">
-					<li>
+					{/* <li>
 						<Link to="/daily">Dashboard</Link>
-					</li>
+					</li> */}
 					<li>
 						<Link to="/daily">Daily Journal</Link>
 					</li>
-					<li>
+					{/* <li>
 						<Link to="/weekly">Weekly Journal</Link>
 					</li>
 					<li>
@@ -52,19 +52,19 @@ class LeftNavigation extends Component {
 					</li>
 					<li>
 						<Link to="/weekly">Yearly Journal</Link>
-					</li>
+					</li> */}
 					<li>
 						<Link to="/daily_calendar">Calendar</Link>
 					</li>
 					<li>
 						<Link to="/tracks">Tracks</Link>
 					</li>
-					<li>
+					{/* <li>
 						<Link to="/weekly">Hats</Link>
 					</li>
 					<li>
 						<Link to="/weekly">Review</Link>
-					</li>
+					</li> */}
 				</ul>
 				<div className="sidebar-header">
 					<Link to="/home">
@@ -79,9 +79,13 @@ class LeftNavigation extends Component {
 							/>
 						</div>
 						<div className="sidebar-profile-links">
-							<a href="# " onClick={this.logout.bind(this)}>
-								<span>Logout</span>
-							</a>
+							<ul className="left-nav">
+								<li>
+								<a href="# " onClick={this.logout.bind(this)}>
+									<span>Logout</span>
+								</a>
+							</li>
+							</ul>
 						</div>
 					</div>
 				</div>

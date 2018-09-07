@@ -303,7 +303,6 @@ button:focus {
 	}
 	.sidebar-profile-links {
 		border-top: 1px solid darken($fourth-color, 10%);
-		padding: 10px 0;
 		text-align: center;
 	}
 }
@@ -339,11 +338,12 @@ button:focus {
 }
 .journal-content .form-control {
 	width: 100%;
-	height: 45px;
-	font-size: 25px;
+	height: 40px;
+	font-size: 20px;
 	padding-left: 10px;
 	border: 1px solid #e0e0e0;
 	border-radius: 5px;
+	margin-bottom: 10px;
 }
 .journal-content .form-control::placeholder {
 	color: #e0e0e0;
@@ -371,11 +371,12 @@ button:focus {
 	.card {
 		border: none;
 		overflow: visible;
+		margin: 0;
 	}
 	.card-header {
 		text-align: center;
 		@include font-bold();
-		padding: 12px;
+		padding: 5px;
 		background: $light-gray;
 		border-radius: 5px;
 	}
@@ -406,6 +407,7 @@ button:focus {
 				width: 30px;
 				.drag_handle {
 					cursor: pointer;
+					top: 18px;
 					@include flex;
 					@include flex-align(center, middle);
 				}
@@ -417,9 +419,10 @@ button:focus {
 					flex-grow: 1;
 					@include flex-align(center, bottom);
 					textarea {
-						margin: rem-calc(10 0);
-						padding: rem-calc(10 10);
-						font-size: rem-calc(20);
+						margin: rem-calc(5 0);
+						padding: rem-calc(5 10);
+						font-size: rem-calc(16);
+						min-height: 35px;
 					}
 				}
 				.checkWrapper {
@@ -823,7 +826,7 @@ button:focus {
 		padding-left: 5px;
 	}
 }
-.rbc-row .rbc-event {
+.rbc-row .rbc-event, .rbc-overlay .rbc-event {
 	padding: 0 2px;
 	// background-color: lighten($secondary-color, 55%);
 	// border-radius: 0px;
@@ -1361,7 +1364,11 @@ button:focus {
 .react-autosuggest__input--open {
 	background: $light-gray;
 }
-
+.trackView {
+	.react-autosuggest__suggestions-container--open{
+		top: 27px;
+	}
+}
 .react-autosuggest__suggestions-container--open {
 	position: absolute;
 	width: 98%;

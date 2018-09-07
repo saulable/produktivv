@@ -223,6 +223,18 @@ export const editTrackView = (data) => async dispatch => {
 	axios.post('/api/tracks_update_treedata', {data, user});
 	dispatch({type: INIT_TRACK_VIEW, payload: {allTasks: data.treeData}});
 };
+export const renameTrackView = (data) => async dispatch => {
+	const user = userToken();
+	axios.post('/api/tracks_update_treedata', {data, user});
+	dispatch({type: INIT_TRACK_VIEW, payload: {allTasks: data.treeData}});
+};
+export const hotSpotChange = data => async dispatch => {
+	const user = userToken();
+	axios.post('/api/tracks_push_treedata', {data, user});
+	// return dispatch({ type: TRACKS_CHANGE_TREE_VIEW, payload: {type, value}});
+};
+
+
 export const clickCompleteTrack = data => async dispatch => {
 	const user = userToken();
 	axios.post('/api/tracks_update_treedata', {data, user});
@@ -230,7 +242,4 @@ export const clickCompleteTrack = data => async dispatch => {
 	data.item.id = data.item._id;
 	axios.post('/api/complete_task', data.item);
 	dispatch({type: INIT_TRACK_VIEW, payload: {allTasks: data.treeData}});
-};
-export const hotSpotChange = (type, value) => async dispatch => {
-	return dispatch({ type: TRACKS_CHANGE_TREE_VIEW, payload: {type, value}});
 };

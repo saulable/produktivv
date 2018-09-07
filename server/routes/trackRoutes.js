@@ -17,8 +17,7 @@ module.exports = app => {
 		const arrFields =  [
 			{ title: 'Inbox', key: '0-key', draggable: false },
 			{ title: 'Personal', key: '1-key' },
-			{ title: 'Business', key: '2-key' },
-			{ title: 'Music', key: '3-key' }
+			{ title: 'Business', key: '2-key' }
 		];
 		if (checkTree === null) {
 			tree = new TrackTree({
@@ -209,6 +208,14 @@ module.exports = app => {
 		const {treeData, key} = req.body.data;
 		const options = {upsert: true, new: true};
 		const trackQuery = await Tracks.findOneAndUpdate({_user: _id, key}, {$set: {treeData : treeData} }, options );
+		// console.log(trackQuery);
+		res.status(200).send({success: true});
+	});
+	app.post('/api/tracks_push_treedata', async(req,res) => {
+		const {_id} = req.body.user;
+		const {treeData, id} = req.body.data;
+		const options = {upsert: true, new: true};
+		const trackQuery = await Tracks.findOneAndUpdate({_id: id}, {$push: {treeData : treeData} }, options );
 		// console.log(trackQuery);
 		res.status(200).send({success: true});
 	});

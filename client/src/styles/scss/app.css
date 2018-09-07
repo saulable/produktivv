@@ -5620,7 +5620,6 @@ button:focus {
     margin-top: auto; }
   .sidebar .sidebar-profile-links {
     border-top: 1px solid #65736c;
-    padding: 10px 0;
     text-align: center; }
 
 .content-x {
@@ -5650,11 +5649,12 @@ button:focus {
 
 .journal-content .form-control {
   width: 100%;
-  height: 45px;
-  font-size: 25px;
+  height: 40px;
+  font-size: 20px;
   padding-left: 10px;
   border: 1px solid #e0e0e0;
-  border-radius: 5px; }
+  border-radius: 5px;
+  margin-bottom: 10px; }
 
 .journal-content .form-control::placeholder {
   color: #e0e0e0; }
@@ -5680,11 +5680,12 @@ button:focus {
     margin-right: 10px; }
   .must-complete .card {
     border: none;
-    overflow: visible; }
+    overflow: visible;
+    margin: 0; }
   .must-complete .card-header {
     text-align: center;
     font-weight: bold;
-    padding: 12px;
+    padding: 5px;
     background: #e6e6e6;
     border-radius: 5px; }
   .must-complete .daily-task-list {
@@ -5715,6 +5716,7 @@ button:focus {
         width: 30px; }
         .must-complete .daily-task-list .list-group-item .drag-div .drag_handle {
           cursor: pointer;
+          top: 18px;
           display: flex;
           justify-content: center;
           align-items: center; }
@@ -5726,9 +5728,10 @@ button:focus {
           justify-content: center;
           align-items: flex-end; }
           .must-complete .daily-task-list .list-group-item .dtWrapper .textWrapper textarea {
-            margin: 0.625rem 0;
-            padding: 0.625rem 0.625rem;
-            font-size: 1.25rem; }
+            margin: 0.3125rem 0;
+            padding: 0.3125rem 0.625rem;
+            font-size: 1rem;
+            min-height: 35px; }
         .must-complete .daily-task-list .list-group-item .dtWrapper .checkWrapper {
           width: 62px;
           display: flex;
@@ -6078,7 +6081,7 @@ button:focus {
     text-align: left;
     padding-left: 5px; }
 
-.rbc-row .rbc-event {
+.rbc-row .rbc-event, .rbc-overlay .rbc-event {
   padding: 0 2px;
   border-radius: 0;
   background: none;
@@ -6086,49 +6089,49 @@ button:focus {
   cursor: pointer;
   font-size: 12px;
   transition: width 1s; }
-  .rbc-row .rbc-event .hide-x {
+  .rbc-row .rbc-event .hide-x, .rbc-overlay .rbc-event .hide-x {
     padding: 0 3px;
     display: flex;
     align-items: center; }
-    .rbc-row .rbc-event .hide-x > div:first-child {
+    .rbc-row .rbc-event .hide-x > div:first-child, .rbc-overlay .rbc-event .hide-x > div:first-child {
       float: left;
       margin-right: 3px; }
-    .rbc-row .rbc-event .hide-x .message {
+    .rbc-row .rbc-event .hide-x .message, .rbc-overlay .rbc-event .hide-x .message {
       overflow: hidden;
       text-overflow: ellipsis; }
-    .rbc-row .rbc-event .hide-x .completedTick {
+    .rbc-row .rbc-event .hide-x .completedTick, .rbc-overlay .rbc-event .hide-x .completedTick {
       min-width: 8px;
       height: 8px;
       background: url("../check.png") no-repeat;
       background-size: 8px 8px; }
-    .rbc-row .rbc-event .hide-x .taskSimpleS {
+    .rbc-row .rbc-event .hide-x .taskSimpleS, .rbc-overlay .rbc-event .hide-x .taskSimpleS {
       min-width: 8px;
       height: 8px;
       border-radius: 50%;
       border: 1px solid #8a8a8a; }
-    .rbc-row .rbc-event .hide-x .inProgress {
+    .rbc-row .rbc-event .hide-x .inProgress, .rbc-overlay .rbc-event .hide-x .inProgress {
       min-width: 12px;
       height: 12px;
       background: url("../img/inprogress.png") no-repeat;
       background-size: 12px 12px; }
-    .rbc-row .rbc-event .hide-x .taskRepeat {
+    .rbc-row .rbc-event .hide-x .taskRepeat, .rbc-overlay .rbc-event .hide-x .taskRepeat {
       background: url("../img/repeat.png") no-repeat;
       background-size: 13px 13px;
       min-width: 13px;
       height: 13px; }
-    .rbc-row .rbc-event .hide-x .taskRedue {
+    .rbc-row .rbc-event .hide-x .taskRedue, .rbc-overlay .rbc-event .hide-x .taskRedue {
       height: 12px;
       min-width: 12px;
       background: url("../img/redue.png") no-repeat;
       background-size: 12px 12px; }
-  .rbc-row .rbc-event .simplelong {
+  .rbc-row .rbc-event .simplelong, .rbc-overlay .rbc-event .simplelong {
     background: rgba(0, 131, 187, 0.1); }
-  .rbc-row .rbc-event .inprogress_bar {
+  .rbc-row .rbc-event .inprogress_bar, .rbc-overlay .rbc-event .inprogress_bar {
     background-color: rgba(255, 174, 0, 0.15) !important; }
-  .rbc-row .rbc-event .completed {
+  .rbc-row .rbc-event .completed, .rbc-overlay .rbc-event .completed {
     background: rgba(41, 191, 137, 0.3);
     color: #000; }
-  .rbc-row .rbc-event.rbc-selected {
+  .rbc-row .rbc-event.rbc-selected, .rbc-overlay .rbc-event.rbc-selected {
     transition: 0.2s box-shadow linear;
     background: none;
     z-index: 2; }
@@ -6577,6 +6580,9 @@ button:focus {
 
 .react-autosuggest__input--open {
   background: #e6e6e6; }
+
+.trackView .react-autosuggest__suggestions-container--open {
+  top: 27px; }
 
 .react-autosuggest__suggestions-container--open {
   position: absolute;

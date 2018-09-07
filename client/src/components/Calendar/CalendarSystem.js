@@ -84,8 +84,7 @@ class CalendarSystem extends Component {
 					onNavigate={this.onNavigate}
 					views={{
 						month: true,
-						week: true,
-						day: DayJournal,
+						day: DayJournal
 					}}
 					components={{
 						toolbar: CustomToolbar,

@@ -91,7 +91,6 @@ class TrackAutoSuggest extends Component {
 		}else {
 			this.setState({suggestError: false});
 		}
-		console.log(this.state.suggestError);
 	};
 
 	// Autosuggest will call this function every time you need to clear suggestions.

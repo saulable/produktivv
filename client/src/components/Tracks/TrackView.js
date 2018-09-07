@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/trackActions';
 import SortableList from './SortableList';
-import SortableTree, { changeNodeAtPath } from 'react-sortable-tree';
+import SortableTree, { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
 import TextFieldGroup from '../../containers/TextFieldGroup';
 import TrackAutoSuggest from './AutoSuggest/TrackAutoSuggest';
@@ -43,8 +43,16 @@ class TrackView extends Component {
 		// this.props.editTrackView({treeData: treeData, key: this.props.tracks.key});
 		this.props.editTrackView({treeData: treeData, key: this.props.tracks.key});
 	}
+
+	// This is where we change the title of the hotspot.
 	handleHotSpot(node, path, getNodeKey, value){
-		console.log(node);
+		const treeData = removeNodeAtPath({
+			treeData: this.props.tracks.trackView,
+			path,
+			getNodeKey
+		});
+		this.props.renameTrackView({treeData: treeData, key: this.props.tracks.key});
+		this.props.hotSpotChange({treeData: node, id: value.suggestion.id});
 	}
 	handleTrackComplete(node, path, getNodeKey){
 		const treeData = changeNodeAtPath({
