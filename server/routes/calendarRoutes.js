@@ -332,14 +332,10 @@ module.exports = app => {
 				{ upsert: true }
 			).exec();
 		} else {
-			await Tracks.update(
-				{
-					$and: [{ _user: user._id }, { title: track }]
-				},
-				{
+			await Tracks.update({$and: [{ _user: user._id }, { title: track }]} ,{
 					title: track,
 					created_at: Date.now(),
-					$push: { tasks: {id:saveTask.id, taskType: saveTask.taskType }},
+					$push: { treeData: saveTask},
 					_user: user._id
 				},
 				{ upsert: true }

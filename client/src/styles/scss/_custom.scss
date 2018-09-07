@@ -52,6 +52,10 @@ button:focus {
 			@include flex-align(left);
 			text-align: left;
 			color: #fff;
+			h3{
+			font-family: $fredoka;
+			font-size: rem-calc(28);
+		}
 		}
 		.menus {
 			@include xy-cell(6);
@@ -75,12 +79,12 @@ button:focus {
 }
 .bottom-section {
 	width: 100%;
-	height: 70vh;
+	height: 50vh;
 	position: relative;
 	.home-page-container {
 		@include xy-grid-container();
 		@include padding(1) @include xy-grid();
-		height: 70vh;
+		height: 50vh;
 		z-index: 2;
 		.slogan {
 			@include xy-cell();
@@ -96,14 +100,14 @@ button:focus {
 					color: $primary-color;
 					@include font-bold(900);
 					font-family: $fredoka;
-					font-size: rem-calc(112);
+					font-size: rem-calc(50);
 					width: 100%;
-					padding: rem-calc(50%);
+					// padding: rem-calc(50%);
 					padding-bottom: 0;
 					text-align: center;
 					line-height: rem-calc(112);
-					// text-shadow: 0 0 40px hsla(0,0%,100%,.75);
-					text-shadow: 0 0 40px hsla(0, 0%, 100%, 0.85);
+					text-shadow: 0 0 40px hsla(0,0%,100%,.75);
+					// text-shadow: 0 0 40px hsla(0, 0%, 100%, 0.85);
 				}
 			}
 			.intro-subtitle {
@@ -124,6 +128,8 @@ button:focus {
 	position: absolute;
 	top: 0;
 	left: 0;
+	width: 100%;
+	height: 70vh;
 }
 .main-content {
 	@include xy-grid-container();
@@ -233,18 +239,41 @@ button:focus {
 	min-height: 100vh;
 	display: flex;
 	flex-direction: column;
-	background: $fourth-color;
+	background: $dark-gray;
+	// background: #3B3B3B;
+	position: fixed;
 	transition: all 0.2s cubic-bezier(0.945, 0.02, 0.27, 0.665);
 	transform-origin: bottom left;
+	box-shadow: inset -5px 0 10px 2px rgba(0,0,0,0.3);
+  position: fixed;
+  top: 0;
+  width: 0;
+  height: 100%;
+  // background: #3B3B3B;
+
+  overflow-y: auto;
+  transition: width 0.3s ease;
 	.left-nav {
 		@include flex-align(start);
 		text-align: center;
 		margin: 0;
 		li {
-			padding: 10px 0;
+			background: linear-gradient(rgba(62,62,62,0.5), rgba(56,56,56,0.5));
+			opacity: 1;
+			border-top:1px solid lighten(#484848, 10%);
+			border-bottom: 1px solid lighten(#2E2E2E, 10%);
+			color: white;
+			font-size: 14px;
+			padding: 10px 0px;
+			font-weight: bold;
+			&:hover, &:focus {
+				background: linear-gradient(#484848, #383838);
+			}
 			display: flex;
 			@include flex-align(center, middle);
-			border-top: 1px solid darken($fourth-color, 10%);
+			// border-top: 1px solid darken($dark-gray, 10%);
+			// -webkit-box-shadow: inset 0 2px 3px 3px rgba(0,0,0,0.3);
+			// 	 -moz-box-shadow: inset 0 2px 3px 3px rgba(0,0,0,0.3);
 		}
 	}
 	@include breakpoint(small only) {
@@ -255,7 +284,9 @@ button:focus {
 		@include flex;
 		@include flex-align(center);
 		font-family: 'Fredoka One';
-		font-size: 22px;
+		font-size: 20px;
+		padding: 5px 0;
+		color: #fff;
 		margin-top: 5px;
 	}
 	.sidebar-profile-image {
@@ -281,11 +312,22 @@ button:focus {
 	flex: 1;
 	background: $primary-color;
 	padding: 10px;
+	margin-left:125px;
+	min-height: 100vh;
 }
 .grid-x {
 	flex-flow: nowrap;
 }
 
+.top-header{
+	position: fixed;
+	background: $secondary-color;
+	height: 40px;
+	width: 100%;
+	z-index: 5;
+	box-shadow:2px 0px 2px 2px rgba(0,0,0,.4);
+
+}
 // 4. Daily Journal
 // --------------
 
@@ -691,7 +733,8 @@ button:focus {
 	}
 	.rbc-toolbar {
 		flex-wrap: wrap;
-		padding: 10px 10px 0 10px;
+		padding: 5px 0px 0 5px;
+		margin-bottom: 0;
 		&.button {
 			border: none;
 		}
@@ -1162,7 +1205,7 @@ button:focus {
 	flex: 1;
 }
 .dailyCalendarContainer {
-	padding: 10px;
+	padding: 5px;
 	.calendar {
 		padding: 20px;
 	}
@@ -1762,6 +1805,7 @@ input:checked + .sliders:before {
 /* ---------------------------------------------------
     Tracks
 ----------------------------------------------------- */
+
 .treeView {
 	width: 150px;
 	border-right: 1px solid #e0e0e0;
@@ -1828,9 +1872,56 @@ input:checked + .sliders:before {
 .trackView {
 	display: flex;
 	flex: 1 1 auto;
-	margin-left: 10px;
+	.content-x{
+		margin-left: 0px;
+		margin-top:0px;
+	}
+	.round {
+		margin-left: 10px;
+		z-index: 2;
+		width: 32px;
+		border: 1px solid #e0e0e0;
+		border-radius: 50%;
+		cursor: pointer;
+		@include flex;
+		@include flex-align(center, bottom);
+	}
+	.completed{
+		background-image: url('check.png');
+		background-repeat: no-repeat;
+		background-size: 24px;
+		background-position: 4px 0px;
+	}
+	.container-fluid .row{
+		height: 45px;
+	}
+	.tasks{
+
+		width: 200px;
+		padding: 0px 30px 0 0;
+		border-bottom: 5px solid $secondary-color;
+		text-align: left;
+		color: darken(#ddd, 30%);
+		font-size: 20px;
+	}
 	.textWrapper{
 		display: flex;
+	}
+	.rst__rowTitle{
+		display: flex;
+		input {
+			padding: 5px 6px;
+			max-height: 27px;
+		}
+		& > div{
+			width: 100%;
+			display: flex;
+		}
+	}
+	.rst__nodeContent{
+		div {
+
+		}
 	}
 	.react-autosuggest__container{
 		display: flex;
@@ -1927,213 +2018,90 @@ input:checked + .sliders:before {
 			background-size: 35px 35px;
 		}
 	}
-}
-.tabs {
-	border: none;
-}
-ul.tabs {
-	margin: 0;
-	list-style-type: none;
-	line-height: 35px;
-	max-height: 25px;
-	overflow: hidden;
-	display: inline-block;
-	padding-right: 20px;
-	padding-left: 5px;
-	background: none;
-
-}
-
-ul.tabs > li.active {
-	z-index: 2;
-	background: #efefef;
-}
-
-ul.tabs > li.active:before {
-	border-color: transparent #efefef transparent transparent;
-}
-
-ul.tabs > li.active:after {
-	border-color: transparent transparent transparent #efefef;
-}
-
-ul.tabs > li {
-	float: left;
-	margin: 5px -1px 0;
-	// border-top-right-radius: 25px 170px;
-	// border-top-left-radius: 20px 90px;
-	padding: 0 10px 0 10px;
-	height: 40px;
-	background: lighten($light-gray, 9%);
-	position: relative;
-	// box-shadow: 0 10px 20px rgba(0,0,0,.5);
-	max-width: 200px;
-	border: 1px solid $dark-gray;
-}
-
-ul.tabs > li > a {
-	display: flex;
-	@include flex-align(center, middle);
-	max-width: 100%;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	text-decoration: none;
-	color: $medium-gray;
-	height: 20px;
-	font-size: rem-calc(12);
-	&:hover{
-		color: $black;
+	.rst__nodeContent{
+		width: 100%;
 	}
-}
-
-ul.tabs > li:before,
-ul.tabs > li:after {
-	content: '';
-	background: transparent;
-	height: 20px;
-	width: 20px;
-	border-radius: 100%;
-	border-width: 10px;
-	top: 0px;
-	border-style: solid;
-	position: absolute;
-}
-
-ul.tabs > li:before {
-	border-color: transparent #ddd transparent transparent;
-	-webkit-transform: rotate(48deg);
-	left: 0px;
-	display: none;
-}
-
-ul.tabs > li:after {
-	border-color: transparent transparent transparent #ddd;
-	-webkit-transform: rotate(-48deg);
-	right: 8px;
-	display: none;
-}
-.clearfix:before,
-.clearfix:after {
-	content: '';
-	display: table;
-}
-.clearfix:after {
-	clear: both;
-}
-.clearfix {
-	zoom: 1;
-}
-
-.SortableHelper {
-	.trackView {
-		display: flex;
+	.rst__rowLabel{
 		flex: 1 1 auto;
-		margin-left: 10px;
-		.tab-container {
-			margin: 0px 0 0 0;
-			padding: 0;
-			max-height: 25px;
-			z-index: 1;
+		padding-right: 10px;
+	}
+	.rst__rowTitle{
+		input{
+			width: 100%;
 		}
-	}
-	.list-group-item {
-		margin-top: 0 !important;
-		margin-bottom: 0;
-		z-index: 2;
-		position: relative;
-		@include shadow();
-		border: 1px solid darken(#e0e0e0, 10%);
-		textarea {
-			margin: rem-calc(5 0) !important;
-			height: 40px !important;
-			padding: rem-calc(5 5) !important;
-			min-height: 0px;
-		}
-	}
-	.drag_handle {
-		top: 10px;
-	}
-	.tabs {
-		border: none;
-	}
-	ul.tabs {
-		margin: 0;
-		list-style-type: none;
-		line-height: 35px;
-		max-height: 25px;
-		position: relative;
-		top: 6px;
-		overflow: hidden;
-		display: inline-block;
-		padding-right: 20px;
-		padding-left: 5px;
-		background: none;
-	}
-
-	ul.tabs > li.active {
-		z-index: 2;
-		background: #efefef;
-	}
-
-	ul.tabs > li.active:before {
-		border-color: transparent #efefef transparent transparent;
-	}
-
-	ul.tabs > li.active:after {
-		border-color: transparent transparent transparent #efefef;
-	}
-
-	ul.tabs > li {
-		float: left;
-		margin: 5px -1px 0;
-		// border-top-right-radius: 25px 170px;
-		// border-top-left-radius: 20px 90px;
-		padding: 0 10px 0 10px;
-		height: 40px;
-		background: lighten($light-gray, 9%);
-		position: relative;
-		// box-shadow: 0 10px 20px rgba(0,0,0,.5);
-		max-width: 200px;
-		border: 1px solid $dark-gray;
-	}
-
-	ul.tabs > li > a {
-		display: flex;
-		@include flex-align(center, middle);
-		max-width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		text-decoration: none;
-		color: #222;
-		height: 20px;
-		font-size: rem-calc(12);
-	}
-
-	ul.tabs > li:before,
-	ul.tabs > li:after {
-		content: '';
-		background: transparent;
-		height: 20px;
-		width: 20px;
-		border-radius: 100%;
-		border-width: 10px;
-		top: 0px;
-		border-style: solid;
-		position: absolute;
-	}
-
-	ul.tabs > li:before {
-		border-color: transparent #ddd transparent transparent;
-		-webkit-transform: rotate(48deg);
-		left: 0px;
-		display: none;
-	}
-
-	ul.tabs > li:after {
-		border-color: transparent transparent transparent #ddd;
-		-webkit-transform: rotate(-48deg);
-		right: 8px;
-		display: none;
 	}
 }
-/* Clear Fix took for HTML 5 Boilerlate*/
+.rst__node {
+  display: flex;
+
+  .rst__lineBlock {
+    flex: 0 0 auto;
+  }
+
+  .rst__nodeContent {
+    flex: 0 1 auto;
+    left: auto !important;
+    position: relative !important;
+    top: auto !important;
+    width: 100%;
+  }
+}
+
+// .rst__highlightTopLeftCorner, .rst__highlightBottomLeftCorner {
+//   display: none;
+// }
+//
+// .rst__lineBlock:not(.rst__lineHalfVerticalTop):not(.rst__lineFullVertical) {
+//   display: none;
+// }
+//
+// .rst__lineBlock.rst__lineHalfVerticalTop.rst__lineHalfHorizontalRight,
+// .rst__lineBlock.rst__lineHalfHorizontalRight.rst__lineFullVertical {
+//   display: none;
+// }
+
+.rst__lineBlock {
+  & + .rst__lineBlock.rst__lineHalfVerticalTop.rst__lineHalfHorizontalRight,
+  & + .rst__lineBlock.rst__lineHalfHorizontalRight.rst__lineFullVertical {
+    display: block;
+  }
+  // &.rst__lineFullVertical {
+  //   display: none
+  // }
+}
+.anim{
+  position: relative;
+  width: 100%;
+  max-height: 70vh;
+	overflow: hidden;
+	float: left;
+
+	@include breakpoint(medium down) {
+		position: relative;
+		width: 100%;
+		height: 100%;
+
+	}
+}
+.bottom-section{
+	height: 70vh;
+	// @include breakpoint(medium down) {
+	// 	height: 45vh;
+	// 	overflow: hidden;
+	// }
+	.home-page-container{
+		height: 70vh;
+		// @include breakpoint(medium down) {
+		// 	height: 45vh;
+		// }
+	}
+}
+.anim-2 {
+	@include breakpoint(medium down) {
+			display: none !important;
+	}
+
+}
+.anim path {
+  stroke-width: 2;
+}

@@ -19,8 +19,16 @@ import { TASK_LI_CLICK } from './types';
 import jwtDecode from 'jwt-decode';
 import moment from 'moment';
 
+function userToken() {
+	let user;
+	if (localStorage.getItem('jwtToken')) {
+		user = jwtDecode(localStorage.getItem('jwtToken'));
+	}
+	return user;
+}
+
 export const newTaskRequest = (data, date) => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const pass = { ...data, user, date };
 	let res;
 	if (moment(date).isSame(moment(), 'day')){
@@ -45,7 +53,7 @@ async function initCalTasks(date, user){
 	return createDailyTask.data;
 }
 export const dbTasks = data => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const date = Date.now();
 	// check to see if there is a dailytaskList already created
 	const resCheckDaily = await axios.post('/api/check_daily_tasks', {date, user});
@@ -65,7 +73,7 @@ export const dbTasks = data => async dispatch => {
 };
 
 export const createJournal = data => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const res = await axios.post('/api/daily_journal', user);
 	if (res.data.length > 0) {
 		dispatch({ type: JOURNAL_CREATED, payload: res.data });
@@ -120,7 +128,7 @@ export function onClickNotes(data) {
 export const newOrder = (data, id, date) => async dispatch => {
 	// if there is no ID assocated, then we go to create_daily_tasks with the items.
 	if (id === undefined){
-		const user = jwtDecode(localStorage.getItem('jwtToken'));
+		const user = userToken();
 		const todayTasks = data;
 		dispatch({ type: UPDATE_TASK_LIST, payload: data });
 		const res = await axios.post('/api/update_daily_calendar_tasks', {user, date, todayTasks});
@@ -132,7 +140,7 @@ export const newOrder = (data, id, date) => async dispatch => {
 	}
 };
 export const clickComplete = (data, list, curDate) => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const {id, tasktype, start_date, end_date} = data.currentTarget.dataset;
 	const date = start_date;
 	const todayTasks = list;
@@ -142,7 +150,7 @@ export const clickComplete = (data, list, curDate) => async dispatch => {
 };
 
 export const deleteTask = data => async dispatch => {
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const res = await axios.post('/api/delete_task', { data, user });
 	dispatch({ type: DELETED_TASK, payload: res });
 };
@@ -152,7 +160,7 @@ export const helperPop = data => async dispatch => {
 export const renderTasks = (events, date) => async dispatch => {
 	let taskList = [];
 	let _id = '';
-	const user = jwtDecode(localStorage.getItem('jwtToken'));
+	const user = userToken();
 	const res = await axios.post('/api/check_daily_tasks', {date, user});
 	if (res.data !== ''){
 		taskList = res.data.taskList;

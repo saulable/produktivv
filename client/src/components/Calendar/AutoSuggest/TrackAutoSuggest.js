@@ -65,8 +65,9 @@ class TrackAutoSuggest extends Component {
 			value: ''
 		};
 	}
-	componentDidMount(){
-		this.props.getTracks();
+	componentDidMount = async () => {
+		await this.props.getTracks();
+		console.log(this.props.calendar.trackSuggest);
 	}
 	onChange = (event, { newValue, method }) => {
 		this.props.onChange(this.props.id, event.target.value);

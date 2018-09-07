@@ -6,6 +6,7 @@ const trackSchema = new Schema({
 	key: String,
 	created_at: {type: Date, default: Date.now() },
 	tasks: [],
+	treeData: [],
 	_user: { type: Schema.Types.ObjectId, ref: 'User' }
 });
 

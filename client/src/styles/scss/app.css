@@ -5342,6 +5342,9 @@ button:focus {
       justify-content: flex-start;
       text-align: left;
       color: #fff; }
+      .site-header .header-content .logo h3 {
+        font-family: "Fredoka One", cursive;
+        font-size: 1.75rem; }
     .site-header .header-content .menus {
       width: calc(50% - 1.25rem);
       margin-right: 0.625rem;
@@ -5385,7 +5388,7 @@ button:focus {
 
 .bottom-section {
   width: 100%;
-  height: 70vh;
+  height: 50vh;
   position: relative; }
   .bottom-section .home-page-container {
     padding-right: 0.625rem;
@@ -5395,7 +5398,7 @@ button:focus {
     padding-top: 1rem !important;
     display: flex;
     flex-flow: row wrap;
-    height: 70vh;
+    height: 50vh;
     z-index: 2; }
     @media print, screen and (min-width: 40em) {
       .bottom-section .home-page-container {
@@ -5427,13 +5430,12 @@ button:focus {
           color: #fefefe;
           font-weight: 900;
           font-family: "Fredoka One", cursive;
-          font-size: 7rem;
+          font-size: 3.125rem;
           width: 100%;
-          padding: 3.125rem;
           padding-bottom: 0;
           text-align: center;
           line-height: 7rem;
-          text-shadow: 0 0 40px rgba(255, 255, 255, 0.85); }
+          text-shadow: 0 0 40px rgba(255, 255, 255, 0.75); }
       .bottom-section .home-page-container .slogan .intro-subtitle {
         flex: 0 0 auto;
         min-height: 0px;
@@ -5451,7 +5453,9 @@ button:focus {
   z-index: 1;
   position: absolute;
   top: 0;
-  left: 0; }
+  left: 0;
+  width: 100%;
+  height: 70vh; }
 
 .main-content {
   padding-right: 0.625rem;
@@ -5564,19 +5568,35 @@ button:focus {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: #7E8D85;
+  background: #8a8a8a;
+  position: fixed;
   transition: all 0.2s cubic-bezier(0.945, 0.02, 0.27, 0.665);
-  transform-origin: bottom left; }
+  transform-origin: bottom left;
+  box-shadow: inset -5px 0 10px 2px rgba(0, 0, 0, 0.3);
+  position: fixed;
+  top: 0;
+  width: 0;
+  height: 100%;
+  overflow-y: auto;
+  transition: width 0.3s ease; }
   .sidebar .left-nav {
     justify-content: start;
     text-align: center;
     margin: 0; }
     .sidebar .left-nav li {
-      padding: 10px 0;
+      background: linear-gradient(rgba(62, 62, 62, 0.5), rgba(56, 56, 56, 0.5));
+      opacity: 1;
+      border-top: 1px solid #626262;
+      border-bottom: 1px solid #484848;
+      color: white;
+      font-size: 14px;
+      padding: 10px 0px;
+      font-weight: bold;
       display: flex;
       justify-content: center;
-      align-items: center;
-      border-top: 1px solid #65736c; }
+      align-items: center; }
+      .sidebar .left-nav li:hover, .sidebar .left-nav li:focus {
+        background: linear-gradient(#484848, #383838); }
   @media screen and (max-width: 39.99875em) {
     .sidebar {
       margin-left: -200px;
@@ -5585,7 +5605,9 @@ button:focus {
     display: flex;
     justify-content: center;
     font-family: 'Fredoka One';
-    font-size: 22px;
+    font-size: 20px;
+    padding: 5px 0;
+    color: #fff;
     margin-top: 5px; }
   .sidebar .sidebar-profile-image {
     display: flex;
@@ -5605,10 +5627,20 @@ button:focus {
   display: flex;
   flex: 1;
   background: #fefefe;
-  padding: 10px; }
+  padding: 10px;
+  margin-left: 125px;
+  min-height: 100vh; }
 
 .grid-x {
   flex-flow: nowrap; }
+
+.top-header {
+  position: fixed;
+  background: #0083BB;
+  height: 40px;
+  width: 100%;
+  z-index: 5;
+  box-shadow: 2px 0px 2px 2px rgba(0, 0, 0, 0.4); }
 
 .journal-content {
   flex: 1; }
@@ -5977,7 +6009,8 @@ button:focus {
       border-left: none; }
   .rbc-calendar .rbc-toolbar {
     flex-wrap: wrap;
-    padding: 10px 10px 0 10px; }
+    padding: 5px 0px 0 5px;
+    margin-bottom: 0; }
     .rbc-calendar .rbc-toolbar.button {
       border: none; }
     .rbc-calendar .rbc-toolbar .todayButton {
@@ -6403,7 +6436,7 @@ button:focus {
   flex: 1; }
 
 .dailyCalendarContainer {
-  padding: 10px; }
+  padding: 5px; }
   .dailyCalendarContainer .calendar {
     padding: 20px; }
   .dailyCalendarContainer .card {
@@ -7002,10 +7035,44 @@ input:checked + .sliders:before {
 
 .trackView {
   display: flex;
-  flex: 1 1 auto;
-  margin-left: 10px; }
+  flex: 1 1 auto; }
+  .trackView .content-x {
+    margin-left: 0px;
+    margin-top: 0px; }
+  .trackView .round {
+    margin-left: 10px;
+    z-index: 2;
+    width: 32px;
+    border: 1px solid #e0e0e0;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end; }
+  .trackView .completed {
+    background-image: url("check.png");
+    background-repeat: no-repeat;
+    background-size: 24px;
+    background-position: 4px 0px; }
+  .trackView .container-fluid .row {
+    height: 45px; }
+  .trackView .tasks {
+    width: 200px;
+    padding: 0px 30px 0 0;
+    border-bottom: 5px solid #0083BB;
+    text-align: left;
+    color: #919191;
+    font-size: 20px; }
   .trackView .textWrapper {
     display: flex; }
+  .trackView .rst__rowTitle {
+    display: flex; }
+    .trackView .rst__rowTitle input {
+      padding: 5px 6px;
+      max-height: 27px; }
+    .trackView .rst__rowTitle > div {
+      width: 100%;
+      display: flex; }
   .trackView .react-autosuggest__container {
     display: flex;
     flex-basis: 150px;
@@ -7081,186 +7148,49 @@ input:checked + .sliders:before {
       width: 35px;
       background: url("../img/students-cap.png") no-repeat;
       background-size: 35px 35px; }
+  .trackView .rst__nodeContent {
+    width: 100%; }
+  .trackView .rst__rowLabel {
+    flex: 1 1 auto;
+    padding-right: 10px; }
+  .trackView .rst__rowTitle input {
+    width: 100%; }
 
-.tabs {
-  border: none; }
+.rst__node {
+  display: flex; }
+  .rst__node .rst__lineBlock {
+    flex: 0 0 auto; }
+  .rst__node .rst__nodeContent {
+    flex: 0 1 auto;
+    left: auto !important;
+    position: relative !important;
+    top: auto !important;
+    width: 100%; }
 
-ul.tabs {
-  margin: 0;
-  list-style-type: none;
-  line-height: 35px;
-  max-height: 25px;
-  overflow: hidden;
-  display: inline-block;
-  padding-right: 20px;
-  padding-left: 5px;
-  background: none; }
+.rst__lineBlock + .rst__lineBlock.rst__lineHalfVerticalTop.rst__lineHalfHorizontalRight,
+.rst__lineBlock + .rst__lineBlock.rst__lineHalfHorizontalRight.rst__lineFullVertical {
+  display: block; }
 
-ul.tabs > li.active {
-  z-index: 2;
-  background: #efefef; }
-
-ul.tabs > li.active:before {
-  border-color: transparent #efefef transparent transparent; }
-
-ul.tabs > li.active:after {
-  border-color: transparent transparent transparent #efefef; }
-
-ul.tabs > li {
-  float: left;
-  margin: 5px -1px 0;
-  padding: 0 10px 0 10px;
-  height: 40px;
-  background: #fdfdfd;
+.anim {
   position: relative;
-  max-width: 200px;
-  border: 1px solid #8a8a8a; }
-
-ul.tabs > li > a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
+  width: 100%;
+  max-height: 70vh;
   overflow: hidden;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  color: #cacaca;
-  height: 20px;
-  font-size: 0.75rem; }
-  ul.tabs > li > a:hover {
-    color: #0a0a0a; }
+  float: left; }
+  @media screen and (max-width: 63.99875em) {
+    .anim {
+      position: relative;
+      width: 100%;
+      height: 100%; } }
 
-ul.tabs > li:before,
-ul.tabs > li:after {
-  content: '';
-  background: transparent;
-  height: 20px;
-  width: 20px;
-  border-radius: 100%;
-  border-width: 10px;
-  top: 0px;
-  border-style: solid;
-  position: absolute; }
+.bottom-section {
+  height: 70vh; }
+  .bottom-section .home-page-container {
+    height: 70vh; }
 
-ul.tabs > li:before {
-  border-color: transparent #ddd transparent transparent;
-  -webkit-transform: rotate(48deg);
-  left: 0px;
-  display: none; }
+@media screen and (max-width: 63.99875em) {
+  .anim-2 {
+    display: none !important; } }
 
-ul.tabs > li:after {
-  border-color: transparent transparent transparent #ddd;
-  -webkit-transform: rotate(-48deg);
-  right: 8px;
-  display: none; }
-
-.clearfix:before,
-.clearfix:after {
-  content: '';
-  display: table; }
-
-.clearfix:after {
-  clear: both; }
-
-.clearfix {
-  zoom: 1; }
-
-.SortableHelper .trackView {
-  display: flex;
-  flex: 1 1 auto;
-  margin-left: 10px; }
-  .SortableHelper .trackView .tab-container {
-    margin: 0px 0 0 0;
-    padding: 0;
-    max-height: 25px;
-    z-index: 1; }
-
-.SortableHelper .list-group-item {
-  margin-top: 0 !important;
-  margin-bottom: 0;
-  z-index: 2;
-  position: relative;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
-  border: 1px solid #c7c7c7; }
-  .SortableHelper .list-group-item textarea {
-    margin: 0.3125rem 0 !important;
-    height: 40px !important;
-    padding: 0.3125rem 0.3125rem !important;
-    min-height: 0px; }
-
-.SortableHelper .drag_handle {
-  top: 10px; }
-
-.SortableHelper .tabs {
-  border: none; }
-
-.SortableHelper ul.tabs {
-  margin: 0;
-  list-style-type: none;
-  line-height: 35px;
-  max-height: 25px;
-  position: relative;
-  top: 6px;
-  overflow: hidden;
-  display: inline-block;
-  padding-right: 20px;
-  padding-left: 5px;
-  background: none; }
-
-.SortableHelper ul.tabs > li.active {
-  z-index: 2;
-  background: #efefef; }
-
-.SortableHelper ul.tabs > li.active:before {
-  border-color: transparent #efefef transparent transparent; }
-
-.SortableHelper ul.tabs > li.active:after {
-  border-color: transparent transparent transparent #efefef; }
-
-.SortableHelper ul.tabs > li {
-  float: left;
-  margin: 5px -1px 0;
-  padding: 0 10px 0 10px;
-  height: 40px;
-  background: #fdfdfd;
-  position: relative;
-  max-width: 200px;
-  border: 1px solid #8a8a8a; }
-
-.SortableHelper ul.tabs > li > a {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-decoration: none;
-  color: #222;
-  height: 20px;
-  font-size: 0.75rem; }
-
-.SortableHelper ul.tabs > li:before,
-.SortableHelper ul.tabs > li:after {
-  content: '';
-  background: transparent;
-  height: 20px;
-  width: 20px;
-  border-radius: 100%;
-  border-width: 10px;
-  top: 0px;
-  border-style: solid;
-  position: absolute; }
-
-.SortableHelper ul.tabs > li:before {
-  border-color: transparent #ddd transparent transparent;
-  -webkit-transform: rotate(48deg);
-  left: 0px;
-  display: none; }
-
-.SortableHelper ul.tabs > li:after {
-  border-color: transparent transparent transparent #ddd;
-  -webkit-transform: rotate(-48deg);
-  right: 8px;
-  display: none; }
-
-/* Clear Fix took for HTML 5 Boilerlate*/
+.anim path {
+  stroke-width: 2; }

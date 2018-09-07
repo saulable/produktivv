@@ -23,7 +23,9 @@ class TracksDashboard extends Component {
 						<TrackTree />
 					</Resizable>
 					<div className="trackView">
+						<div className="content-x">
 						<TrackView />
+					</div>
 					</div>
 				</div>
 			</div>

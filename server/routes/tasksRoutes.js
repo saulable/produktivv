@@ -43,9 +43,12 @@ module.exports = app => {
 				indexes: [],
 			};
 		}
+		const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+
 		try {
 			// taskDailyList.save();
 			const saveTask = await task.save();
+			let findTrackList = await Tracks.findOneAndUpdate({_user: user._id, key: '0-key'}, {$push: { treeData: saveTask }}).exec();
 			highestIndexDaily.taskList.push({
 				_id: saveTask._id.toString(),
 				completed: false,

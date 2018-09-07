@@ -185,9 +185,10 @@ export const initTrackView = data => async dispatch => {
 	}else {
 		key = '0-key';
 	}
-	const res = await axios.post('/api/tracks/init_trackview', {user, key});
-	console.log(res);
-	dispatch({ type: INIT_TRACK_VIEW, payload: res });
+	let res = await axios.post('/api/tracks/init_trackview', {user, key});
+	res.data.allTasks.map((x) => {
+	});
+	dispatch({ type: INIT_TRACK_VIEW, payload: res.data });
 };
 export const onSelectTree = data => async dispatch => {
 	const user = userToken();
@@ -214,11 +215,22 @@ export const onSelectTree = data => async dispatch => {
 		keysOfTree.push(dataLoop.eventKey);
 	}
 	const keys = [...new Set(keysOfTree)];
-	const res = await axios.post('/api/tracks/retrieve_tasks', { keys, user });
+	// const res = await axios.post('/api/tracks/retrieve_tasks', { keys, user });
 	initTrackView(folderKey);
 };
-
-
+export const editTrackView = (data) => async dispatch => {
+	const user = userToken();
+	axios.post('/api/tracks_update_treedata', {data, user});
+	dispatch({type: INIT_TRACK_VIEW, payload: {allTasks: data.treeData}});
+};
+export const clickCompleteTrack = data => async dispatch => {
+	const user = userToken();
+	axios.post('/api/tracks_update_treedata', {data, user});
+	data.item.tasktype = data.item.taskType;
+	data.item.id = data.item._id;
+	axios.post('/api/complete_task', data.item);
+	dispatch({type: INIT_TRACK_VIEW, payload: {allTasks: data.treeData}});
+};
 export const hotSpotChange = (type, value) => async dispatch => {
 	return dispatch({ type: TRACKS_CHANGE_TREE_VIEW, payload: {type, value}});
 };

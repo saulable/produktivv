@@ -50,8 +50,12 @@ export default function(state = initState, action) {
 		};
 	}
 	case INIT_TRACK_VIEW: {
+		if (action.payload.projectHeader){
+			return {...state, trackView: action.payload.allTasks, projectHeader: action.payload.projectHeader, key: action.payload.key};
+		}else {
+			return {...state, trackView: action.payload.allTasks};
+		}
 
-		return {...state, trackView: action.payload.data.allTasks, projectHeader: action.payload.data.projectHeader};
 	}
 	case TRACKS_CHANGE_TREE_VIEW: {
 		const index = state.hotSpot.indexOf(action.payload.type);

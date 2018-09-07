@@ -105,7 +105,7 @@ class TrackAutoSuggest extends Component {
 	render() {
 		const {suggestions} = this.state;
 		const {value} = this.props;
-		const errorBorder = this.state.suggestError ? { 'border-bottom' : '3px solid red'} : null;
+		const errorBorder = this.state.suggestError ? { 'borderBottom' : '3px solid red'} : null;
 		// Autosuggest will pass through all these props to the input.
 		const inputProps = {
 			placeholder: this.props.placeholder,
