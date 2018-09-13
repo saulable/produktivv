@@ -13,9 +13,7 @@ const authRouter = require('./server/lib/auth.router')
 const passportInit = require('./server/lib/passport.init')
 const { SESSION_SECRET, CLIENT_ORIGIN } = require('./config')
 const fs = require('fs');
-const pug = require('pug');
 const path = require('path');
-const gulp = require('gulp');
 
 let server;
 
@@ -35,7 +33,7 @@ require('./server/models/RedueTask');
 require('./server/models/TrackTree');
 
 // used for development purposes.
-const morgan = require('morgan');
+// const morgan = require('morgan');
 const options = {
 	key: fs.readFileSync('./server/keys/server.key'),
 	cert: fs.readFileSync('./server/keys/server.crt'),
@@ -45,9 +43,9 @@ const app = express();
 
 const PORT = process.env.PORT || 5000;
 // If we are in production we are already running in https
-if (process.env.NODE_ENV === 'production') {
-  server = http.createServer(app)
-}
+// if (process.env.NODE_ENV === 'production') {
+//   server = http.createServer(app)
+// }
 // We are not in production so load up our certificates to be able to
 // run the server in https mode locally
 else {
