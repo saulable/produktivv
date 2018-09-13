@@ -1,13 +1,10 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+// import { connect } from 'react-redux';
 import LeftNavigation from '../../containers/LeftNavigation';
 import Resizable from 're-resizable';
 import TrackTree from './TrackTree';
 import TrackView from './TrackView';
 class TracksDashboard extends Component {
-	constructor(props) {
-		super(props);
-	}
 	render() {
 		return (
 			<div className="container">

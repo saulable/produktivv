@@ -22,7 +22,6 @@ module.exports = (app, passport) => {
 			const token = jwt.sign(req.user.toJSON(), settings.secret);
 			res.cookie('jwtToken', token);
 			res.redirect('/social_auth');
-
 		}
 	);
 	app.post(
@@ -33,7 +32,6 @@ module.exports = (app, passport) => {
 			failureFlash: true // allow flash messages
 		})
 	);
-
 	// facebook ------- authorization.
 	app.get(
 		'/connect/facebook',
@@ -41,9 +39,7 @@ module.exports = (app, passport) => {
 			scope: ['public_profile', 'email']
 		})
 	);
-
 	// handle the callback after facebook has authorized the user
-
 	app.get(
 		'/connect/facebook/callback',
 		passport.authorize('facebook', {

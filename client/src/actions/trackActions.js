@@ -7,10 +7,8 @@ import {
 	EDIT_TITLE_VIEW,
 	SAVE_TITLE_TREE,
 	INIT_TRACK_VIEW,
-	TRACKS_CHANGE_TREE_VIEW
 } from './types';
 import jwtDecode from 'jwt-decode';
-import _ from 'lodash';
 
 function userToken() {
 	let user;
@@ -95,7 +93,6 @@ export const newFolder = data => async dispatch => {
 	return;
 };
 export const renameFolder = data => async dispatch => {
-	const arrIndexes = [];
 	let dataLoop = data.tree;
 	const key = data.key;
 	const loop = (data, key, callback) => {
@@ -186,12 +183,9 @@ export const initTrackView = data => async dispatch => {
 		key = '0-key';
 	}
 	let res = await axios.post('/api/tracks/init_trackview', {user, key});
-	res.data.allTasks.map((x) => {
-	});
 	dispatch({ type: INIT_TRACK_VIEW, payload: res.data });
 };
 export const onSelectTree = data => async dispatch => {
-	const user = userToken();
 	const folderKey = data.key;
 	const rootKeys = data.tree.pos.split('-');
 	let keysOfTree = [];
@@ -214,7 +208,7 @@ export const onSelectTree = data => async dispatch => {
 	} else {
 		keysOfTree.push(dataLoop.eventKey);
 	}
-	const keys = [...new Set(keysOfTree)];
+	// const keys = [...new Set(keysOfTree)];
 	// const res = await axios.post('/api/tracks/retrieve_tasks', { keys, user });
 	initTrackView(folderKey);
 };

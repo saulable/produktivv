@@ -231,14 +231,6 @@ var Tree = function (_React$Component) {
       _this.setUncontrolledState({ selectedKeys: selectedKeys });
 
       if (onSelect) {
-        var eventObj = {
-          event: 'select',
-          selected: targetSelected,
-          node: treeNode,
-          selectedNodes: selectedNodes,
-          nativeEvent: e.nativeEvent
-        };
-				console.log(treeNode);
         onSelect(treeNode);
       }
     }, _this.onNodeCheck = function (e, treeNode, checked) {

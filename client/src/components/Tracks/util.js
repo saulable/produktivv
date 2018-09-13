@@ -36,7 +36,7 @@ export function calcTotal(x = 3, y = 2, z = 1) {
 	const rec = n => (n >= 0 ? x * y ** n-- + rec(n) : 0);
 	return rec(z + 1);
 }
-console.log('总节点数（单个tree）：', calcTotal());
+// console.log('总节点数（单个tree）：', calcTotal());
 // 性能测试：总节点数超过 2000（z要小）明显感觉慢。z 变大时，递归多，会卡死。
 
 export const gData = generateData();

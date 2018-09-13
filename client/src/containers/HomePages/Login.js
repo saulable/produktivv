@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login, facebookLogin } from '../../actions/authActions';
+import FaceBookLogin from './FaceBookLogin';
 import FlashMessageList from '../FlashMessageList';
 import { addFlashMessage } from '../../actions/flashMessages';
 
@@ -49,7 +50,7 @@ class Login extends Component {
 										{message}
 									</div>
 								)}
-								<h4 className="type-sidelines"><span>Sign In</span></h4>
+								<h4 className="type-sidelines"><span>Sign In Here</span></h4>
 								<div className="field">
 									<label className="sr-only">Email address</label>
 									<input
@@ -80,10 +81,7 @@ class Login extends Component {
 								<h4 className="type-sidelines">
 									<span>Or</span>
 								</h4>
-
-								<a className="facebook-wrap" href="/auth/facebook">
-									<div className="facebookLogin">Login with Facebook</div>
-								</a>
+								<FaceBookLogin ></FaceBookLogin>
 							</form>
 						</div>
 					</div>

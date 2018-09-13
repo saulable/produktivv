@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import * as actions from '../../actions/trackActions';
-import SortableList from './SortableList';
 import SortableTree, { changeNodeAtPath, removeNodeAtPath } from 'react-sortable-tree';
 import 'react-sortable-tree/style.css';
-import TextFieldGroup from '../../containers/TextFieldGroup';
 import TrackAutoSuggest from './AutoSuggest/TrackAutoSuggest';
 import classnames from 'classnames';
 
@@ -67,7 +65,7 @@ class TrackView extends Component {
 	}
 	render() {
 		const getNodeKey = ({ treeIndex }) => treeIndex;
-		const placeholder = `Enter a track: ${this.props.tracks.projectHeader}`;
+		// const placeholder = `Enter a track: ${this.props.tracks.projectHeader}`;
 		return (
 			<div className="wrapper journal-content">
 				<div className="container-fluid">

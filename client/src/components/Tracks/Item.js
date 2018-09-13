@@ -74,11 +74,11 @@ class Item extends Component {
 		// console.log(this.props.tracks.hotSpot);
 		if (this.props.tracks.hotSpot.length > 0){
 			const {hotSpot} = this.props.tracks;
-			hotSpotValue = hotSpot.map((x) => {
-				if (x.id === value._id){
-					return x.value;
-				}
-			});
+			// hotSpotValue = hotSpot.map((x) => {
+			// 	if (x.id === value._id){
+			// 		return x.value;
+			// 	}
+			// });
 		}
 		// console.log(hotSpotValue);
 		return (

@@ -10,6 +10,10 @@
 		"/auth/*": {
 			"target": "https://localhost:5000",
 			"secure": false
+		},
+		"/socket.io/*": {
+			"target": "https://localhost:5000",
+			"secure": false
 		}
 	},
 	"dependencies": {
@@ -24,22 +28,29 @@
 		"rc-time-picker": "^3.3.1",
 		"rc-tooltip": "^3.7.2",
 		"rc-tree": "^1.14.3",
+		"re-resizable": "^4.8.1",
 		"react": "^16.3.2",
+		"react-autosize-textarea": "^3.0.3",
 		"react-autosuggest": "^9.3.4",
 		"react-big-calendar": "^0.19.1",
 		"react-bootstrap": "^0.32.1",
 		"react-day-picker": "^7.1.9",
 		"react-dom": "^16.3.2",
+		"react-fontawesome": "^1.6.1",
+		"react-idle-timer": "^3.0.0",
 		"react-redux": "^5.0.7",
 		"react-router-dom": "^4.2.2",
 		"react-scripts": "1.1.4",
+		"react-sortable-hoc": "^0.8.3",
 		"react-sortable-tree": "^2.2.0",
 		"react-sortable-tree-theme-minimal": "0.0.14",
 		"react-stripe-checkout": "^2.6.3",
+		"react-textarea-autosize": "^6.1.0",
 		"reactjs-popup": "^1.1.1",
 		"redux": "^3.7.2",
 		"redux-form": "^7.3.0",
 		"redux-thunk": "^2.2.0",
+		"socket.io-client": "^2.1.1",
 		"what-input": "^5.1.0"
 	},
 	"scripts": {

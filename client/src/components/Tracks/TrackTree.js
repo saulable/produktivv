@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import ReactDOM from 'react-dom';
-import { Popover } from 'react-bootstrap';
 import Tooltip from 'rc-tooltip';
 import './rc-tree/assets/index.css';
 import './contextmenu.less';
@@ -61,8 +60,6 @@ class TrackTree extends Component {
 		const dropPos = info.node.props.pos.split('-');
 		const dropPosition =
 			info.dropPosition - Number(dropPos[dropPos.length - 1]);
-		console.log(dropPosition);
-		console.log(data);
 		// const dragNodesKeys = info.dragNodesKeys;
 		const loop = (data, key, callback) => {
 			data.forEach((item, index, arr) => {
@@ -157,7 +154,7 @@ class TrackTree extends Component {
 		});
 	}
 	handleKeyPress(e) {
-		if (e.key == 'Enter') {
+		if (e.key === 'Enter') {
 			this.props.saveTitle({
 				tree: [...this.props.tracks.tree],
 				key: this.props.tracks.key
@@ -216,9 +213,8 @@ class TrackTree extends Component {
 		ReactDOM.render(this.toolTip, container);
 	}
 	onSelectTree(info){
-		const {eventKey, pos} = info.props;
+		const {eventKey} = info.props;
 		const expandedKeys = this.state.expandedKeys;
-		const tree = this.props.tracks.tree;
 		this.props.onSelectTree({key: eventKey, expandedKeys, tree: info.props});
 		this.props.initTrackView({key: eventKey});
 	}
