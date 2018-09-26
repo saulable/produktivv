@@ -22,7 +22,11 @@ class CustomEvent extends Component {
 		} else if (this.props.event.taskType === 'simple') {
 			return <div className="taskSimpleS" />;
 		} else if (this.props.event.taskType === 'repeat') {
-			return <div className="taskRepeat" />;
+			if (this.props.event.missed){
+				return <div className="taskRepeatMissed" />;
+			}else {
+				return <div className="taskRepeat" />;
+			}
 		} else if (this.props.event.taskType === 'redue') {
 			return <div className="taskRedue" />;
 		} else if (this.props.event.taskType === 'simplelong') {
@@ -77,9 +81,7 @@ class CustomEvent extends Component {
 					</div>
 				</div>
 				<div className="taskContent">
-					<div className="edit">
-						<i className="fas fa-pen"></i>
-					</div>
+					{this.dataItems('edit', this.props.editCalTask, '', 'fas fa-pen')}
 					<div className="details">
 						<i className="far fa-clock"></i>
 						<span>{moment(this.props.event.start_date).format('HH:MM a')}</span><span> - </span>

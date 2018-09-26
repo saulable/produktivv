@@ -82,7 +82,16 @@ module.exports = app => {
 		// });
 		res.send(fullCal);
 	});
-
+	app.post('/api/edit_cal_task', async(req, res) => {
+		const {id, tasktype, dailyid} = req.body;
+		switch (tasktype){
+		case 'simple':
+			await SimpleTask.findById(id, (err, doc)=> {
+				if (err) res.status(500).send(err);
+				res.status(200).send(doc);
+			});
+		}
+	});
 	// The route to create the daily Journal and return it.
 	app.post('/api/create_daily_tasks', async (req, res) => {
 		const { user, todayTasks, date } = req.body;
@@ -151,6 +160,9 @@ module.exports = app => {
 			taskList[index].completed = !taskList[index].completed;
 			const options = { upsert: true, new: true};
 			await DailyTaskList.findOneAndUpdate({_id: findDailyList._id}, {$set: {taskList}}, options).exec();
+			res.status(200).send({updated: true});
+		}else {
+			res.status(200).send({updated: false});
 		}
 	});
 	app.post('/api/check_daily_tasks', async(req,res) => {
@@ -189,6 +201,7 @@ module.exports = app => {
 			rptDisabled,
 			taskDuration,
 			taskDurationFormat,
+			repeatCarry
 		} = req.body.rdxStore;
 		timePlural ? (timeInterval = timeInterval.slice(0, -1)) : timeInterval;
 		// moment("10/15/2014 9:00", "M/D/YYYY H:mm")
@@ -230,6 +243,7 @@ module.exports = app => {
 					end_date,
 					repeatTime,
 					timeInterval,
+					repeatCarry,
 					activeRepeatRadio,
 					endsOnDate,
 					afterCompletes,
@@ -246,6 +260,7 @@ module.exports = app => {
 					start_date,
 					end_date,
 					repeatTime,
+					repeatCarry,
 					timeInterval,
 					daysSelected,
 					activeRepeatRadio,

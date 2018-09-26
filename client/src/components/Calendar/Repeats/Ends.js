@@ -9,10 +9,28 @@ import MomentLocaleUtils, {
 	parseDate
 } from 'react-day-picker/moment';
 
-import {handleCompletes} from '../../../actions/calendarActions';
+import {handleCompletes, catchUp} from '../../../actions/calendarActions';
 import 'moment/locale/en-gb';
 
 class Ends extends Component {
+	catchUp(){
+		let {timeInterval, timePlural, activeRepeatRadio, switchRepeats, repeatCarry} = this.props.calendar;
+		if (timePlural){
+			timeInterval = timeInterval.substring(0, timeInterval.length -1);
+		}
+		if (timeInterval === 'week' && switchRepeats === 'repeat'){
+			return (
+				<div className="catchUp">
+					<div onClick={this.props.catchUp} data-id="fixed" className="menu"><div className="small-radio-button"><div className={classnames('small-radio-inside', {
+						'selected' : repeatCarry === 'fixed'
+					})}></div></div><span>Fixed</span></div>
+					<div onClick={this.props.catchUp} data-id="push" className="menu"><div className="small-radio-button"><div className={classnames('small-radio-inside', {
+						'selected' : repeatCarry === 'push'
+					})}></div></div><span>Push</span></div>
+				</div>
+			);
+		}
+	}
 	render() {
 		const { activeRepeatRadio } = this.props;
 		return (
@@ -35,6 +53,7 @@ class Ends extends Component {
 							<span className="choiceSelect">Never</span>
 						</label>
 					</div>
+					{(activeRepeatRadio === 'never') ? this.catchUp() : null }
 					<div className="radio datePicker">
 						<label>
 							<div
@@ -69,6 +88,7 @@ class Ends extends Component {
 							}}
 						/>
 					</div>
+					{(activeRepeatRadio === 'on') ? this.catchUp() : null }
 					<div className="radio afterCompletes">
 						<label>
 							<div
@@ -91,6 +111,7 @@ class Ends extends Component {
 						/>
 						<div className="repeatCompletes">completes</div>
 					</div>
+					{(activeRepeatRadio === 'after') ? this.catchUp() : null }
 				</div>
 			</div>
 		);
@@ -99,4 +120,4 @@ class Ends extends Component {
 function mapStateToProps({ calendar }) {
 	return { calendar };
 }
-export default connect(mapStateToProps, {handleCompletes})(Ends);
+export default connect(mapStateToProps, {handleCompletes, catchUp})(Ends);

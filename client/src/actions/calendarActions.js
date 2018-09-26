@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
 	INIT_CAL_TASKS,
+	CALENDAR_VIEW,
 	COMPLETE_CAL_TASK,
 	DELETE_CAL_TASK,
 	WRITE_QUICK_TASK,
@@ -33,7 +34,7 @@ import {
 	Q_FROM_START,
 	Q_TO_END,
 	Q_UPDATE_DURATION,
-
+	REPEAT_CATCH_UP
 } from './types';
 import {
 	dailyRepeatNever,
@@ -63,12 +64,15 @@ export const initCal = dataDate => async dispatch => {
 	});
 	dispatch({ type: INIT_CAL_TASKS, payload: data });
 };
+export const setCalendarView = data => dispatch => {
+	return dispatch ({type: CALENDAR_VIEW, payload: data});
+};
 export const clickCompleteCal = (data, list, curDate) => async dispatch => {
 	const user = jwtDecode(localStorage.getItem('jwtToken'));
 	const {id, tasktype, start_date, end_date} = data.currentTarget.dataset;
 	axios.post('/api/complete_task', { id, tasktype, start_date, curDate, end_date});
 	axios.post('/api/update_daily_calendar_complete_task', {id, start_date, user});
-	dispatch({ type: COMPLETE_CAL_TASK, payload: {id} });
+	dispatch({ type: COMPLETE_CAL_TASK, payload: {id, start_date, tasktype} });
 };
 export const clickDeleteCal = data => async dispatch => {
 	const {id, tasktype, start_date, dailyid} = data.currentTarget.dataset;
@@ -80,6 +84,12 @@ export const clickDeleteCal = data => async dispatch => {
 		dispatch({type: DELETE_CAL_TASK, payload: {id}});
 	}
 	}
+};
+export const editCalTask = data => async dispatch => {
+	const {id, tasktype, start_date, dailyid} = data.currentTarget.dataset;
+	const res = await axios.post('/api/edit_cal_task', {id, tasktype, dailyid});
+	console.log(res);
+
 };
 export const setTimes = data => dispatch => {
 	const a = data.slotEndState;
@@ -292,5 +302,10 @@ export function endTimePickerMins(data) {
 export function updateDuration(data) {
 	return dispatch => {
 		dispatch({ type: Q_UPDATE_DURATION, payload: data });
+	};
+}
+export function catchUp(data){
+	return dispatch => {
+		dispatch({ type: REPEAT_CATCH_UP, payload: data.currentTarget.dataset.id});
 	};
 }

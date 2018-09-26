@@ -13,6 +13,7 @@ const repeatTaskSchema = new Schema({
 	index: Number,
 	_user: {type: Schema.Types.ObjectId, ref: 'User'},
 	repeat: Boolean,
+	repeatCarry: String,
 	repeatTime: Number,
 	timeInterval: String,
 	daysSelected: Array,

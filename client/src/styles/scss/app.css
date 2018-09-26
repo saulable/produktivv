@@ -6751,7 +6751,6 @@ button:focus {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 0 !important;
   z-index: 0; }
   .datePicker input {
     font-size: 1.25rem; }
@@ -6761,7 +6760,6 @@ button:focus {
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 0px !important;
   font-size: 1rem;
   font-weight: bold; }
   .afterCompletes input {
@@ -6843,7 +6841,6 @@ input:checked + .sliders:before {
 .switchHeaders .DayPickerInput {
   display: inline-block;
   margin-left: 7px;
-  padding: 10px;
   position: relative; }
 
 .switchHeaders .DayPickerInput input {
@@ -6889,6 +6886,40 @@ input:checked + .sliders:before {
   height: 40px;
   position: relative;
   top: 0px; }
+
+.endsWrap > div {
+  margin-top: 10px; }
+
+.catchUp {
+  background: url("../img/rightarrowdown.png") no-repeat;
+  background-size: 20px 20px;
+  background-position: 8px 5px;
+  padding-left: 40px;
+  font-size: 14px;
+  clear: both;
+  margin-bottom: 5px;
+  margin-top: 5px !important; }
+  .catchUp .menu {
+    display: flex;
+    cursor: pointer;
+    justify-content: flex-start;
+    align-items: center; }
+  .catchUp .small-radio-button {
+    cursor: pointer;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #8a8a8a;
+    margin-right: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .catchUp .small-radio-button .small-radio-inside {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%; }
+      .catchUp .small-radio-button .small-radio-inside.selected {
+        background: #0083BB; }
 
 .addMarginTop {
   margin-top: 10px; }

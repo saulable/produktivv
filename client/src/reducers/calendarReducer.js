@@ -1,5 +1,6 @@
 import {
 	INIT_CAL_TASKS,
+	CALENDAR_VIEW,
 	DELETE_CAL_TASK,
 	WRITE_QUICK_TASK,
 	SWITCH_REPEATS,
@@ -31,17 +32,20 @@ import {
 	Q_FROM_START,
 	Q_TO_END,
 	Q_UPDATE_DURATION,
-	COMPLETE_CAL_TASK
+	COMPLETE_CAL_TASK,
+	REPEAT_CATCH_UP
 } from '../actions/types';
 import _ from 'lodash';
 import moment from 'moment';
 
 const initState = {
 	events: [],
+	calendarView: 'BigCalendar',
 	showBoth: false,
 	timeInterval: 'week',
 	timePlural: false,
 	repeatTime: '1',
+	repeatCarry: 'fixed',
 	monthChoice: 'noDays',
 	monthlyBoth: false,
 	repeatDropdown: false,
@@ -70,25 +74,36 @@ export default (state = initState, action) => {
 	switch (action.type) {
 	case INIT_CAL_TASKS:
 		return { ...state, events: action.payload.data };
+	case CALENDAR_VIEW:
+		return { ...state, calendarView: action.payload };
 	case COMPLETE_CAL_TASK: {
-		const index = _.findIndex([...state.events], { _id: action.payload.id });
-		if (index >= 0) {
-			// if there is a match, toggle the state.
+		let index = _.findIndex([...state.events], { _id: action.payload.id });
+		if (action.payload.tasktype === 'repeat') {
+			const indexRepeat = _.findIndex([...state.events], {
+				start_date: action.payload.start_date
+			});
+			let newArray = state.events.slice();
+			const item = state.events[indexRepeat];
+			item.completed = !item.completed;
+			newArray.splice(indexRepeat, 1, item);
+			return { ...state, events: newArray };
+		}
+		// if there is a match, toggle the state.
+		else {
+			let index = _.findIndex([...state.events], { _id: action.payload.id });
 			const item = state.events[index];
 			item.completed = !item.completed;
 			let newArray = state.events.slice();
 			newArray.splice(index, 1, item);
-			return {...state, events: newArray};
+			return { ...state, events: newArray };
 		}
-		return state;
 	}
 	case DELETE_CAL_TASK: {
 		const index = _.findIndex([...state.events], { _id: action.payload.id });
-		console.log(index);
 		if (index >= 0) {
 			let newArray = state.events.slice();
 			newArray.splice(index, 1);
-			return {...state, events: newArray};
+			return { ...state, events: newArray };
 		}
 		return state;
 	}
@@ -119,11 +134,19 @@ export default (state = initState, action) => {
 		};
 	}
 	case SWITCH_REPEATS:
-		if (action.payload === 'redue'){
+		if (action.payload === 'redue') {
 			if (state.timePlural) {
-				return { ...state, switchRepeats: action.payload, timeInterval: 'days'};
+				return {
+					...state,
+					switchRepeats: action.payload,
+					timeInterval: 'days'
+				};
 			} else {
-				return {...state, switchRepeats: action.payload, timeInterval: 'day'};
+				return {
+					...state,
+					switchRepeats: action.payload,
+					timeInterval: 'day'
+				};
 			}
 		}
 		return { ...state, switchRepeats: action.payload };
@@ -413,6 +436,8 @@ export default (state = initState, action) => {
 		}
 		}
 	}
+	case REPEAT_CATCH_UP:
+		return { ...state, repeatCarry: action.payload };
 	default:
 		return state;
 	}

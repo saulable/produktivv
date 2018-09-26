@@ -42,7 +42,6 @@ class CalendarSystem extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			showComponent: 'BigCalendar',
 			slotStartState: '',
 			slotEndState: '',
 			currentMonth: ''
@@ -61,11 +60,7 @@ class CalendarSystem extends Component {
 		slotStartState.set({ h: nowHours, m: nowMinutes });
 		const slotEndState = moment(slotStartState).add(1, 'hours');
 		this.props.setTimes({ slotStartState, slotEndState });
-		this.setState({ showComponent: 'AddTask', slotStartState, slotEndState });
-	}
-	onCancelTask() {
-		this.setState({ showComponent: 'BigCalendar' });
-		this.props.clearRepeats();
+		this.props.setCalendarView('AddTask');
 	}
 	onNavigate = e => {
 		if (!moment(this.state.currentMonth).isSame(moment(e), 'month')){
@@ -74,7 +69,8 @@ class CalendarSystem extends Component {
 		}
 	};
 	renderContent() {
-		if (this.state.showComponent === 'BigCalendar') {
+		const {calendarView} = this.props.calendar;
+		if (calendarView === 'BigCalendar') {
 			return (
 				<BigCalendar
 					popup
@@ -99,8 +95,8 @@ class CalendarSystem extends Component {
 					}}
 				/>
 			);
-		} else if (this.state.showComponent === 'AddTask') {
-			return <AddTask onCancel={() => this.onCancelTask()} />;
+		} else if (calendarView === 'AddTask') {
+			return <AddTask />;
 		}
 	}
 	render() {

@@ -194,10 +194,25 @@ module.exports = app => {
 		else if (tasktype === 'repeat'){
 			const taskComplete = await RepeatTask.findById(id);
 			const getStart = new Date(start_date).getTime();
+			const {lastCompleted} = await RepeatTask.findById(id);
+			// last completed is undefined when we first init it.
+			// check to see if the task has been ticked before...
 			if (taskComplete.datesCompleted.includes(getStart)){
-				completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$pull: { datesCompleted: getStart }}, {new: true}).exec();
+				// we remove the task from the datesCompleted array.
+				if (moment(getStart).isBefore(moment(curDate).endOf('day')) && moment(lastCompleted).isBefore(moment(getStart))){
+					completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$pull: { datesCompleted: getStart } }, {new: true}).exec();
+					await RepeatTask.findOneAndUpdate({_id:id}, {$set: {lastCompleted: getStart} }).exec();
+				}else {
+					completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$pull: { datesCompleted: getStart }}, {new: true}).exec();
+				}
 			}else {
-				completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$push: { datesCompleted: getStart }}, {new: true}).exec();
+				if (moment(getStart).isBefore(moment(curDate).endOf('day')) && (moment(lastCompleted).isBefore(moment(getStart)) || lastCompleted === undefined)){
+					completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$push: { datesCompleted: getStart }}, {new: true}).exec();
+					await RepeatTask.findOneAndUpdate({_id:id}, {$set: {lastCompleted: getStart} }).exec();
+				}
+				else {
+					completed = await RepeatTask.findOneAndUpdate({ _id: id }, {$push: { datesCompleted: getStart }}, {new: true}).exec();
+				}
 			}
 		}else if (tasktype === 'redue'){
 			const taskComplete = await RedueTask.findById(id);

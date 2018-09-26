@@ -54,7 +54,8 @@ class AddTask extends Component {
 			end_date: endDateFormat,
 			rdxStore
 		});
-		await this.props.onCancel();
+		await this.props.setCalendarView('BigCalendar');
+		await this.props.clearRepeats();
 	};
 
 	render() {
@@ -63,7 +64,7 @@ class AddTask extends Component {
 				<div className="dailyCalendarContainer">
 					<div className="card">
 						<div className="sortHead">
-							<div onClick={this.props.onCancel} className="newTask">
+							<div onClick={() => this.props.setCalendarView('BigCalendar')} className="newTask">
 								&times;
 							</div>
 							<div className="task-box">
