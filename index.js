@@ -90,11 +90,6 @@ if (process.env.NODE_ENV === 'production') {
 		res.sendFile(path.resolve(__dirname, 'client', 'build', 'index.html'));
 	});
 }
-//
-// // reload code
-// app.use(express.static('./dist/', {
-//     extensions: ['html', 'htm']
-// }));
 
 app.get('/wake-up', (req, res) => res.send('👍'))
 server.listen(process.env.PORT || 5000, () => {

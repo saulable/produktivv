@@ -81,7 +81,9 @@ class Login extends Component {
 								<h4 className="type-sidelines">
 									<span>Or</span>
 								</h4>
-								<FaceBookLogin ></FaceBookLogin>
+								<div className="facebook-wrap">
+									<a href="/auth/facebook"><div className="facebookLogin">Login with FaceBook</div></a>
+								</div>
 							</form>
 						</div>
 					</div>
