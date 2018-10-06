@@ -14,6 +14,10 @@ module.exports = (app, passport) => {
 		'/auth/facebook',
 		passport.authenticate('facebook', { scope: 'email' })
 	);
+	app.get('/api/testme', (req,res) =>{
+		console.log(123);
+		res.send('Hello saul');
+	});
 	app.get(
 		'/auth/facebook/callback',
 		passport.authenticate('facebook', {

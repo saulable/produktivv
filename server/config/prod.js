@@ -1,9 +1,10 @@
+const fs = require('fs');
+
 module.exports = {
-	// mongoURI: 'mongodb://saulable:gwhizz7390@ds115740.mlab.com:15740/meal_management',
-	mongoURI:'mongodb://saulable:gwhizz7390@ds247191.mlab.com:47191/justdelete2',
-	facebookClientId : '273898299894334',
-	facebookSecretId : 'f19f2c37e3cf7399d1f7fea914148d5e',
-	facebookCallBackUrl: 'https://www.produktivv.com/auth/facebook/callback',
-	googleClientID: '1074055474085-17dp51m3vl11a08c7krbkpbpacmdvkvj.apps.googleusercontent.com',
-	googleClientSecret: 'WlH-TkFkYc-e6kQCWl0RUhGD'
+	mongoURI: fs.readFileSync('/run/secrets/mongoURI', 'utf8').trim(),
+	facebookClientId : fs.readFileSync('/run/secrets/fb_client', 'utf8').trim(),
+	facebookSecretId : fs.readFileSync('/run/secrets/fb_secret', 'utf8').trim(),
+	facebookCallBackUrl:  fs.readFileSync('/run/secrets/fb_cb_url', 'utf8').trim(),
+	googleClientID: fs.readFileSync('/run/secrets/google_client', 'utf8').trim(),
+	googleClientSecret: fs.readFileSync('/run/secrets/google_secret', 'utf8').trim()
 };

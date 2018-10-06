@@ -19,9 +19,6 @@ import Hats from './Hats/Index';
 import requireAuth from '../services/requireAuth';
 
 class App extends Component {
-	componentDidMount() {
-		$(document).foundation();
-	}
 	render() {
 		return (
 			<BrowserRouter>

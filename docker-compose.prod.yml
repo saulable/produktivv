@@ -1,0 +1,71 @@
+version: "3.1"
+services:
+  client:
+    image: saulable/produktivv_client
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128m
+    ports:
+      - "3000"
+    networks:
+      - produktivv
+  api:
+    image: saulable/produktivv_server
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: 256m
+    ports:
+      - '5000'
+    networks:
+      - produktivv
+    secrets:
+      - mongoURI
+      - fb_client
+      - fb_secret
+      - fb_cb_url
+      - google_client
+      - google_secret
+    environment:
+      NODE_ENV: "production"
+      MONGO_URI: /run/secrets/mongoURI
+      FB_CLIENT_ID: /run/secrets/fb_client_id
+      FB_SECRET_ID: /run/secrets/fb_secret_id
+      FB_CALLBACK_URL: /run/secrets/fb_callback_url
+      GOOGLE_CLIENT_ID: /run/secrets/google_client
+      GOOGLE_CLIENT_SECRET: /run/secrets/google_secret
+  nginx:
+    image: saulable/produktivv_nginx
+    restart: always
+    volumes:
+      - /docker-volumes/etc/letsencrypt/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/fullchain.pem:/etc/letsencrypt/live/produktivv.com/fullchain.pem
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/privkey.pem:/etc/letsencrypt/live/produktivv.com/privkey.pem
+    ports:
+      - '80:80'
+      - '443:443'
+    networks:
+      - produktivv
+    depends_on:
+      - client
+      - api
+secrets:
+  mongoURI:
+    file: ./secrets/mongo_uri.txt
+  fb_client:
+    file: ./secrets/fb_client_id.txt
+  fb_secret:
+    file: ./secrets/fb_secret_id.txt
+  fb_cb_url:
+    file: ./secrets/fb_callback_url.txt
+  google_client:
+    file: ./secrets/google_client_id.txt
+  google_secret:
+    file: ./secrets/google_client_secret.txt
+networks:
+  produktivv:

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { login, facebookLogin } from '../../actions/authActions';
-import FaceBookLogin from './FaceBookLogin';
+// import FaceBookLogin from './FaceBookLogin';
 import FlashMessageList from '../FlashMessageList';
 import { addFlashMessage } from '../../actions/flashMessages';
 
