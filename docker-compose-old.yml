@@ -1,0 +1,33 @@
+version: '3'
+services:
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
+    image: produktivv_server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
+    ports:
+      - '5000'
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    image: produktivv_client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    ports:
+      - '3000'
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    image: produktivv_nginx
+    ports:
+      - '3050:80'
+    depends_on:
+      - client
+      - api

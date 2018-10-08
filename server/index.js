@@ -18,6 +18,8 @@ const path = require('path');
 
 let server;
 const connection = 'mongodb://saulable:gwhizz7390@ds247191.mlab.com:47191/justdelete2';
+console.log(123);
+
 mongoose
 	.connect(connection)
 	.then(() => console.log('connection successful'))
@@ -46,7 +48,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 // If we are in production we are already running in https
 if (process.env.NODE_ENV === 'production') {
-	server = http.createServer(app)
+	const certOptionsProd = {
+		key: fs.readFileSync('/etc/ssl/certs/privkey.pem'),
+		cert: fs.readFileSync('/etc/ssl/certs/fullchain.pem')
+	}
+	server = https.createServer(certOptionsProd, app);
 }
 // We are not in production so load up our certificates to be able to
 // run the server in https mode locally

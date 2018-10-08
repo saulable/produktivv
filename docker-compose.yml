@@ -1,5 +1,13 @@
 version: '3'
 services:
+  traefik:
+    image: traefik
+    command: --web --docker
+    ports:
+      - '80:80'
+      - '8080:8080'
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -10,6 +18,13 @@ services:
       - ./server:/app
     ports:
       - '5000'
+    networks:
+      - web
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:server.produktivv.com"
   client:
     build:
       dockerfile: Dockerfile.dev
@@ -18,16 +33,15 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
+    networks:
+      - web
     ports:
       - '3000'
-  nginx:
-    restart: always
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./nginx
-    image: produktivv_nginx
-    ports:
-      - '3050:80'
-    depends_on:
-      - client
-      - api
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=3000"
+      - "traefik.frontend.rule=Host:client.produktivv.com"
+networks:
+  web:
+    driver: overlay

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const express = require('express');
 const moment = require('moment');
 const _ = require('lodash');
-const axios = require('axios');
 const SimpleTask = mongoose.model('simpleTask');
 const SimpleLongTask = mongoose.model('simpleLongTask');
 const RepeatTask = mongoose.model('repeatTask');

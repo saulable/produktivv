@@ -24,6 +24,9 @@ services:
       - '5000'
     networks:
       - produktivv
+    volumes:
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/fullchain.pem:/etc/ssl/certs/fullchain.pem
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/privkey.pem:/etc/ssl/certs/privkey.pem
     secrets:
       - mongoURI
       - fb_client
@@ -33,27 +36,18 @@ services:
       - google_secret
     environment:
       NODE_ENV: "production"
-      MONGO_URI: /run/secrets/mongoURI
-      FB_CLIENT_ID: /run/secrets/fb_client_id
-      FB_SECRET_ID: /run/secrets/fb_secret_id
-      FB_CALLBACK_URL: /run/secrets/fb_callback_url
-      GOOGLE_CLIENT_ID: /run/secrets/google_client
-      GOOGLE_CLIENT_SECRET: /run/secrets/google_secret
-  nginx:
-    image: saulable/produktivv_nginx
-    restart: always
-    volumes:
-      - /docker-volumes/etc/letsencrypt/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
-      - /docker-volumes/etc/letsencrypt/live/produktivv.com/fullchain.pem:/etc/letsencrypt/live/produktivv.com/fullchain.pem
-      - /docker-volumes/etc/letsencrypt/live/produktivv.com/privkey.pem:/etc/letsencrypt/live/produktivv.com/privkey.pem
+  reverse-proxy:
+    image: traefik
+    command: --api --docker
     ports:
       - '80:80'
       - '443:443'
-    networks:
-      - produktivv
+      - '8080:8080'
     depends_on:
       - client
       - api
+    volumes:
+      -/var/run/docker.sock:/var/run/docker.sock
 secrets:
   mongoURI:
     file: ./secrets/mongo_uri.txt

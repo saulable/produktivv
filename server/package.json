@@ -19,24 +19,21 @@
 		"jquery": ">=3.0.0",
 		"jsonwebtoken": "^8.2.1",
 		"jwt-decode": "^2.2.0",
-		"localtunnel": "^1.9.0",
 		"lodash": "^4.17.10",
 		"moment": "^2.22.1",
+		"mongodb": "^3.1.6",
 		"mongoose": "^5.0.17",
 		"morgan": "^1.9.0",
 		"motion-ui": "^2.0.3",
-		"nodemon": "^1.17.3",
+		"nodemon": "^1.18.4",
 		"passport": "^0.4.0",
 		"passport-facebook": "^2.1.1",
 		"passport-google-oauth20": "^1.0.0",
 		"passport-jwt": "^4.0.0",
 		"path-parser": "^4.0.4",
-		"pug": "^2.0.3",
-		"sendgrid": "^5.2.3",
 		"serve-favicon": "^2.5.0",
 		"shortid": "^2.2.8",
-		"socket.io": "^2.1.1",
-		"stripe": "^5.8.0"
+		"socket.io": "^2.1.1"
 	},
 	"devDependencies": {
 		"babel-eslint": "^8.2.3",
@@ -55,7 +52,8 @@
 		"gulp-sass": "^4.0.1",
 		"gulp-watch": "^5.0.0",
 		"gutil": "^1.6.4",
-		"reload": "^2.3.0"
+		"reload": "^2.3.0",
+		"localtunnel": "^1.9.0"
 	},
 	"scripts": {
 		"start": "node index.js",
