@@ -1,0 +1,75 @@
+version: "3.1"
+services:
+  client:
+    image: saulable/produktivv_client
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128m
+    ports:
+      - "3000"
+    networks:
+      - produktivv
+  api:
+    image: saulable/produktivv_server
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.4"
+          memory: 256m
+    ports:
+      - '5000'
+    networks:
+      - produktivv
+    volumes:
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/fullchain.pem:/etc/ssl/certs/fullchain.pem
+      - /docker-volumes/etc/letsencrypt/live/produktivv.com/privkey.pem:/etc/ssl/certs/privkey.pem
+    secrets:
+      - mongoURI
+      - fb_client
+      - fb_secret
+      - fb_cb_url
+      - google_client
+      - google_secret
+    environment:
+      NODE_ENV: "production"
+traefik:
+  image: traefik
+  command: --web --docker --docker.domain=docker.localhost --logLevel=DEBUG
+  ports:
+    - "80:80"
+    - "8080:8080"
+    - "443:443"
+  volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /dev/null:/traefik.toml
+
+machine:
+  image: katacoda/docker-http-server
+  labels:
+    - "traefik.backend=machine-echo"
+    - "traefik.frontend.rule=Host:machine-echo.example.com"
+
+echo:
+  image: katacoda/docker-http-server:v2
+  labels:
+    - "traefik.backend=echo"
+    - "traefik.frontend.rule=Host:echo-echo.example.com"
+secrets:
+  mongoURI:
+    file: ./secrets/mongo_uri.txt
+  fb_client:
+    file: ./secrets/fb_client_id.txt
+  fb_secret:
+    file: ./secrets/fb_secret_id.txt
+  fb_cb_url:
+    file: ./secrets/fb_callback_url.txt
+  google_client:
+    file: ./secrets/google_client_id.txt
+  google_secret:
+    file: ./secrets/google_client_secret.txt
+networks:
+  produktivv:

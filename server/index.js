@@ -18,8 +18,6 @@ const path = require('path');
 
 let server;
 const connection = 'mongodb://saulable:gwhizz7390@ds247191.mlab.com:47191/justdelete2';
-console.log(123);
-
 mongoose
 	.connect(connection)
 	.then(() => console.log('connection successful'))
@@ -61,7 +59,8 @@ else {
 		key: fs.readFileSync('./keys/server.key'),
 		cert: fs.readFileSync('./keys/server.crt')
 	};
-	server = https.createServer(certOptions, app);
+	// server = https.createServer(certOptions, app);
+	server = http.createServer(app);
 }
 app.use(morgan('dev'));
 app.use(cors());

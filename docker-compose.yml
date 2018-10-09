@@ -1,13 +1,18 @@
 version: '3'
 services:
   traefik:
+    networks:
+      - web
     image: traefik
-    command: --web --docker
+    command: --web --docker --docker.domain=docker.localhost
     ports:
       - '80:80'
+      - '443:443'
       - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./traefik/traefik.toml:/traefik.toml
+      - ./traefik/certs/:/certs/
   api:
     build:
       dockerfile: Dockerfile.dev
@@ -21,10 +26,12 @@ services:
     networks:
       - web
     labels:
-      - "traefik.docker.network=web"
       - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.backend=api"
       - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:server.produktivv.com"
+      - "traefik.frontend.rule=Host:localhost; PathPrefix:/api, /auth"
+      - "traefik.frontend.passHostHeader=true"
   client:
     build:
       dockerfile: Dockerfile.dev
@@ -41,7 +48,7 @@ services:
       - "traefik.docker.network=web"
       - "traefik.enable=true"
       - "traefik.port=3000"
-      - "traefik.frontend.rule=Host:client.produktivv.com"
+      - "traefik.backend=client"
+      - "traefik.frontend.rule=Host:localhost"
 networks:
   web:
-    driver: overlay

@@ -44,7 +44,7 @@
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules/foundation-sites/scss --include-path ./node_modules/motion-ui src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules/foundation-sites/scss --include-path ./node_modules/motion-ui src/ -o src/ --watch --recursive",
-    "start-js": "HTTPS=true react-scripts start",
+    "start-js": "react-scripts start",
     "start": "npm-run-all -p watch-css start-js",
     "build-js": "react-scripts build",
     "build": "npm-run-all build-css build-js",
