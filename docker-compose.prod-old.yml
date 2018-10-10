@@ -24,9 +24,6 @@ services:
       - '5000'
     networks:
       - produktivv
-    volumes:
-      - /docker-volumes/etc/letsencrypt/live/produktivv.com/fullchain.pem:/etc/ssl/certs/fullchain.pem
-      - /docker-volumes/etc/letsencrypt/live/produktivv.com/privkey.pem:/etc/ssl/certs/privkey.pem
     secrets:
       - mongoURI
       - fb_client

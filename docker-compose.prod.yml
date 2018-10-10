@@ -1,54 +1,90 @@
-version: '3'
+version: '3.2'
 services:
   traefik:
     networks:
       - web
-    image: traefik
-    command: --web --docker --docker.domain=docker.localhost
+    image: traefik:1.7.2-alpine
+    command:
+      - "--docker"
+      - "--docker.swarmMode"
+      - "--docker.domain=docker.localhost"
+      - "--docker.watch"
     ports:
       - '80:80'
       - '443:443'
       - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.toml:/traefik.toml
-      - ./traefik/certs/:/certs/
+      - ./traefik/traefik.prod.toml:/traefik.toml
+      - ./traefik/acme:/etc/traefik/acme
+    depends_on:
+      - api
+      - client
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.3"
+          memory: 128m
   api:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./server
-    image: produktivv_server
-    volumes:
-      - /app/node_modules
-      - ./server:/app
+    image: saulable/produktivv_server
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512m
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=web"
+        - "traefik.backend=api"
+        - "traefik.port=5000"
+        - "traefik.frontend.rule=Host:api.produktivv.com"
+        - "traefik.frontend.passHostHeader=true"
     ports:
       - '5000'
     networks:
       - web
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=web"
-      - "traefik.backend=api"
-      - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:localhost; PathPrefix:/api, /auth"
-      - "traefik.frontend.passHostHeader=true"
+    secrets:
+      - mongoURI
+      - fb_client
+      - fb_secret
+      - fb_cb_url
+      - google_client
+      - google_secret
+    environment:
+      NODE_ENV: "production"
   client:
-    build:
-      dockerfile: Dockerfile.dev
-      context: ./client
-    image: produktivv_client
-    volumes:
-      - /app/node_modules
-      - ./client:/app
+    image: saulable/produktivv_client
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.2"
+          memory: 128m
+      labels:
+        - "traefik.docker.network=web"
+        - "traefik.enable=true"
+        - "traefik.port=3000"
+        - "traefik.backend=client"
+        - "traefik.frontend.rule=Host:produktivv.com"
+    ports:
+      - "3000"
     networks:
       - web
-    ports:
-      - '3000'
-    labels:
-      - "traefik.docker.network=web"
-      - "traefik.enable=true"
-      - "traefik.port=3000"
-      - "traefik.backend=client"
-      - "traefik.frontend.rule=Host:localhost"
+secrets:
+  mongoURI:
+    file: ./secrets/mongo_uri.txt
+  fb_client:
+    file: ./secrets/fb_client_id.txt
+  fb_secret:
+    file: ./secrets/fb_secret_id.txt
+  fb_cb_url:
+    file: ./secrets/fb_callback_url.txt
+  google_client:
+    file: ./secrets/google_client_id.txt
+  google_secret:
+    file: ./secrets/google_client_secret.txt
 networks:
   web:
+    external: true
