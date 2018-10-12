@@ -35,6 +35,7 @@ class Login extends Component {
 	}
 	render() {
 		const { username, password, message } = this.state;
+		const url = `${process.env.REACT_APP_OAUTHDOMAIN}/auth/facebook`;
 		return (
 			<div className="login-form-bg">
 				<div className="login-form">
@@ -82,7 +83,7 @@ class Login extends Component {
 									<span>Or</span>
 								</h4>
 								<div className="facebook-wrap">
-									<a href="/auth/facebook"><div className="facebookLogin">Login with FaceBook</div></a>
+									<a href={url}><div className="facebookLogin">Login with FaceBook</div></a>
 								</div>
 							</form>
 						</div>

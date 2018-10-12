@@ -11,6 +11,7 @@ module.exports = {
 		allowImportExportEverywhere: false,
 		codeFrame: false
 	},
+	plugins: ['react'],
 	rules: {
 		indent: ['error', 'tab'],
 		'no-unused-vars': 0,

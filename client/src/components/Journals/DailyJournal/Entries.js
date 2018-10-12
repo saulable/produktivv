@@ -59,7 +59,7 @@ class Entries extends Component {
 								<TextFieldGroup
 									field="message"
 									label="Daily Task"
-									placeholder="enter your daily task here"
+									placeholder="Enter your daily task here"
 									onChange={this.onChange}
 									value={this.state.message}
 								/>

@@ -6,21 +6,13 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 
 const settings = require('../config/settings');
-require('../services/facebookPassport')(passport);
 
 module.exports = (app, passport) => {
 	// send to facebook to do the authentication
-	app.get('/', (req,res) => {
-		res.send('hello world!');
-	});
 	app.get(
 		'/auth/facebook',
 		passport.authenticate('facebook', { scope: 'email' })
 	);
-	app.get('/api/testme', (req,res) =>{
-		console.log(123);
-		res.send('Hello saul');
-	});
 	app.get(
 		'/auth/facebook/callback',
 		passport.authenticate('facebook', {

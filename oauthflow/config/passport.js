@@ -1,4 +1,5 @@
 const JwtStrategy = require('passport-jwt').Strategy;
+const FacebookStrategy = require('passport-facebook').Strategy;
 const { ExtractJwt } = require('passport-jwt');
 
 // load up the user model
@@ -24,5 +25,23 @@ module.exports = passport => {
 				}
 			});
 		})
+	);
+	passport.use(
+		new FacebookStrategy(
+			{
+				clientID: keys.facebookClientId,
+				clientSecret: keys.facebookSecretId,
+				callbackURL: keys.facebookCallBackUrl,
+				proxy: true
+			},
+			async (accessToken, refershToken, profile, done) => {
+				let exisitingUser = await User.findOne({ facebookId: profile.id });
+				if (exisitingUser) {
+					return done(null, exisitingUser);
+				}
+				let user = await new User({facebookId: profile.id}).save();
+				done(null, user);
+			}
+		)
 	);
 };

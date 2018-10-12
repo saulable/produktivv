@@ -1,9 +1,7 @@
 /* global process */
 const FacebookStrategy = require('passport-facebook').Strategy;
 const keys = require('../config/keys');
-
 const User = require('../models/User');
-
 module.exports = passport => {
 	passport.use(
 		new FacebookStrategy(

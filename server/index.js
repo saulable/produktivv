@@ -1,25 +1,21 @@
 /* global __dirname process env */
 const mongoose = require('mongoose');
 const express = require('express');
-const cookieSession = require('cookie-session');
-const keys = require('./config/keys');
 const bodyParser = require('body-parser');
-const auth = require('./routes/auth');
+const cookieSession = require('cookie-session');
 const passport = require('passport');
-const https = require('https');
 const http = require('http');
 const cors = require('cors');
-const socketio = require('socket.io');
-const authRouter = require('./lib/auth.router');
-const passportInit = require('./lib/passport.init');
 const morgan = require('morgan');
 const fs = require('fs');
 const path = require('path');
 
+// keys for the app
+const keys = require('./config/keys');
+
 let server;
-const connection = 'mongodb://saulable:gwhizz7390@ds247191.mlab.com:47191/justdelete2';
 mongoose
-	.connect(connection)
+	.connect(keys.mongoURI, {useNewUrlParser: true})
 	.then(() => console.log('connection successful'))
 	.catch(err => console.log(err));
 

@@ -8,8 +8,12 @@ defaultEntryPoints = ["https","http"]
   [entryPoints.https]
   address = ":443"
 	[entryPoints.https.tls]
-
+	[entryPoints.dashboard]
+	address=":8080"
 [retry]
+
+[api]
+entrypoint = "dashboard"
 
 [docker]
 endpoint = "unix:///var/run/docker.sock"
@@ -20,9 +24,11 @@ exposedbydefault = false
 [acme]
 email = "hello@youtech.io"
 storage = "/etc/traefik/acme/acme.json"
+# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 entryPoint = "https"
   [acme.httpChallenge]
   entryPoint = "http"
 
   [[acme.domains]]
     main = "produktivv.com"
+		sans = ["api.produktivv.com"]
