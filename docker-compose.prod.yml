@@ -20,6 +20,7 @@ services:
     depends_on:
       - api
       - client
+      - oauthflow
     deploy:
       replicas: 1
       resources:
@@ -39,7 +40,7 @@ services:
         - "traefik.docker.network=web"
         - "traefik.backend=api"
         - "traefik.port=5000"
-        - "traefik.frontend.rule=Host:api.produktivv.com"
+        - "traefik.frontend.rule=Host:produktivv.com"
         - "traefik.frontend.passHostHeader=true"
     ports:
       - '5000'
@@ -47,6 +48,27 @@ services:
       - web
     secrets:
       - mongoURI
+    environment:
+      NODE_ENV: "production"
+  oauthflow:
+    image: saulable/produktivv_oauthflow
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.1"
+          memory: 128m
+        labels:
+          - "traefik.docker.network=web"
+          - "traefik.enable=true"
+          - "traefik.port=5050"
+          - "traefik.backend=oauthflow"
+          - "traefik.frontend.rule=Host:oauth.produktivv.com"
+    ports:
+      - '5000'
+    networks:
+      - web
+    secrets:
       - fb_client
       - fb_secret
       - fb_cb_url
