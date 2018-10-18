@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const passport = require('passport');
 const express = require('express');
 const mongoose = require('mongoose');
+// const cookieParser = require('cookie-parser');
 const http = require('http');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -27,10 +28,10 @@ app.use(bodyParser.json());
 
 // Login Routes
 require('./routes/facebookRoutes')(app, passport);
-
+// app.use(express.cookieParser());
 
 app.get('/', (req, res) => {
-	res.redirect(`${keys.hostURL}`);
+	console.log(123);
 });
 // Listen up on the port.
 const PORT = process.env.PORT || 5050;

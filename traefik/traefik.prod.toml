@@ -2,14 +2,15 @@ defaultEntryPoints = ["https","http"]
 
 [entryPoints]
   [entryPoints.http]
-  address = ":80"
+    address = ":80"
     [entryPoints.http.redirect]
-    entryPoint = "https"
+      entryPoint = "https"
   [entryPoints.https]
-  address = ":443"
-	[entryPoints.https.tls]
-	[entryPoints.dashboard]
-	address=":8080"
+    address = ":443"
+    [entryPoints.https.tls]
+  [entryPoints.dashboard]
+    address=":8080"
+
 [retry]
 
 [api]
@@ -30,5 +31,5 @@ entryPoint = "https"
   entryPoint = "http"
 
   [[acme.domains]]
-    main = "produktivv.com"
-		sans = ["api.produktivv.com"]
+    main = "*.produktivv.com"
+		sans = ["api.produktivv.com", "oauth.produktivv.com"]

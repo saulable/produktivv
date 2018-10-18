@@ -6,5 +6,6 @@ module.exports = {
 	facebookSecretId : fs.readFileSync('/run/secrets/fb_secret', 'utf8').trim(),
 	facebookCallBackUrl:  fs.readFileSync('/run/secrets/fb_cb_url', 'utf8').trim(),
 	googleClientID: fs.readFileSync('/run/secrets/google_client', 'utf8').trim(),
-	googleClientSecret: fs.readFileSync('/run/secrets/google_secret', 'utf8').trim()
+	googleClientSecret: fs.readFileSync('/run/secrets/google_secret', 'utf8').trim(),
+	hostURL: 'https://www.produktivv.com'
 };

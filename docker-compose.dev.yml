@@ -3,7 +3,7 @@ services:
   traefik:
     networks:
       - web
-    image: traefik
+    image: traefik:1.7.2-alpine
     command:
       - "--docker"
       - "--docker.swarmMode"
@@ -16,8 +16,8 @@ services:
       - '8080:8080'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - ./traefik/traefik.prod.toml:/traefik.toml
-      - ./traefik/acme:/etc/traefik/acme
+      - ./traefik/traefik.dev.toml:/traefik.toml
+      - ./traefik/certs/:/certs/
     depends_on:
       - api
       - client
@@ -28,29 +28,26 @@ services:
         limits:
           cpus: "0.3"
           memory: 128m
-      labels:
-      - "traefik.backend=traefik"
-      - "traefik.enable=true"
-      - "traefik.logLevel=DEBUG"
-      - "traefik.port=8080"
-      - "traefik.passHostHeader=true"
-      - "traefik.frontend.entryPoints=http"
-      - "traefik.backend.loadbalancer.method=wrr"
-      - "traefik.backend.loadbalancer.swarm=true"
   api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./server
     image: saulable/produktivv_server
+    volumes:
+      - /app/node_modules
+      - ./server:/app
     deploy:
       replicas: 1
       resources:
         limits:
-          cpus: "0.4"
+          cpus: "0.5"
           memory: 512m
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=web"
         - "traefik.backend=api"
         - "traefik.port=5000"
-        - "traefik.frontend.rule=Host:www.produktivv.com; PathPrefix:/api"
+        - "traefik.frontend.rule=Host:localhost; PathPrefix:/api"
         - "traefik.frontend.passHostHeader=true"
     ports:
       - '5000'
@@ -61,7 +58,13 @@ services:
     environment:
       NODE_ENV: "production"
   oauthflow:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./oauthflow
     image: saulable/produktivv_oauth
+    volumes:
+      - /app/node_modules
+      - ./oauthflow:/app
     deploy:
       replicas: 1
       resources:
@@ -73,7 +76,7 @@ services:
         - "traefik.docker.network=web"
         - "traefik.backend=oauthflow"
         - "traefik.port=5050"
-        - "traefik.frontend.rule=Host:oauth.produktivv.com"
+        - "traefik.frontend.rule=Host:localhost; PathPrefix:/auth"
         - "traefik.frontend.passHostHeader=true"
     ports:
       - '5050'
@@ -89,43 +92,29 @@ services:
     environment:
       NODE_ENV: "production"
   client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
     image: saulable/produktivv_client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.1"
-          memory: 56m
+          memory: 128m
       labels:
         - "traefik.docker.network=web"
         - "traefik.enable=true"
         - "traefik.port=3000"
         - "traefik.backend=client"
-        - "traefik.frontend.rule=Host:www.produktivv.com"
+        - "traefik.frontend.rule=Host:localhost"
     ports:
       - "3000"
     networks:
       - web
-  nginx:
-    networks:
-      - web
-    image: schmunk42/nginx-redirect
-    ports:
-      - '80'
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "0.05"
-          memory: 56m
-      labels:
-        - "traefik.docker.network=web"
-        - "traefik.enable=true"
-        - "traefik.port=80"
-        - "traefik.frontend.rule=Host:produktivv.com"
-    environment:
-      - SERVER_REDIRECT=www.produktivv.com
-      - SERVER_REDIRECT_SCHEME=https
 secrets:
   mongoURI:
     file: ./secrets/mongo_uri.txt

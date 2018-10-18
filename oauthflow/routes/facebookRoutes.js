@@ -15,20 +15,17 @@ module.exports = (app, passport) => {
 		'/auth/facebook',
 		passport.authenticate('facebook', { scope: 'email' })
 	);
-	app.get(
-		'/api/testme', (req, res) => {
-			console.log(123);
-			res.send('Hello Saul');
-		}
-	);
+	app.get('/testme', (req,res) => {
+		res.send('hello saul');
+	});
 	app.get(
 		'/auth/facebook/callback',
 		passport.authenticate('facebook', {
 			session: false
 		}), (req, res) => {
+			console.log(req.user.toJSON());
 			const token = jwt.sign(req.user.toJSON(), settings.secret);
-			res.cookie('jwtToken', token);
-			res.redirect(`${keys.hostURL}/social_auth`);
+			res.redirect(`${keys.hostURL}/social_auth/${token}`);
 		}
 	);
 };

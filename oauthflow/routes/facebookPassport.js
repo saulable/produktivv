@@ -20,10 +20,9 @@ module.exports = passport => {
 				process.nextTick(function() {
 					// check if the user is logged
 					if (!req.user) {
-						User.findOne({ 'facebook.id': profile.id }, (err, user) => {
+						User.findOne({ 'facebook.email': profile.email }, (err, user) => {
 							// if there is an error stop everything and return
 							if (err) return done(err);
-
 							// if the user is found, then log them in
 							if (user) {
 								return done(null, user); // user found, return that user

@@ -1,66 +1,74 @@
 version: '3.2'
 services:
   traefik:
+    image: traefik:1.7.2-alpine
     networks:
       - web
-    image: traefik
-    command: --web --docker --docker.domain=docker.localhost
     ports:
       - '80:80'
       - '443:443'
       - '8080:8080'
+    command:
+      - "--docker"
+      - "--docker.domain=docker.localhost"
+      - "--docker.watch"
+      - "--logLevel=DEBUG"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.dev.toml:/traefik.toml
       - ./traefik/certs/:/certs/
+    depends_on:
+      - api
+      - client
+      - oauthflow
   api:
     build:
       dockerfile: Dockerfile.dev
       context: ./server
     image: produktivv_server
+    networks:
+      - web
     volumes:
       - /app/node_modules
       - ./server:/app
     ports:
       - '5000'
-    networks:
-      - web
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
       - "traefik.backend=api"
       - "traefik.port=5000"
-      - "traefik.frontend.rule=Host:localhost; PathPrefix:/api, /auth"
+      - "traefik.frontend.rule=Host:localhost; PathPrefix:/api"
       - "traefik.frontend.passHostHeader=true"
   oauthflow:
     build:
       dockerfile: Dockerfile.dev
       context: ./oauthflow
     image: produktivv_server_oauthflow
+    networks:
+      - web
     volumes:
       - /app/node_modules
       - ./oauthflow:/app
     ports:
       - '5050'
-    networks:
-      - web
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=web"
       - "traefik.backend=oauthflow"
       - "traefik.port=5050"
-      - "traefik.frontend.rule=Host:oauth.localhost"
+      - "traefik.frontend.rule=Host:localhost; PathPrefix:/auth"
       - "traefik.frontend.passHostHeader=true"
   client:
     build:
       dockerfile: Dockerfile.dev
       context: ./client
     image: produktivv_client
+    networks:
+      - web
     volumes:
       - /app/node_modules
       - ./client:/app
-    networks:
-      - web
     ports:
       - '3000'
     labels:
@@ -71,3 +79,4 @@ services:
       - "traefik.frontend.rule=Host:localhost"
 networks:
   web:
+    external: true

@@ -51,7 +51,7 @@ class Login extends Component {
 										{message}
 									</div>
 								)}
-								<h4 className="type-sidelines"><span>Sign In Here</span></h4>
+								<h4 className="type-sidelines"><span>Sign In Here Mate</span></h4>
 								<div className="field">
 									<label className="sr-only">Email address</label>
 									<input

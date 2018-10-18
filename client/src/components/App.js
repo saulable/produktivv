@@ -26,7 +26,7 @@ class App extends Component {
 					<Route exact path="/" component={Index} />
 					<Route exact path="/login" component={Login} />
 					<Route exact path="/register" component={Register} />
-					<Route path="/social_auth" component={SocialAuthRedirect} />
+					<Route path="/social_auth/:query" component={SocialAuthRedirect} />
 					<Route exact path="/home" component={requireAuth(Home)} />
 					<Route exact path="/daily" component={requireAuth(DailyJournal)} />
 					<Route exact path="/weekly" component={requireAuth(WeeklyJournal)} />

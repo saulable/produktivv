@@ -10,10 +10,14 @@ defaultEntryPoints = ["https","http"]
   [entryPoints.https]
   address = ":443"
   [entryPoints.https.tls]
+	[entryPoints.dashboard]
+	address=":8080"
     [[entryPoints.https.tls.certificates]]
       certFile = "./certs/wekan1.crt"
       keyFile = "./certs/wekan1.key"
 
+[api]
+entrypoint = "dashboard"
 [retry]
 
 [docker]
