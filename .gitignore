@@ -5,3 +5,4 @@ fb_secret_id.txt
 google_client_id.txt
 google_client_secret.txt
 mongo_uri.txt
+package-lock.json
