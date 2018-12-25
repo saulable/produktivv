@@ -14,6 +14,25 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Installing
 
+## For Development
+
+In outhaflow && server folders. Create dev.js inside config folder. I.E server > config > dev.js
+
+Create the following file structure
+
+module.exports = {
+	mongoURI:'mongodb://username:password@ds247191.mlab.com:47191/justdelete2',
+	facebookClientId : 'FACEBOOK_CLIENT_ID',
+	facebookSecretId : 'FACEBOOK_ID',
+	facebookCallBackUrl: 'https://localhost/auth/facebook/callback',
+	googleClientID: 'some-key.apps.googleusercontent.com',
+	googleClientSecret: 'SOMEAPIKEY',
+	hostURL: 'https://localhost'
+};
+
+
+## For production....
+
 Create the following .txt files in secrets folder. You will need FB oauth token, google oauth token.
 
 fb_callback_url.txt
@@ -24,9 +43,6 @@ google_client_secret.txt
 mongo_uri.txt
 
 * Examples
-
-* Copy the .env.example file to a new .env file and fill in the variables like so, you can find them in the resources channel in slack
-
 ```
 fb_callback_url=https://localhost/auth/facebook/callback
 fb_client_id=273898299894334
