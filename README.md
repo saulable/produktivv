@@ -41,12 +41,14 @@ module.exports = {
 
 Create the following .txt files in secrets folder. You will need FB oauth token, google oauth token.
 
+```
 fb_callback_url.txt
 fb_client_id.txt
 fb_secret_id.txt
 google_client_id.txt
 google_client_secret.txt
 mongo_uri.txt
+```
 
 * Examples
 ```
