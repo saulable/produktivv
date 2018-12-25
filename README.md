@@ -36,6 +36,7 @@ module.exports = {
 };
 ```
 
+* Then run `docker-compose up` in terminal
 
 ### For production
 
@@ -58,4 +59,4 @@ fb_secret_id=f19f2c37e3cf72222f7fea922148d5e
 mongo_uri=mongodb://username:password@ds247191.mlab.com:47222/justdelete2
 ```
 
-* Then run `docker-compose up` in terminal.
+* Production requirements will vary depending on the host. Please check how to deploy swarm. 
