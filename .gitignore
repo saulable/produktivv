@@ -1,2 +1,7 @@
 node_modules
 dev.js
+fb_client_id.txt
+fb_secret_id.txt
+google_client_id.txt
+google_client_secret.txt
+mongo_uri.txt
