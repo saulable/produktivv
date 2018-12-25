@@ -1,8 +1,12 @@
 # Produktivv.com Full Stack Project
 
+Full Node.js + Express + MongoDB Backend, React - Frontend
+
+Full setup for using Docker with this tech stack, including routing with Traefik and handling oAuth flows.
+
 ### Currently being hosted on Digital Ocean at https://www.produktivv.com
 
-API for the PeepX Mobile App
+Full project files for produktivv.com
 
 ## Getting Started
 
@@ -14,12 +18,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 ## Installing
 
-## For Development
+### For Development
 
 In outhaflow && server folders. Create dev.js inside config folder. I.E server > config > dev.js
 
 Create the following file structure
 
+```
 module.exports = {
 	mongoURI:'mongodb://username:password@ds247191.mlab.com:47191/justdelete2',
 	facebookClientId : 'FACEBOOK_CLIENT_ID',
@@ -29,9 +34,10 @@ module.exports = {
 	googleClientSecret: 'SOMEAPIKEY',
 	hostURL: 'https://localhost'
 };
+```
 
 
-## For production....
+### For production
 
 Create the following .txt files in secrets folder. You will need FB oauth token, google oauth token.
 
