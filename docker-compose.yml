@@ -79,4 +79,3 @@ services:
       - "traefik.frontend.rule=Host:localhost"
 networks:
   web:
-    external: true
