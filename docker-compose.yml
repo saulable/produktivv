@@ -26,8 +26,6 @@ services:
       dockerfile: Dockerfile.dev
       context: ./server
     image: produktivv_server
-    networks:
-      - web
     volumes:
       - /app/node_modules
       - ./server:/app
@@ -40,6 +38,8 @@ services:
       - "traefik.port=5000"
       - "traefik.frontend.rule=Host:localhost; PathPrefix:/api"
       - "traefik.frontend.passHostHeader=true"
+    networks:
+      - web
   oauthflow:
     build:
       dockerfile: Dockerfile.dev

@@ -39,10 +39,7 @@ services:
       - "traefik.backend.loadbalancer.method=wrr"
       - "traefik.backend.loadbalancer.swarm=true"
   api:
-    build:
-      dockerfile: Dockerfile
-      context: ./server
-    image: produktivv_server
+    image: saulable/produktivv_server
     deploy:
       replicas: 1
       resources:
@@ -65,9 +62,7 @@ services:
     environment:
       NODE_ENV: "production"
   oauthflow:
-    build:
-      dockerfile: Dockerfile
-      context: ./oauthflow
+    image: saulable/produktivv_oauth
     deploy:
       replicas: 1
       resources:
@@ -95,9 +90,7 @@ services:
     environment:
       NODE_ENV: "production"
   client:
-    build:
-      dockerfile: Dockerfile
-      context: ./client
+    image: saulable/produktivv_client
     deploy:
       replicas: 1
       resources:
@@ -151,3 +144,4 @@ networks:
   web:
     external: true
 volumes:
+  dronedata: {}

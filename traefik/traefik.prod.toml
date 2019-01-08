@@ -32,4 +32,4 @@ entryPoint = "https"
 
   [[acme.domains]]
     main = "*.produktivv.com"
-		sans = ["api.produktivv.com", "oauth.produktivv.com"]
+		sans = ["api.produktivv.com", "oauth.produktivv.com", "drone.produktivv.com"]
