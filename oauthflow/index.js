@@ -17,8 +17,14 @@ const app = express();
 let server;
 server = http.createServer(app);
 
+const mongooseOptions = {
+	useNewUrlParser: true,
+	keepAlive: 1, 
+	connectTimeoutMS: 30000
+}
+
 mongoose
-	.connect(keys.mongoURI, {useNewUrlParser: true})
+	.connect(keys.mongoURI, mongooseOptions)
 	.then(() => console.log('connection successful'))
 	.catch(err => console.log(err));
 

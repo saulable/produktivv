@@ -1,4 +1,4 @@
-version: '3.2'
+version: "3.2"
 services:
   traefik:
     networks:
@@ -11,9 +11,9 @@ services:
       - "--docker.watch"
       - "--logLevel=DEBUG"
     ports:
-      - '80:80'
-      - '443:443'
-      - '8080:8080'
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.prod.toml:/traefik.toml
@@ -22,14 +22,13 @@ services:
       - api
       - client
       - oauthflow
-      - drone-server
-    deploy:
-      replicas: 1
-      resources:
-        limits:
-          cpus: "0.3"
-          memory: 128m
-      labels:
+    # deploy:
+    #   replicas: 1
+    #   resources:
+    #     limits:
+    #       cpus: "0.3"
+    #       memory: 128m
+    labels:
       - "traefik.backend=traefik"
       - "traefik.enable=true"
       - "traefik.logLevel=DEBUG"
@@ -42,22 +41,24 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./server
-    image: produktivv_server
+    volumes:
+      - ./api:/app
+      - /app/node_modules
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.4"
           memory: 512m
-      labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=web"
-        - "traefik.backend=api"
-        - "traefik.port=5000"
-        - "traefik.frontend.rule=Host:www.produktivv.com; PathPrefix:/api"
-        - "traefik.frontend.passHostHeader=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.backend=api"
+      - "traefik.port=5000"
+      - "traefik.frontend.rule=Host:www.produktivv.com; PathPrefix:/api"
+      - "traefik.frontend.passHostHeader=true"
     ports:
-      - '5000'
+      - "5000"
     networks:
       - web
     secrets:
@@ -68,21 +69,24 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./oauthflow
+    volumes:
+      - ./oauthflow:/app
+      - /app/node_modules
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.1"
           memory: 128m
-      labels:
-        - "traefik.enable=true"
-        - "traefik.docker.network=web"
-        - "traefik.backend=oauthflow"
-        - "traefik.port=5050"
-        - "traefik.frontend.rule=Host:oauth.produktivv.com"
-        - "traefik.frontend.passHostHeader=true"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=web"
+      - "traefik.backend=oauthflow"
+      - "traefik.port=5050"
+      - "traefik.frontend.rule=Host:oauth.produktivv.com"
+      - "traefik.frontend.passHostHeader=true"
     ports:
-      - '5050'
+      - "5050"
     networks:
       - web
     secrets:
@@ -98,18 +102,21 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./client
+    volumes:
+      - ./client:/app
+      - /app/node_modules
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.1"
           memory: 56m
-      labels:
-        - "traefik.docker.network=web"
-        - "traefik.enable=true"
-        - "traefik.port=3000"
-        - "traefik.backend=client"
-        - "traefik.frontend.rule=Host:www.produktivv.com"
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=3000"
+      - "traefik.backend=client"
+      - "traefik.frontend.rule=Host:www.produktivv.com"
     ports:
       - "3000"
     networks:
@@ -117,23 +124,23 @@ services:
   nginx:
     image: schmunk42/nginx-redirect
     ports:
-      - '80'
+      - "80"
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.05"
           memory: 56m
-      labels:
-        - "traefik.docker.network=web"
-        - "traefik.enable=true"
-        - "traefik.port=80"
-        - "traefik.frontend.rule=Host:produktivv.com"
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.port=80"
+      - "traefik.frontend.rule=Host:produktivv.com"
     environment:
       - SERVER_REDIRECT=www.produktivv.com
       - SERVER_REDIRECT_SCHEME=https
     networks:
-    - web
+      - web
 secrets:
   mongoURI:
     file: ./secrets/mongo_uri.txt
@@ -150,4 +157,3 @@ secrets:
 networks:
   web:
     external: true
-volumes:

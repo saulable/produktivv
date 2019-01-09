@@ -1,8 +1,6 @@
 version: '3.2'
 services:
   traefik:
-    networks:
-      - web
     image: traefik
     command:
       - "--docker"
@@ -17,27 +15,30 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - ./traefik/traefik.prod.toml:/traefik.toml
-      - ./traefik/acme:/etc/traefik/acme
+      - ./traefik/acme.json:/etc/traefik/acme.json
     depends_on:
       - api
       - client
       - oauthflow
-      - drone-server
     deploy:
       replicas: 1
       resources:
         limits:
           cpus: "0.3"
           memory: 128m
-      labels:
-      - "traefik.backend=traefik"
-      - "traefik.enable=true"
-      - "traefik.logLevel=DEBUG"
-      - "traefik.port=8080"
-      - "traefik.passHostHeader=true"
-      - "traefik.frontend.entryPoints=http"
-      - "traefik.backend.loadbalancer.method=wrr"
-      - "traefik.backend.loadbalancer.swarm=true"
+    environment:
+      - DO_AUTH_TOKEN=6d632f63cd5f03eba61659e19e0f9264e1d6854d42562b54396c48362dcb3415
+    labels:
+    - "traefik.backend=traefik"
+    - "traefik.enable=true"
+    - "traefik.logLevel=DEBUG"
+    - "traefik.port=8080"
+    - "traefik.passHostHeader=true"
+    - "traefik.frontend.entryPoints=http"
+    - "traefik.backend.loadbalancer.method=wrr"
+    - "traefik.backend.loadbalancer.swarm=true"
+    networks:
+      - web
   api:
     image: saulable/produktivv_server
     deploy:
@@ -109,8 +110,6 @@ services:
       - web
   nginx:
     image: schmunk42/nginx-redirect
-    ports:
-      - '80'
     deploy:
       replicas: 1
       resources:
@@ -119,6 +118,7 @@ services:
           memory: 56m
       labels:
         - "traefik.docker.network=web"
+        - "traefik.backend=nginx"
         - "traefik.enable=true"
         - "traefik.port=80"
         - "traefik.frontend.rule=Host:produktivv.com"
@@ -143,5 +143,3 @@ secrets:
 networks:
   web:
     external: true
-volumes:
-  dronedata: {}

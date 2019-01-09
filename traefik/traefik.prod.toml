@@ -1,4 +1,4 @@
-defaultEntryPoints = ["https","http"]
+defaultEntryPoints = ["http","https"]
 
 [entryPoints]
   [entryPoints.http]
@@ -24,12 +24,16 @@ exposedbydefault = false
 
 [acme]
 email = "hello@youtech.io"
-storage = "/etc/traefik/acme/acme.json"
-# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
 entryPoint = "https"
+storage = "/etc/traefik/acme.json"
+acmeLogging = true
+# caServer = "https://acme-staging-v02.api.letsencrypt.org/directory"
+  [acme.dnsChallenge]
+  provider = "digitalocean"
+  delayBeforeCheck = 0
   [acme.httpChallenge]
   entryPoint = "http"
-
   [[acme.domains]]
     main = "*.produktivv.com"
-		sans = ["api.produktivv.com", "oauth.produktivv.com", "drone.produktivv.com"]
+    sans = ["produktivv.com"]
+    

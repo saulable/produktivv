@@ -10,3 +10,5 @@ docker-compose-old.yml
 docker-compose.dev.yml
 docker-compose.prod.backup.yml
 docker-compose.prod-old.yml
+/traefik/certs
+
